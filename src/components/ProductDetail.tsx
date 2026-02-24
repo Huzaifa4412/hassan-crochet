@@ -1,230 +1,270 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react"
+import Link from "next/link"
+import Image from "next/image"
 
-// react icons
-import { FaStar } from "react-icons/fa6"
-import { FaHeart, FaRegHeart } from "react-icons/fa"
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { colors, images } from "@/Data"
 
-// all data 
-import { colors, images } from "../Data";
+import {
+  ColorSelector,
+  ImageGallery,
+  ProductRating,
+  ProductPrice,
+  QuantitySelector,
+} from "@/components/ui/ecommerce"
+
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Label } from "@/components/ui/label"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+import { ArrowRight, ShoppingCart, Sparkles, Heart, Truck, Minus, Plus } from "lucide-react"
 
 const ProductDetailsPage = () => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0)
-    const [quantity, setQuantity] = useState(1)
-    const [selectedColor, setSelectedColor] = useState("black")
-    const [isFavorite, setIsFavorite] = useState(false)
-    const [timeLeft, setTimeLeft] = useState({
-        days: 2,
-        hours: 12,
-        minutes: 45,
-        seconds: 5
-    })
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [selectedColor, setSelectedColor] = useState(colors[0])
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [quantity, setQuantity] = useState(1)
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev.seconds > 0) {
-                    return { ...prev, seconds: prev.seconds - 1 }
-                } else if (prev.minutes > 0) {
-                    return { ...prev, minutes: prev.minutes - 1, seconds: 59 }
-                } else if (prev.hours > 0) {
-                    return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 }
-                } else if (prev.days > 0) {
-                    return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 }
-                }
-                return prev
-            })
-        }, 1000)
-
-        return () => clearInterval(timer)
-    }, [])
-
-    const nextImage = () => {
-        setCurrentImageIndex((prev) => (prev + 1) % images.length)
-    }
-
-    const previousImage = () => {
-        setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
-    }
-
-    const formatNumber = (number) => number.toString().padStart(2, "0");
-
-    return (
-        <div className="mx-auto md:px-8 md:py-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-
-                {/* Left side - Image gallery */}
-                <div className="space-y-4">
-
-                    <div className="relative aspect-square">
-
-                        {/* NEW and SALE tags */}
-                        <div className="absolute top-4 left-4 z-10 space-y-2">
-                            <span className="inline-block px-2 py-1 text-xs font-semibold bg-black text-white">
-                                NEW
-                            </span>
-                            <div className="inline-block px-2 py-1 text-xs font-semibold bg-emerald-500 text-white">
-                                -50%
-                            </div>
-                        </div>
-
-                        {/* Main image with navigation arrows */}
-                        <div className="relative h-full">
-                            <img
-                                src={images[currentImageIndex]}
-                                alt={`Product view ${currentImageIndex + 1}`}
-                                className="w-full h-full object-cover"
-                            />
-                            <button
-                                onClick={previousImage}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white shadow-lg hover:bg-[#0FABCA] hover:text-white"
-                                aria-label="Previous image"
-                            >
-                                <BiChevronLeft className="w-6 h-6" />
-                            </button>
-                            <button
-                                onClick={nextImage}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white shadow-lg hover:bg-[#0FABCA] hover:text-white"
-                                aria-label="Next image"
-                            >
-                                <BiChevronRight className="w-6 h-6" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Thumbnail images */}
-                    <div className="flex gap-4 justify-between">
-                        {images.map((image, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentImageIndex(index)}
-                                className={`relative transition-all duration-300 w-[8rem] aspect-square ${currentImageIndex === index
-                                    ? "ring-2 ring-[#0FABCA]"
-                                    : "hover:ring-2 hover:ring-[#0FABCA]"
-                                    }`}
-                            >
-                                <img
-                                    src={image}
-                                    alt={`Thumbnail ${index + 1}`}
-                                    className="w-full h-full object-cover"
-                                />
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Right side - Product details */}
-                <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                        <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                                <FaStar key={i} className="w-4 h-4 dark:fill-slate-400 fill-black" />
-                            ))}
-                        </div>
-                        <span className="text-sm dark:text-slate-400 text-gray-600">11 Reviews</span>
-                    </div>
-
-                    <h1 className="text-[1.6rem] md:text-[1.9rem] dark:text-[#abc2d3] text-gray-800 font-semibold">Tray Table</h1>
-
-                    <p className="text-gray-600 dark:text-slate-400 text-[0.9rem]">
-                        Buy one or buy a few and make every space where you sit more convenient. Light and easy to
-                        move around with removable tray top, handy for serving snacks.
-                    </p>
-
-                    <div className="flex items-center gap-3">
-                        <span className="text-[1.5rem] dark:text-[#abc2d3] text-gray-800 font-medium">$199.00</span>
-                        <span className="text-lg dark:text-slate-400 text-gray-500 line-through">$400.00</span>
-                    </div>
-
-                    <div className="pb-2">
-                        <p className="font-medium text-[0.9rem] dark:text-[#abc2d3] text-gray-600">Offer expires in:</p>
-                        <div className="flex items-center gap-[10px] mt-2">
-                            <div className="flex items-center justify-center dark:text-[#abc2d3] flex-col gap-[0.2rem]">
-                                <h5 className="py-2 px-3 dark:bg-slate-900 bg-gray-100 text-[1.9rem] font-semibold">{formatNumber(timeLeft.days)}</h5>
-                                <span className="text-[0.7rem]">Days</span>
-                            </div>
-                            <div className="flex items-center justify-center dark:text-[#abc2d3] flex-col gap-[0.2rem]">
-                                <h5 className="py-2 px-3 dark:bg-slate-900 bg-gray-100 text-[1.9rem] font-semibold">{formatNumber(timeLeft.hours)}</h5>
-                                <span className="text-[0.7rem]">Hours</span>
-                            </div>
-                            <div className="flex items-center justify-center dark:text-[#abc2d3] flex-col gap-[0.2rem]">
-                                <h5 className="py-2 px-3 dark:bg-slate-900 bg-gray-100 text-[1.9rem] font-semibold">{formatNumber(timeLeft.minutes)}</h5>
-                                <span className="text-[0.7rem]">Minutes</span>
-                            </div>
-                            <div className="flex items-center justify-center dark:text-[#abc2d3] flex-col gap-[0.2rem]">
-                                <h5 className="py-2 px-3 dark:bg-slate-900 bg-gray-100 text-[1.9rem] font-semibold">{formatNumber(timeLeft.seconds)}</h5>
-                                <span className="text-[0.7rem]">Seconds</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2 border-t dark:border-slate-700 border-t-gray-200 pt-4">
-                        <p className="font-medium dark:text-[#abc2d3] text-[0.9rem] text-gray-600">Measurements</p>
-                        <p className="text-gray-800 dark:text-slate-400">17 1/2×20 5/8 "</p>
-                    </div>
-
-                    <div className="space-y-2 pt-2">
-                        <p className="font-medium text-gray-600 dark:text-[#abc2d3] text-[0.9rem]">Choose Color</p>
-                        <p className="font-semibold pb-1 dark:text-slate-400 text-gray-800 text-[0.9rem] capitalize">{selectedColor}</p>
-                        <div className="flex gap-2">
-                            {colors.map((color) => (
-                                <button
-                                    onClick={() => setSelectedColor(color.name)}
-                                    aria-label={color.name}
-                                    key={color.name}
-                                    className={`w-8 h-8 rounded-full ${color.value} ${selectedColor === color.name ? "ring-2 dark:ring-offset-slate-800 ring-offset-2 ring-[#0FABCA]" : ""
-                                        }`}
-                                >
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="flex gap-4 items-center pt-6">
-                        <div className="flex items-center dark:bg-slate-900 bg-gray-100 rounded-md">
-                            <button
-                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="px-4 py-[0.560rem] dark:hover:bg-slate-800 dark:text-[#abc2d3] text-[1.3rem] font-[300] hover:bg-gray-100 rounded-l-md"
-                            >
-                                −
-                            </button>
-                            <input
-                                type="number"
-                                value={quantity}
-                                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                className="w-10 font-medium outline-none dark:text-[#abc2d3] text-[0.9rem] bg-transparent text-center"
-                            />
-                            <button
-                                onClick={() => setQuantity(quantity + 1)}
-                                className="px-4 py-[0.560rem] dark:text-[#abc2d3] dark:hover:bg-slate-800 text-[1.3rem] font-[300] hover:bg-gray-100 rounded-r-md"
-                            >
-                                +
-                            </button>
-                        </div>
-                        <button
-                            onClick={() => setIsFavorite(!isFavorite)}
-                            className="py-3 border border-gray-200 rounded-md dark:border-slate-700 dark:text-[#abc2d3] dark:hover:bg-slate-900 flex items-center justify-center gap-[10px] grow hover:bg-gray-50">
-                            {
-                                isFavorite ? (
-                                    <FaHeart className="w-5 h-5 text-red-500" />
-                                )
-                                    : (
-                                        <FaRegHeart className="w-5 h-5 dark:text-[#abc2d3] text-gray-800" />
-                                    )
-                            }
-                            Wishlist
-                        </button>
-                    </div>
-
-                    <button className="w-full px-6 py-3 bg-[#0FABCA] text-white rounded-md hover:bg-[#0FABCA]/90">
-                        Add to Cart
-                    </button>
-                </div>
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto px-4 py-4 md:px-6">
+          <nav className="flex items-center justify-between">
+            <Link href="/" className="text-xl font-bold tracking-tight">Hassan Crochet</Link>
+            <div className="flex items-center gap-4">
+              <Link href="/products" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Products</Link>
+              <Button variant="outline" size="sm">Contact</Button>
             </div>
+          </nav>
         </div>
-    );
-};
+      </header>
 
-export default ProductDetailsPage;
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8 md:px-6 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
+          {/* Left Column - Images */}
+          <div className="space-y-4">
+            {/* Main Image */}
+            <Card className="overflow-hidden border-0 shadow-sm">
+              <CardContent className="p-0 relative aspect-square bg-muted/20">
+                <img
+                  src={images[currentImageIndex]}
+                  alt={`Product view ${currentImageIndex + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </CardContent>
+            </Card>
+
+            {/* Thumbnails */}
+            <div className="flex gap-3 justify-start">
+              {images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden transition-all border-2 ${
+                    currentImageIndex === index
+                      ? "border-foreground"
+                      : "border-transparent hover:border-muted-foreground/50"
+                  }`}
+                >
+                  <img
+                    src={image}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column - Product Details */}
+          <div className="space-y-6">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+              <span>/</span>
+              <Link href="/products" className="hover:text-foreground transition-colors">Products</Link>
+              <span>/</span>
+              <span className="text-foreground font-medium">Tray Table</span>
+            </div>
+
+            {/* Title & Badge */}
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+                  Tray Table
+                </h1>
+                <Badge className="bg-[#0FABCA] text-white hover:bg-[#0e9ab5] mt-1">
+                  New Arrival
+                </Badge>
+              </div>
+              <ProductRating rating={4.9} reviewCount={23} />
+            </div>
+
+            {/* Price */}
+            <div className="space-y-1">
+              <ProductPrice price={199.99} comparePrice={249.99} />
+              <p className="text-sm text-green-600 font-medium">Save $50.00</p>
+            </div>
+
+            <Separator />
+
+            {/* Color Selection */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <Label className="text-base font-medium">Choose a Color</Label>
+                <span className="text-sm text-muted-foreground capitalize">{selectedColor.name}</span>
+              </div>
+              <div className="flex gap-3">
+                {colors.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => setSelectedColor(color)}
+                    className={`relative w-12 h-12 rounded-full transition-all duration-200 flex items-center justify-center ${
+                      selectedColor.name === color.name
+                        ? "scale-110 shadow-lg ring-2 ring-foreground ring-offset-2"
+                        : "hover:scale-105 opacity-80 hover:opacity-100"
+                    }`}
+                  >
+                    <div
+                      className={`w-full h-full rounded-full ${color.value} border border-border`}
+                    />
+                    {selectedColor.name === color.name && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-3 h-3 bg-white rounded-full shadow-sm" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Quantity Selector */}
+            <div className="space-y-3">
+              <Label className="text-base font-medium">Quantity</Label>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center border border-input rounded-lg overflow-hidden">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={quantity <= 1}
+                    className="h-10 w-10 rounded-none"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <div className="h-10 w-16 flex items-center justify-center text-center">
+                    <span className="text-base font-medium">{quantity}</span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="h-10 w-10 rounded-none"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                <span className="text-sm text-muted-foreground">80 pieces available</span>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              <Button className="w-full h-12 text-base font-semibold bg-foreground text-background hover:bg-foreground/90">
+                Add to Cart
+              </Button>
+              <div className="flex gap-3">
+                <Button variant="outline" className="flex-1 h-12 text-base font-semibold border-foreground hover:bg-foreground/5">
+                  Buy it now
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsFavorite(!isFavorite)}
+                  className={`h-12 w-12 ${isFavorite ? "border-destructive text-destructive" : ""}`}
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
+                </Button>
+              </div>
+            </div>
+
+            {/* Free Delivery Message */}
+            <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Truck className="w-5 h-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">Free Delivery</p>
+                <p className="text-xs text-muted-foreground">Estimated delivery in 3-5 business days</p>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* View Details Accordion */}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="details" className="border-0">
+                <AccordionTrigger className="py-3 text-base font-medium hover:no-underline">
+                  View Details
+                </AccordionTrigger>
+                <AccordionContent className="pt-2 pb-0 space-y-3">
+                  <div>
+                    <h4 className="font-medium mb-2">Description</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Buy one or buy a few and make every space where you sit more convenient.
+                      Light and easy to move around with removable tray top, handy for serving snacks.
+                      Each piece is lovingly handmade with premium cotton crochet thread.
+                    </p>
+                  </div>
+                  <Separator />
+                  <div>
+                    <h4 className="font-medium mb-2">Specifications</h4>
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      <li>• Material: Premium cotton crochet thread</li>
+                      <li>• Base: MDF wood with removable tray top</li>
+                      <li>• Care: Spot clean only, keep dry</li>
+                      <li>• Measurements: 17 1/2×20 5/8"</li>
+                    </ul>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border/40 mt-16">
+        <div className="container mx-auto px-4 py-8 md:px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-muted-foreground">
+              © 2024 Hassan Crochet. All rights reserved.
+            </p>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm">Privacy</Button>
+              <Button variant="ghost" size="sm">Terms</Button>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default ProductDetailsPage

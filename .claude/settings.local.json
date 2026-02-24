@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(bun run build)",
+      "WebSearch",
+      "Bash(npx shadcn@latest mcp:*)",
+      "Bash(powershell -Command:*)",
+      "mcp__shadcn__get_project_registries",
+      "mcp__shadcn__search_items_in_registries",
+      "mcp__shadcn__list_items_in_registries",
+      "mcp__shadcn__get_add_command_for_items",
+      "Bash(bunx shadcn@latest add:*)",
+      "mcp__shadcn__get_audit_checklist",
+      "Bash(bunx:*)",
+      "Bash(npm run build:*)",
+      "Bash(bun run dev:*)",
+      "Bash(bun add:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ]
+}

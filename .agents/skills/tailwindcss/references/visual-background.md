@@ -65,7 +65,7 @@ Gradient directions: `to-t`, `to-tr`, `to-r`, `to-br`, `to-b`, `to-bl`, `to-l`, 
 
 - Colors: `bg-{color}-{shade}`, opacity `/50`, arbitrary `bg-[#hex]`
 - Gradients: `bg-gradient-to-{dir}`, `from-*`, `via-*`, `to-*`
-- Image: `bg-[url('...')]`, `bg-cover`, `bg-center`, etc.
+- Image: `bg-[url('/path/to/image.jpg')]`, `bg-cover`, `bg-center`, etc.
 - Size: `bg-auto`, `bg-cover`, `bg-contain`
 - Position: `bg-center`, `bg-top`, `bg-[position:...]`
 
