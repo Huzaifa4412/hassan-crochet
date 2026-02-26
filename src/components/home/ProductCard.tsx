@@ -34,7 +34,7 @@ export function ProductCard({
   const firstVariant = product.variants?.[0]
   const productImage = firstVariant?.imageUrl
   const productSlug = product.slug?.current
-  const isSale = comparePrice && comparePrice > price
+  const isSale = comparePrice && price != null && comparePrice > price
   const isNew = product.badges?.some(b => b.toLowerCase() === "new")
   const isBestseller = product.badges?.some(b => b.toLowerCase().includes("best"))
 
@@ -283,7 +283,7 @@ export function FeaturedProductCard({
   const firstVariant = product.variants?.[0]
   const productImage = firstVariant?.imageUrl
   const productSlug = product.slug?.current
-  const isSale = comparePrice && comparePrice > price
+  const isSale = comparePrice && price != null && comparePrice > price
 
   if (!productSlug) return null
 

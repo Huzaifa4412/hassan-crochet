@@ -169,7 +169,7 @@ export default function ProductClient({ product }: ProductClientProps) {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-b from-background to-muted/10 ${pacifico.variable} ${delius.variable} ${meowScript.variable} ${borel.variable} ${mysteryQuest.variable} ${pinyonScript.variable}`}
+      className={`min-h-screen bg-gradient-to-b from-background to-muted/10 ${pacifico.className} ${delius.className} ${meowScript.className} ${borel.className} ${mysteryQuest.className} ${pinyonScript.className}`}
       style={{ overflowX: "hidden", width: "100%", boxSizing: "border-box" }}
     >
       <div className="mx-auto px-4 py-8 md:py-12 w-full overflow-x-hidden" style={{ maxWidth: "1280px" }}>

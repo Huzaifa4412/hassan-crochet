@@ -101,14 +101,13 @@ export function SocialFeed({ className }: SocialFeedProps) {
             <div
               key={post.id}
               className={cn(
-                "group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300",
+                "group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300 animate-in fade-in zoom-in-95 duration-700",
                 // Create masonry effect with varying aspect ratios
                 index % 5 === 0 ? "row-span-2 aspect-[3/4]" : "aspect-square"
               )}
               style={{
                 animationDelay: `${index * 150}ms`,
               }}
-              className="animate-in fade-in zoom-in-95 duration-700"
             >
               {/* Image */}
               <Image
