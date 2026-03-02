@@ -8,35 +8,27 @@ This is a Next.js 16 e-commerce application for Hassan Crochet with Sanity CMS h
 
 ## Development Commands
 
+**Note**: This project uses **bun** as the preferred package manager (`bun.lock` present). npm works as an alternative.
+
 ```bash
-# Install dependencies (uses bun.lock, but npm works too)
+# Install dependencies
 bun install
-# or
-npm install
 
 # Start development server on http://localhost:3000
 bun dev
-# or
-npm run dev
 
 # Production build
 bun run build
-# or
-npm run build
 
 # Start production server
 bun run start
-# or
-npm run start
 
 # Run ESLint
 bun run lint
-# or
-npm run lint
 
 # Sanity CMS commands (requires .env.local with project credentials)
-npx sanity@latest schema deploy    # Deploy schema changes to Sanity
-npx sanity@latest docs             # Open Sanity documentation
+bunx sanity@latest schema deploy   # Deploy schema changes to Sanity
+bunx sanity@latest docs            # Open Sanity documentation
 ```
 
 **Note**: The `package.json` has `ignoreScripts: ["sharp", "unrs-resolver"]` configured. If encountering image-related build issues, these scripts may need to be enabled.
@@ -56,13 +48,15 @@ npx sanity@latest docs             # Open Sanity documentation
 
 ## Environment Variables
 
-The project requires Sanity CMS credentials in `.env.local`:
+The project requires a `.env.local` file (create manually, no template exists):
 
 ```bash
 NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2026-02-23
 ```
+
+Get your Sanity project ID from [sanity.io/manage](https://www.sanity.io/manage).
 
 Access Sanity Studio at `http://localhost:3000/studio` to manage content.
 
@@ -231,9 +225,11 @@ const product = await getProductBySlug("tray-table");
 - Set badges, categories, stock status, featured flags, sort orders
 - Use Vision plugin to test GROQ queries
 
-**Image URLs**: Sanity images must be projected with `"imageUrl": image.asset->url` or `"url": asset->url` to get the actual URL.
+**Image URLs**: Sanity images must be projected with `"imageUrl": image.asset->url` or `"url": asset->url` to get the actual URL. Sanity CDN domains are already whitelisted in `next.config.ts`.
 
 **Draft Exclusion**: All queries include `!(_id in path("drafts.**"))` to exclude draft documents from production queries.
+
+**ISR Revalidation**: Product pages use ISR with `revalidate: 60` (60 seconds). Content updates appear within 1 minute.
 
 ### Customization Canvas Features
 
@@ -313,6 +309,11 @@ The `CustomizationCanvas` component (`src/components/CustomizationCanvas.tsx`) p
 - Custom scrollbar-hide utility class
 - Number input spin buttons hidden via CSS
 
+## TypeScript Configuration
+
+- `strict: true` - Strict mode enabled for better type safety
+- Path alias `@/*` maps to `./src/*` (configured in `tsconfig.json`)
+
 ## ESLint Configuration
 
 Uses `eslint.config.mjs` (flat config format) with `eslint-config-next` presets:
@@ -320,6 +321,17 @@ Uses `eslint.config.mjs` (flat config format) with `eslint-config-next` presets:
 - `nextTs`: TypeScript-specific rules
 - Custom global ignores for build outputs
 
+## Testing
+
+No testing framework is currently configured.
+
 ## References
 
 See `docs/FABRIC_GUIDE.md` and `docs/FABRIC_IMAGES_TEXT_GUIDE.md` for comprehensive Fabric.js v7 usage patterns.
+
+For Sanity CMS:
+- `docs/SANITY_QUICKSTART.md` - Getting started guide with Sanity CMS
+- `docs/SANITY_SCHEMA_REFERENCE.md` - Complete schema and GROQ query reference
+- `docs/SANITY_TROUBLESHOOTING.md` - Common issues and debugging guide
+
+**Debug Route**: Access `/test-sanity` to verify Sanity connection and test queries.

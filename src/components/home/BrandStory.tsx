@@ -1,10 +1,11 @@
 "use client"
 
+import { useState, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Play, Pause, Volume2, VolumeX, Maximize } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface BrandStoryProps {
@@ -12,8 +13,45 @@ interface BrandStoryProps {
 }
 
 export function BrandStory({ className }: BrandStoryProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [isMuted, setIsMuted] = useState(false)
+  const [showControls, setShowControls] = useState(false)
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+      } else {
+        videoRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted
+      setIsMuted(!isMuted)
+    }
+  }
+
+  const toggleFullscreen = () => {
+    if (videoRef.current) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen()
+      } else {
+        videoRef.current.requestFullscreen()
+      }
+    }
+  }
+
   return (
-    <section className={cn("py-12 md:py-16 lg:py-24 bg-background", className)}>
+    <section
+      className={cn("py-12 md:py-16 lg:py-24 bg-background", className)}
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
+    >
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content Column */}
@@ -25,7 +63,7 @@ export function BrandStory({ className }: BrandStoryProps) {
 
             {/* Heading */}
             <div className="space-y-4">
-              <h2 className="font-['Lora'] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
                 Handcrafted with Love Since 2020
               </h2>
               <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
@@ -67,18 +105,95 @@ export function BrandStory({ className }: BrandStoryProps) {
             </div>
           </div>
 
-          {/* Image Column */}
+          {/* Video Column */}
           <div className="order-1 lg:order-2 animate-in fade-in slide-in-from-right-4 duration-1000">
-            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
-              <Image
-                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80"
-                alt="Handmade crochet craft"
-                fill
-                className="object-cover"
-                priority
+            <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl bg-muted group">
+              <video
+                ref={videoRef}
+                src="/videos/video1.mp4"
+                autoPlay
+                loop
+                playsInline
+                muted={isMuted}
+                className="w-full h-full object-cover"
               />
               {/* Overlay Gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
+
+              {/* Custom Controls */}
+              <div
+                className={cn(
+                  "absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent p-4 transition-opacity duration-300",
+                  showControls || !isPlaying ? "opacity-100" : "opacity-0"
+                )}
+              >
+                {/* Progress Bar */}
+                <div className="mb-3">
+                  <div className="h-1 bg-white/30 rounded-full overflow-hidden cursor-pointer group/progress">
+                    <div
+                      className="h-full bg-white rounded-full transition-all duration-100"
+                      style={{
+                        width: videoRef.current
+                          ? `${(videoRef.current.currentTime / videoRef.current.duration) * 100}%`
+                          : "0%"
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Control Buttons */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {/* Play/Pause */}
+                    <button
+                      onClick={togglePlay}
+                      className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                      aria-label={isPlaying ? "Pause" : "Play"}
+                    >
+                      {isPlaying ? (
+                        <Pause className="h-5 w-5 text-white" />
+                      ) : (
+                        <Play className="h-5 w-5 text-white" />
+                      )}
+                    </button>
+
+                    {/* Mute/Unmute */}
+                    <button
+                      onClick={toggleMute}
+                      className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                      aria-label={isMuted ? "Unmute" : "Mute"}
+                    >
+                      {isMuted ? (
+                        <VolumeX className="h-5 w-5 text-white" />
+                      ) : (
+                        <Volume2 className="h-5 w-5 text-white" />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Fullscreen */}
+                  <button
+                    onClick={toggleFullscreen}
+                    className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    aria-label="Fullscreen"
+                  >
+                    <Maximize className="h-5 w-5 text-white" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Center Play/Pause Button (shows on hover when paused) */}
+              {!isPlaying && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <button
+                    onClick={togglePlay}
+                    className="p-4 rounded-full bg-white/90 hover:bg-white transition-transform hover:scale-110"
+                    aria-label="Play"
+                  >
+                    <Play className="h-8 w-8 text-primary fill-primary" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

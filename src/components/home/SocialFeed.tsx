@@ -86,7 +86,7 @@ export function SocialFeed({ className }: SocialFeedProps) {
           <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
             Social Feed
           </Badge>
-          <h2 className="font-['Lora'] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+          <h2 className=" text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
             Loved by Our Customers
           </h2>
           <p className="text-muted-foreground text-base md:text-lg">

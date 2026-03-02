@@ -4,7 +4,6 @@ import category from './category'
 import banner from './banner'
 import testimonial from './testimonial'
 import newsletter from './newsletter'
-import navigationMenu from './navigationMenu'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -13,6 +12,5 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     banner,
     testimonial,
     newsletter,
-    navigationMenu,
   ],
 }

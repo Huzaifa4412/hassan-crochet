@@ -33,7 +33,7 @@ export function EnhancedCTA({ className }: EnhancedCTAProps) {
 
           {/* Heading */}
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <h2 className="font-['Lora'] text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white">
+            <h2 className=" text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white">
               Make It Yours Today
             </h2>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import { Heart, Star, ShoppingCart, Eye } from "lucide-react"
+import { Heart, ShoppingCart, Star } from "lucide-react"
 import type { Product } from "@/sanity/queries"
 
 interface ProductCardProps {
@@ -30,6 +30,7 @@ export function ProductCard({
   reviewCount
 }: ProductCardProps) {
   const [isFavorited, setIsFavorited] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   const firstVariant = product.variants?.[0]
   const productImage = firstVariant?.imageUrl
@@ -40,100 +41,109 @@ export function ProductCard({
 
   if (!productSlug) return null
 
-  const getBadgeColor = (badge: string) => {
-    switch (badge.toLowerCase()) {
-      case "new":
-        return "bg-teal-500 text-white hover:bg-teal-600"
-      case "bestseller":
-        return "bg-primary/20 text-primary border-primary hover:bg-primary/30"
-      case "sale":
-        return "bg-red-500 text-white hover:bg-red-600 animate-pulse"
-      case "limited edition":
-        return "bg-purple-500 text-white hover:bg-purple-600"
-      case "customizable":
-        return "bg-green-500 text-white hover:bg-green-600"
-      default:
-        return "bg-muted text-foreground"
-    }
-  }
-
+  // Compact variant for list views
   if (variant === "compact") {
     return (
-      <Link href={`/products/${productSlug}`} className={cn("group", className)}>
-        <Card className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-all duration-300">
-          <CardContent className="p-4">
-            <div className="flex gap-4">
-              {/* Thumbnail */}
-              <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
-                {productImage ? (
-                  <Image
-                    src={productImage}
-                    alt={product.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    sizes="96px"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
-                    <span className="text-xs text-muted-foreground">No image</span>
-                  </div>
-                )}
+      <Link href={`/products/${productSlug}`} className={cn("group block", className)}>
+        <div className="flex gap-4 p-4 bg-white rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
+          {/* Thumbnail */}
+          <div className="relative w-20 h-20 flex-shrink-0 rounded overflow-hidden bg-gray-50">
+            {productImage ? (
+              <Image
+                src={productImage}
+                alt={product.title}
+                fill
+                className="object-cover"
+                sizes="80px"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <span className="text-xs text-gray-400">No img</span>
               </div>
+            )}
+          </div>
 
-              {/* Info */}
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-sm truncate mb-1">{product.title}</h3>
-                {product.badges && product.badges.length > 0 && (
-                  <Badge className={cn("text-[10px] px-1.5 py-0.5", getBadgeColor(product.badges[0]))}>
-                    {product.badges[0]}
-                  </Badge>
-                )}
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-sm font-semibold">Custom</span>
-                  <Button size="sm" variant="ghost" className="h-7 px-2 text-xs">
-                    Customize
-                  </Button>
-                </div>
-              </div>
+          {/* Info */}
+          <div className="flex-1 min-w-0 flex flex-col justify-between">
+            <div>
+              <h3 className="font-medium text-sm text-gray-900 line-clamp-1">
+                {product.title}
+              </h3>
+              {product.category && (
+                <p className="text-xs text-gray-500 mt-0.5">{product.category.title}</p>
+              )}
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex items-center justify-between">
+              {price ? (
+                <span className="text-sm font-semibold text-gray-900">
+                  ${price.toFixed(2)}
+                </span>
+              ) : (
+                <span className="text-sm font-medium text-primary">Custom</span>
+              )}
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  setIsFavorited(!isFavorited)
+                }}
+                className="text-gray-400 hover:text-red-500 transition-colors"
+              >
+                <Heart className={cn("w-4 h-4", isFavorited && "fill-red-500 text-red-500")} />
+              </button>
+            </div>
+          </div>
+        </div>
       </Link>
     )
   }
 
   return (
     <Card className={cn(
-      "group overflow-hidden border-0 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500",
+      "group border border-gray-100 bg-white overflow-hidden hover:shadow-lg transition-all duration-300",
       variant === "featured" && "md:col-span-2 lg:col-span-1",
       className
     )}>
       <CardContent className="p-0">
-        <Link href={`/products/${productSlug}`} className="block">
+        <Link href={`/products/${productSlug}`}>
           {/* Image Container */}
-          <div className="relative aspect-square overflow-hidden bg-muted">
+          <div className="relative aspect-square overflow-hidden bg-gray-50">
             {productImage && productImage.length > 0 ? (
               <Image
                 src={productImage}
                 alt={product.title}
                 fill
-                className="object-cover group-hover:scale-105 group-hover:brightness-105 transition-all duration-500"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
             ) : (
-              <div className="w-full h-full bg-muted flex items-center justify-center">
-                <span className="text-sm text-muted-foreground">No image available</span>
+              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <span className="text-sm text-gray-400">No image</span>
               </div>
             )}
 
-            {/* Badges - Priority 1 at top left */}
-            {product.badges && product.badges.length > 0 && (
-              <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
-                {product.badges.slice(0, 2).map((badge, index) => (
-                  <Badge key={index} className={cn("text-xs px-2 py-1 shadow-sm", getBadgeColor(badge))}>
-                    {badge}
-                  </Badge>
-                ))}
+            {/* Badge - Top Left */}
+            {isNew && (
+              <div className="absolute top-3 left-3">
+                <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+                  NEW
+                </Badge>
+              </div>
+            )}
+
+            {isBestseller && !isNew && (
+              <div className="absolute top-3 left-3">
+                <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-2.5 py-1 rounded-md">
+                  BESTSELLER
+                </Badge>
+              </div>
+            )}
+
+            {/* Sale Badge */}
+            {isSale && (
+              <div className="absolute top-3 right-3">
+                <Badge className="bg-red-500 hover:bg-red-600 text-white text-xs font-bold px-2.5 py-1 rounded-md">
+                  -{Math.round((1 - price / comparePrice!) * 100)}%
+                </Badge>
               </div>
             )}
 
@@ -143,104 +153,83 @@ export function ProductCard({
                 e.preventDefault()
                 setIsFavorited(!isFavorited)
               }}
-              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:bg-white hover:scale-110 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100"
-              aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+              className={cn(
+                "absolute bottom-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all",
+                "bg-white shadow-md hover:shadow-lg hover:scale-105",
+                isFavorited && "bg-red-50"
+              )}
             >
-              <Heart className={cn("w-4 h-4 transition-colors", isFavorited ? "fill-red-500 text-red-500" : "text-foreground")} />
+              <Heart className={cn(
+                "w-4 h-4 transition-colors",
+                isFavorited ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500"
+              )} />
             </button>
-
-            {/* Quick Actions Overlay - Appears on Hover */}
-            <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div className="flex gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                <Button
-                  size="sm"
-                  className="flex-1 bg-white text-foreground hover:bg-white/90 shadow-lg text-xs font-medium"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // Handle quick add
-                  }}
-                >
-                  <ShoppingCart className="w-3 h-3 mr-1" />
-                  Quick Add
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="px-3 bg-white/90 backdrop-blur-sm hover:bg-white shadow-lg"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <Eye className="w-3 h-3" />
-                </Button>
-              </div>
-            </div>
           </div>
 
           {/* Product Info */}
           <div className="p-4 space-y-3">
-            {/* Rating for Bestsellers */}
-            {isBestseller && rating && (
+            {/* Category */}
+            {product.category && (
+              <p className="text-xs text-gray-500 uppercase tracking-wide">
+                {product.category.title}
+              </p>
+            )}
+
+            {/* Title */}
+            <h3 className="font-medium text-base text-gray-900 line-clamp-2 group-hover:text-primary transition-colors">
+              {product.title}
+            </h3>
+
+            {/* Rating */}
+            {(isBestseller || rating) && rating && (
               <div className="flex items-center gap-1">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={cn(
-                        "w-3 h-3",
-                        i < Math.floor(rating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/30"
+                        "w-3.5 h-3.5",
+                        i < Math.floor(rating)
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-gray-200"
                       )}
                     />
                   ))}
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-gray-500">
                   {rating} {reviewCount && `(${reviewCount})`}
                 </span>
               </div>
             )}
 
-            <h3 className="font-semibold text-base line-clamp-1 group-hover:text-primary transition-colors">
-              {product.title}
-            </h3>
-
-            {product.shortDescription && (
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {product.shortDescription}
-              </p>
-            )}
-
-            {/* Price Display */}
+            {/* Price */}
             <div className="flex items-center gap-2">
-              {price && (
+              {price ? (
                 <>
                   <span className={cn(
-                    "text-lg font-bold",
-                    isSale ? "text-red-500" : ""
+                    "text-lg font-bold text-gray-900",
+                    isSale && "text-red-600"
                   )}>
                     ${price.toFixed(2)}
                   </span>
                   {isSale && comparePrice && (
-                    <span className="text-sm text-muted-foreground line-through">
+                    <span className="text-sm text-gray-400 line-through">
                       ${comparePrice.toFixed(2)}
                     </span>
                   )}
-                  {isSale && (
-                    <Badge variant="destructive" className="text-xs">
-                      Save {Math.round((1 - price / comparePrice) * 100)}%
-                    </Badge>
-                  )}
                 </>
-              )}
-              {!price && (
-                <span className="text-lg font-bold">Custom</span>
+              ) : (
+                <span className="text-lg font-bold text-primary">Custom</span>
               )}
             </div>
 
             {/* Color Swatches */}
             {product.variants && product.variants.length > 1 && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 pt-1">
                 {product.variants.slice(0, 4).map((variant, index) => (
-                  <div
+                  <button
                     key={index}
-                    className="w-5 h-5 rounded-full border-2 border-transparent hover:scale-110 hover:border-primary transition-all cursor-pointer shadow-sm"
+                    className="w-5 h-5 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
                     style={{
                       backgroundColor: variant.colorValue || "#ccc"
                     }}
@@ -248,12 +237,33 @@ export function ProductCard({
                   />
                 ))}
                 {product.variants.length > 4 && (
-                  <span className="text-xs text-muted-foreground ml-1">
+                  <span className="text-xs text-gray-500">
                     +{product.variants.length - 4}
                   </span>
                 )}
               </div>
             )}
+
+            {/* Add to Cart Button */}
+            <Button
+              className={cn(
+                "w-full h-10 font-semibold",
+                product.inStock === false
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-gray-900 text-white hover:bg-gray-800"
+              )}
+              disabled={product.inStock === false}
+              onClick={(e) => e.preventDefault()}
+            >
+              {product.inStock === false ? (
+                "Out of Stock"
+              ) : (
+                <>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Add to Cart
+                </>
+              )}
+            </Button>
           </div>
         </Link>
       </CardContent>
@@ -261,7 +271,7 @@ export function ProductCard({
   )
 }
 
-// Featured Product Card with different layout
+// Featured Product Card
 interface FeaturedProductCardProps {
   product: Product
   className?: string
@@ -280,6 +290,7 @@ export function FeaturedProductCard({
   reviewCount
 }: FeaturedProductCardProps) {
   const [isFavorited, setIsFavorited] = useState(false)
+
   const firstVariant = product.variants?.[0]
   const productImage = firstVariant?.imageUrl
   const productSlug = product.slug?.current
@@ -289,93 +300,80 @@ export function FeaturedProductCard({
 
   return (
     <Card className={cn(
-      "group overflow-hidden border-0 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500",
+      "group border border-gray-100 bg-white overflow-hidden hover:shadow-xl transition-all duration-300",
       className
     )}>
       <CardContent className="p-0">
-        <Link href={`/products/${productSlug}`} className="block">
-          {/* Larger Image for Featured */}
-          <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+        <Link href={`/products/${productSlug}`}>
+          {/* Image */}
+          <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
             {productImage && productImage.length > 0 ? (
               <Image
                 src={productImage}
                 alt={product.title}
                 fill
-                className="object-cover group-hover:scale-105 group-hover:brightness-105 transition-all duration-700"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
             ) : (
-              <div className="w-full h-full bg-muted flex items-center justify-center">
-                <span className="text-sm text-muted-foreground">No image available</span>
+              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <span className="text-sm text-gray-400">No image</span>
               </div>
             )}
 
-            {/* Featured Badge */}
+            {/* Bestseller Badge */}
             <div className="absolute top-4 left-4">
-              <Badge className="bg-gradient-to-r from-primary to-accent text-white border-0 px-3 py-1 text-sm font-semibold shadow-lg">
-                ⭐ Best Seller
+              <Badge className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold px-3 py-1.5 rounded-md shadow-md">
+                ⭐ BESTSELLER
               </Badge>
             </div>
 
-            {/* Rating Overlay */}
+            {/* Rating Badge */}
             {rating && (
-              <div className="absolute top-4 right-4 flex items-center gap-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1">
+                <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 <span className="text-sm font-semibold">{rating}</span>
               </div>
             )}
 
-            {/* Favorite Button */}
+            {/* Favorite */}
             <button
               onClick={(e) => {
                 e.preventDefault()
                 setIsFavorited(!isFavorited)
               }}
-              className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:bg-white hover:scale-110 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100"
-              aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+              className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center"
             >
-              <Heart className={cn("w-5 h-5 transition-colors", isFavorited ? "fill-red-500 text-red-500" : "text-foreground")} />
+              <Heart className={cn(
+                "w-5 h-5",
+                isFavorited ? "fill-red-500 text-red-500" : "text-gray-600"
+              )} />
             </button>
           </div>
 
-          {/* Product Info */}
+          {/* Info */}
           <div className="p-5 space-y-3">
-            <h3 className="font-bold text-lg line-clamp-1 group-hover:text-primary transition-colors">
+            <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 group-hover:text-primary transition-colors">
               {product.title}
             </h3>
 
             {product.shortDescription && (
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-gray-500 line-clamp-2">
                 {product.shortDescription}
               </p>
             )}
 
-            {/* Price Display */}
-            {price && (
-              <div className="flex items-center gap-2">
-                <span className={cn("text-2xl font-bold", isSale ? "text-red-500" : "")}>
-                  ${price.toFixed(2)}
-                </span>
-                {isSale && comparePrice && (
-                  <span className="text-lg text-muted-foreground line-through">
-                    ${comparePrice.toFixed(2)}
-                  </span>
-                )}
-              </div>
-            )}
+           
 
-            <div className="flex items-center gap-2 pt-2">
-              <Button className="flex-1 bg-foreground text-background hover:bg-foreground/90">
+            {/* Button */}
+            <div className="flex gap-3 pt-2">
+              <Button className="flex-1 bg-orange-600 text-white hover:bg-orange-700 h-11 font-semibold">
                 Customize
               </Button>
               <Button
                 size="icon"
                 variant="outline"
-                className="shrink-0"
-                onClick={(e) => {
-                  e.preventDefault()
-                  // Handle quick add
-                }}
+                className="h-11 border-gray-200 hover:bg-gray-50"
               >
                 <ShoppingCart className="w-4 h-4" />
               </Button>

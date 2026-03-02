@@ -41,7 +41,8 @@ const ICONS = [
   { name: "Yellow Flower", url: "/icons/Yellow Flower-half.png" },
 ]
 
-const TEXT_COLORS = [
+// Single color options
+const SINGLE_TEXT_COLORS = [
   { name: "White", value: "#FFFFFF", preview: "#FFFFFF" },
   { name: "Cream", value: "#FFFDD0", preview: "#FFFDD0" },
   { name: "Oat", value: "#E8DCC4", preview: "#E8DCC4" },
@@ -58,10 +59,30 @@ const TEXT_COLORS = [
   { name: "Navy Blue", value: "#000080", preview: "#000080" },
   { name: "Natural white", value: "#F5F5DC", preview: "#F5F5DC" },
   { name: "Grass Green", value: "#4CAF50", preview: "#4CAF50" },
-  { name: "Rainbow", value: "rainbow", gradient: "linear-gradient(90deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #9400D3)" },
-  { name: "Blossom", value: "blossom", gradient: "linear-gradient(90deg, #FFB6C1, #FF69B4, #FF1493, #C71585, #FF6B6B, #FFA07A)" },
-  { name: "Cloudy", value: "cloudy", gradient: "linear-gradient(90deg, #D3D3D3, #C0C0C0, #F5F5F5, #ADD8E6, #B0C4DE, #778899)" },
-  { name: "Grassland", value: "grassland", gradient: "linear-gradient(90deg, #4CAF50, #7CFC00, #228B22, #808000, #20B2AA, #006400)" },
+]
+
+// Multi-color palette options with individual swatches
+const MULTI_COLOR_PALETTES = [
+  {
+    name: "Blossom",
+    value: "blossom",
+    colors: ["#FF69B4", "#FFB6C1", "#FFF0F5"], // magenta, light pink, pale pink
+  },
+  {
+    name: "Cloudy",
+    value: "cloudy",
+    colors: ["#87CEEB", "#B0E0E6", "#E6E6FA", "#A9A9A9"], // sky-blue, powder-blue, lavender, gray
+  },
+  {
+    name: "Rainbow",
+    value: "rainbow",
+    colors: ["#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF", "#9D4EDD"], // pink, yellow, green, blue, purple
+  },
+  {
+    name: "Grassland",
+    value: "grassland",
+    colors: ["#556B2F", "#98FB98", "#808080"], // olive green, mint green, gray
+  },
 ]
 
 const FONTS = [
@@ -122,11 +143,16 @@ export default function ProductClient({ product }: ProductClientProps) {
 
   // Customization state
   const [customText, setCustomText] = useState("")
-  const [textColor, setTextColor] = useState(TEXT_COLORS[0].value)
+  const [textColor, setTextColor] = useState(SINGLE_TEXT_COLORS[0].value)
   const [textFont, setTextFont] = useState(FONTS[0].value)
+  const [isMultiColor, setIsMultiColor] = useState(false)
   const [addedIcons, setAddedIcons] = useState<string[]>([])
   const [addedTexts, setAddedTexts] = useState<Array<{ text: string; color: string; font: string }>>([])
   const [copied, setCopied] = useState(false)
+
+  // Selection state
+  const [hasSelectedText, setHasSelectedText] = useState(false)
+  const [selectedObjectType, setSelectedObjectType] = useState<'text' | 'group' | 'image' | null>(null)
 
   // UI state
   const [showFullDescription, setShowFullDescription] = useState(false)
@@ -146,6 +172,33 @@ export default function ProductClient({ product }: ProductClientProps) {
     setCustomText("")
   }
 
+  // Handle selection change from canvas
+  const handleSelectionChange = (hasSelection: boolean, selectionType: 'text' | 'group' | 'image' | null) => {
+    setHasSelectedText(hasSelection && (selectionType === 'text' || selectionType === 'group'))
+    setSelectedObjectType(selectionType)
+  }
+
+  // Handle color change - update selected object if exists
+  const handleTextColorChange = (newColor: string, multiColor: boolean) => {
+    setTextColor(newColor)
+    setIsMultiColor(multiColor)
+
+    // If a text object is selected, update it in real-time
+    if (hasSelectedText && (selectedObjectType === 'text' || selectedObjectType === 'group')) {
+      canvasRef.current?.updateSelectedTextColor(newColor, textFont)
+    }
+  }
+
+  // Handle font change - update selected object if exists
+  const handleFontChange = (newFont: string) => {
+    setTextFont(newFont)
+
+    // If a text object is selected, update it in real-time
+    if (hasSelectedText && (selectedObjectType === 'text' || selectedObjectType === 'group')) {
+      canvasRef.current?.updateSelectedTextColor(textColor, newFont)
+    }
+  }
+
   const handleAddIcon = (icon: typeof ICONS[0]) => {
     canvasRef.current?.addIcon(icon.url)
     if (!addedIcons.includes(icon.name)) {
@@ -157,7 +210,7 @@ export default function ProductClient({ product }: ProductClientProps) {
     canvasRef.current?.download()
   }
 
-  const currentSummary = `Product: ${product.title} | Color: ${selectedColor?.name} | Text: ${addedTexts.length > 0 ? addedTexts.map(t => t.text).join(", ") : "None"} | Text Color: ${TEXT_COLORS.find(c => c.value === textColor)?.name || textColor} | Font: ${FONTS.find((f) => f.value === textFont)?.name} | Icons: ${addedIcons.length > 0 ? addedIcons.join(", ") : "None"}`
+  const currentSummary = `Product: ${product.title} | Color: ${selectedColor?.name} | Text: ${addedTexts.length > 0 ? addedTexts.map(t => t.text).join(", ") : "None"} | Text Color: ${isMultiColor ? MULTI_COLOR_PALETTES.find(p => p.value === textColor)?.name : SINGLE_TEXT_COLORS.find(c => c.value === textColor)?.name} | Font: ${FONTS.find((f) => f.value === textFont)?.name} | Icons: ${addedIcons.length > 0 ? addedIcons.join(", ") : "None"}`
 
   const handleCopyCustomizations = () => {
     navigator.clipboard.writeText(currentSummary)
@@ -168,13 +221,11 @@ export default function ProductClient({ product }: ProductClientProps) {
   const badges = getBadgeLabels(product.badges)
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-b from-background to-muted/10 `}
-      style={{ overflowX: "hidden", width: "100%", boxSizing: "border-box" }}
-    >
-      <div className="mx-auto px-4 py-8 md:py-12 w-full overflow-x-hidden" style={{ maxWidth: "1280px" }}>
+    <div className="bg-gradient-to-b from-background to-muted/10 flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto px-4 py-8 md:py-12 max-w-7xl w-full">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8 overflow-hidden">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <a href="/" className="hover:text-foreground transition-colors shrink-0">Home</a>
           <span className="shrink-0">/</span>
           <a href="/products" className="hover:text-foreground transition-colors shrink-0">Products</a>
@@ -183,7 +234,7 @@ export default function ProductClient({ product }: ProductClientProps) {
         </nav>
 
         {/* Product Header */}
-        <div className="text-center mb-12 space-y-4">
+        <div className="text-center mb-8 md:mb-12 space-y-4">
           <div className="flex items-center justify-center gap-2 flex-wrap">
             {badges.primary && (
               <Badge className="bg-primary/10 text-primary hover:bg-primary/20">{badges.primary}</Badge>
@@ -198,24 +249,23 @@ export default function ProductClient({ product }: ProductClientProps) {
               <Badge variant="destructive">Out of Stock</Badge>
             )}
           </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight px-2">
             {product.title}
           </h1>
           {product.shortDescription && (
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               {product.shortDescription}
             </p>
           )}
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start w-full" style={{ contain: "layout" }}>
-          {/* Left Column - Canvas */}
-          <div className="space-y-6 min-w-0 w-full">
-            {/* Canvas Card */}
-            <Card className="overflow-hidden shadow-2xl border-2 w-full">
+        {/* Main Content - Flex container with sticky */}
+        <div className="flex flex-col lg:flex-row lg:gap-6 lg:items-start w-full">
+          {/* Left Column - Canvas (Sticky) */}
+          <div className="sticky top-4 lg:top-6 self-start flex-shrink-0 w-full lg:w-[45%] lg:max-w-lg z-20">
+            <Card className="overflow-hidden shadow-2xl border-2">
               <CardContent className="p-0">
-                <div className="relative aspect-square w-full bg-gradient-to-br from-muted/30 via-muted/20 to-muted/30 overflow-hidden">
+                <div className="relative aspect-[4/5] md:aspect-[3/4] w-full min-h-[500px] max-h-[600px] bg-gradient-to-br from-muted/30 via-muted/20 to-muted/30 overflow-hidden">
                   {/* Badges */}
                   <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                     {badges.primary && (
@@ -236,13 +286,17 @@ export default function ProductClient({ product }: ProductClientProps) {
                   <CustomizationCanvas
                     ref={canvasRef}
                     initialImage={colors[0]?.imageUrl || ""}
+                    onSelectionChange={handleSelectionChange}
                   />
                 </div>
               </CardContent>
             </Card>
+          </div>
 
+          {/* Right Column - Customization (Scrollable) */}
+          <div className="space-y-6 w-full lg:w-[55%] lg:max-w-xl min-w-0">
             {/* Product Description */}
-            <Card className="shadow-sm w-full">
+            <Card className="shadow-sm w-full overflow-hidden">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-2">
                   <Info className="w-5 h-5 text-primary" />
@@ -315,10 +369,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </div>
               </CardContent>
             </Card>
-          </div>
 
-          {/* Right Column - Customization */}
-          <div className="space-y-6 min-w-0 w-full">
             {/* Action Bar */}
             <div className="flex items-center justify-between p-4 rounded-xl border bg-card shadow-sm">
               <Button
@@ -343,13 +394,13 @@ export default function ProductClient({ product }: ProductClientProps) {
             </div>
 
             {/* Color Selection */}
-            <Card className="shadow-sm w-full">
+            <Card className="shadow-sm w-full overflow-hidden">
               <CardHeader className="pb-4">
                 <CardTitle className="text-base">Choose Your Color</CardTitle>
                 <CardDescription>Select your preferred color variant</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-5 gap-4">
+                <div className="grid grid-cols-5 gap-2">
                   {colors.map((color) => (
                     <TooltipProvider key={color.name}>
                       <Tooltip>
@@ -357,9 +408,9 @@ export default function ProductClient({ product }: ProductClientProps) {
                           <button
                             onClick={() => setSelectedColor(color)}
                             aria-label={color.name}
-                            className={`relative aspect-square rounded-xl overflow-hidden transition-all duration-300 border-2 ${selectedColor?.name === color.name
-                              ? "scale-105 shadow-xl ring-2 ring-primary ring-offset-2 border-primary"
-                              : "border-transparent hover:scale-102 hover:shadow-lg opacity-90 hover:opacity-100"
+                            className={`relative aspect-square rounded-lg overflow-hidden transition-all duration-200 border-2 ${selectedColor?.name === color.name
+                              ? "shadow-lg ring-2 ring-primary border-primary"
+                              : "border-transparent hover:shadow-md opacity-90 hover:opacity-100"
                               }`}
                           >
                             {color.imageUrl ? (
@@ -391,7 +442,7 @@ export default function ProductClient({ product }: ProductClientProps) {
             </Card>
 
             {/* Customization Studio */}
-            <Card className="shadow-lg border-2 w-full">
+            <Card className="shadow-lg border-2 w-full overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
                 <div className="flex items-center gap-2">
                   <Palette className="w-5 h-5 text-primary" />
@@ -434,26 +485,36 @@ export default function ProductClient({ product }: ProductClientProps) {
                       </div>
 
                       {/* Text Color */}
-                      <div className="space-y-3">
-                        <Label className="text-sm font-medium">Text Color</Label>
-                        <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 gap-2 p-1">
-                          {TEXT_COLORS.map((color) => (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm font-medium">Text Color</Label>
+                          {hasSelectedText && (
+                            <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full flex items-center gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                              Editing selected text
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Single Colors Grid */}
+                        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 gap-2 p-1 overflow-hidden">
+                          {SINGLE_TEXT_COLORS.map((color) => (
                             <TooltipProvider key={color.value}>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
-                                    onClick={() => setTextColor(color.value)}
+                                    onClick={() => handleTextColorChange(color.value, false)}
                                     aria-label={color.name}
-                                    className={`relative aspect-square rounded-lg overflow-hidden transition-all duration-200 border-2 ${textColor === color.value
-                                      ? "scale-105 shadow-lg ring-2 ring-primary border-primary"
-                                      : "border-border hover:scale-105 opacity-70 hover:opacity-100 shadow-sm"
+                                    className={`relative aspect-square rounded-lg overflow-hidden transition-all duration-200 border-2 ${textColor === color.value && !isMultiColor
+                                      ? "shadow-lg ring-2 ring-primary border-primary"
+                                      : "border-border opacity-70 hover:opacity-100 shadow-sm"
                                       }`}
                                   >
                                     <div
                                       className="w-full h-full"
-                                      style={color.gradient ? { background: color.gradient } : { backgroundColor: color.preview }}
+                                      style={{ backgroundColor: color.preview }}
                                     />
-                                    {textColor === color.value && (
+                                    {textColor === color.value && !isMultiColor && (
                                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                                         <Check className="h-4 w-4 text-white drop-shadow-md" />
                                       </div>
@@ -467,12 +528,50 @@ export default function ProductClient({ product }: ProductClientProps) {
                             </TooltipProvider>
                           ))}
                         </div>
+
+                        {/* Multi Colors Section */}
+                        <div className="space-y-2 pt-2">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Multi colors</p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {MULTI_COLOR_PALETTES.map((palette) => (
+                              <button
+                                key={palette.value}
+                                onClick={() => handleTextColorChange(palette.value, true)}
+                                className={`relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${textColor === palette.value && isMultiColor
+                                  ? "border-primary bg-primary/5 shadow-md"
+                                  : "border-border hover:border-primary/50 hover:bg-muted/30"
+                                  }`}
+                              >
+                                {/* Color Swatches - compact horizontal */}
+                                <div className="flex gap-1">
+                                  {palette.colors.map((swatchColor, idx) => (
+                                    <div
+                                      key={idx}
+                                      className="w-5 h-5 rounded-full border border-gray-200 shadow-sm"
+                                      style={{ backgroundColor: swatchColor }}
+                                    />
+                                  ))}
+                                </div>
+                                {/* Palette Name */}
+                                <span className="text-xs font-medium">{palette.name}</span>
+                                {/* Selected indicator */}
+                                {textColor === palette.value && isMultiColor && (
+                                  <div className="absolute top-1 right-1">
+                                    <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                                      <Check className="h-3 w-3 text-white" />
+                                    </div>
+                                  </div>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
                       </div>
 
                       {/* Font Selection */}
                       <div className="space-y-2">
                         <Label htmlFor="text-font" className="text-sm font-medium">Font Style</Label>
-                        <Select value={textFont} onValueChange={setTextFont}>
+                        <Select value={textFont} onValueChange={handleFontChange}>
                           <SelectTrigger id="text-font" className="w-full h-11">
                             <SelectValue>
                               <span style={{ fontFamily: textFont }}>
@@ -518,7 +617,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                                     e.dataTransfer.effectAllowed = "copy"
                                   }}
                                   draggable
-                                  className="aspect-square flex items-center justify-center bg-muted/50 hover:bg-muted border border-border hover:border-primary/50 rounded-xl transition-all cursor-grab active:cursor-grabbing group hover:scale-105 shadow-sm hover:shadow-md"
+                                  className="aspect-square flex items-center justify-center bg-muted/50 hover:bg-muted border border-border hover:border-primary/50 rounded-xl transition-all cursor-grab active:cursor-grabbing group shadow-sm hover:shadow-md"
                                 >
                                   <img
                                     src={icon.url}
@@ -562,9 +661,13 @@ export default function ProductClient({ product }: ProductClientProps) {
                         <span className="text-muted-foreground">Text:</span>
                         <span className="font-medium text-foreground">{addedTexts.length > 0 ? addedTexts.map(t => t.text).join(", ") : "None"}</span>
                         <span className="text-muted-foreground">Text Color:</span>
-                        <span className="font-medium text-foreground">{TEXT_COLORS.find(c => c.value === textColor)?.name}</span>
+                        <span className="font-medium text-foreground">
+                          {isMultiColor
+                            ? MULTI_COLOR_PALETTES.find(p => p.value === textColor)?.name
+                            : SINGLE_TEXT_COLORS.find(c => c.value === textColor)?.name}
+                        </span>
                         <span className="text-muted-foreground">Icons:</span>
-                        <span className="font-medium text-foreground">{addedIcons.length}</span>
+                        <span className="font-medium text-foreground">{addedIcons.length > 0 ? addedIcons.join(", ") : "None"}</span>
                       </div>
                     </div>
                   </AlertDescription>
@@ -589,11 +692,22 @@ export default function ProductClient({ product }: ProductClientProps) {
                     {copied ? "Copied!" : "Copy"}
                   </Button>
                 </div>
+
+                {/* Etsy Note */}
+                <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-200 dark:border-amber-800 rounded-lg">
+                  <p className="text-sm font-semibold text-amber-900 dark:text-amber-100 flex items-start gap-2">
+                    <span className="text-amber-600 dark:text-amber-400 mt-0.5">💡</span>
+                    <span>Important Note:</span>
+                  </p>
+                  <p className="text-sm text-amber-800 dark:text-amber-200 mt-2 leading-relaxed">
+                    Please copy the text below to Etsy's personalization box, or take a screenshot and send it to the seller!
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
             {/* Premium CTA */}
-            <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl overflow-hidden border-0 w-full">
+            <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl border-0 w-full">
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
               <CardContent className="p-6 space-y-4 relative">
@@ -665,6 +779,7 @@ export default function ProductClient({ product }: ProductClientProps) {
             </div>
           </CardContent>
         </Card>
+      </div>
       </div>
     </div>
   )

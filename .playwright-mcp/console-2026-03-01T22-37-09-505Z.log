@@ -1,0 +1,149 @@
+[    1208ms] [ERROR] In HTML, %s cannot be a descendant of <%s>.
+This will cause a hydration error.%s <a> a 
+
+  ...
+    <SegmentViewNode type="page" pagePath="products/p...">
+      <SegmentTrieNode>
+      <ProductsPage>
+        <ProductsContent>
+          <main className="min-h-scre...">
+            <div>
+            ...
+              <div className="flex-1">
+                <div>
+                <div className="grid grid-...">
+                  <Suspense fallback={<div>}>
+                    <ProductCard product={{_id:"57cb9...", ...}}>
+                      <div className="group">
+                        <Card className="overflow-h...">
+                          <div data-slot="card" className="text-card-...">
+                            <Button>
+                            <div>
+                            <LinkComponent href="/products/..." className="block rela...">
+>                             <a
+>                               className="block relative aspect-square overflow-hidden bg-muted/30"
+>                               ref={function}
+>                               onClick={function onClick}
+>                               onMouseEnter={function onMouseEnter}
+>                               onTouchStart={function onTouchStart}
+>                               href="/products/hand-embroidered-kids-name-sweater"
+>                             >
+                                <img>
+                                <div>
+                                <div className="absolute b...">
+                                  <Button asChild={true} size="sm" className="flex-1 bg-...">
+                                    <Slot.Slot data-slot="button" data-variant="default" data-size="sm" ...>
+                                      <Slot.SlotClone data-slot="button" data-variant="default" data-size="sm" ...>
+>                                       <a
+>                                         href="https://www.etsy.com/?ref=lgo"
+>                                         target="_blank"
+>                                         rel="noopener noreferrer"
+>                                         onClick={function onClick}
+>                                         data-slot="button"
+>                                         data-variant="default"
+>                                         data-size="sm"
+>                                         className={"inline-flex items-center justify-center whitespace-nowrap text-..."}
+>                                         ref={null}
+>                                       >
+                                ...
+                            ...
+    ...
+ @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[    1208ms] [ERROR] <%s> cannot contain a nested %s.
+See this log for the ancestor stack trace. a <a> @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[    1229ms] Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <SegmentViewNode type="page" pagePath="products/p...">
+      <SegmentTrieNode>
+      <ProductsPage>
+        <ProductsContent>
+          <main className="min-h-scre...">
+            <div>
+            ...
+              <div className="grid grid-...">
+                <Suspense fallback={<div>}>
+                  <ProductCard product={{_id:"57cb9...", ...}}>
+                    <div className="group">
+                      <Card className="overflow-h...">
+                        <div data-slot="card" className="text-card-...">
+                          <Button>
+                          <div>
+                          <LinkComponent href="/products/..." className="block rela...">
+                            <a className="block rela..." ref={function} onClick={function onClick} ...>
+                              <img>
+                              <div>
++                             <div
++                               className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate..."
++                             >
+                              ...
+                          ...
+
+    at throwOnHydrationMismatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:3348:56)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6775:918)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9562:97)
+    at workLoopConcurrentByScheduler (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9558:58)
+    at renderRootConcurrent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9541:71)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9068:150)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10230:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:2647:64)
+[    1243ms] [WARNING] Image with src "https://cdn.sanity.io/images/6m1z3oqp/production/54e881ce2b4de20326d9016993635cf7e8d469dc-1200x900.png" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[    1424ms] [WARNING] Image with src "https://cdn.sanity.io/images/6m1z3oqp/production/54e881ce2b4de20326d9016993635cf7e8d469dc-1200x900.png" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[  184569ms] [ERROR] ./src/app/products/[slug]/client.tsx:785:1
+Parsing ecmascript source code failed
+  783 |     </div>
+  784 |   )
+> 785 | }
+      | ^
+  786 |
+
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+
+Import trace:
+  Server Component:
+    ./src/app/products/[slug]/client.tsx
+    ./src/app/products/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  199976ms] [ERROR] ./src/app/products/[slug]/client.tsx:785:6
+Parsing ecmascript source code failed
+  783 |         </div>
+  784 |       </div>
+> 785 |     </div>
+      |      ^^^^^
+  786 |   )
+  787 | }
+  788 |
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./src/app/products/[slug]/client.tsx
+    ./src/app/products/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  207373ms] [ERROR] ./src/app/products/[slug]/client.tsx:785:6
+Parsing ecmascript source code failed
+  783 |         </div>
+  784 |       </div>
+> 785 |     </div>
+      |      ^^^^^
+  786 |   )
+  787 | }
+  788 |
+
+Unterminated regexp literal
+
+Import trace:
+  Server Component:
+    ./src/app/products/[slug]/client.tsx
+    ./src/app/products/[slug]/page.tsx @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127

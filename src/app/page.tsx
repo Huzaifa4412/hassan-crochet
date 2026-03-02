@@ -16,18 +16,16 @@ import {
   getBanners,
   getNewProducts,
   getFeaturedProducts,
-  getTestimonials,
   type Product,
-  type Testimonial,
 } from "@/sanity/queries"
+import { TestimonialsSection } from "@/components/home/Testimonials"
 
 export default async function Home() {
   // Fetch all data in parallel
-  const [heroBanners, newProducts, featuredProducts, testimonials] = await Promise.all([
+  const [heroBanners, newProducts, featuredProducts] = await Promise.all([
     getBanners("hero"),
     getNewProducts(8),
     getFeaturedProducts(4),
-    getTestimonials(true, 6),
   ])
 
   return (
@@ -51,7 +49,7 @@ export default async function Home() {
                   <Sparkles className="w-3 h-3 mr-1" />
                   Just In
                 </Badge>
-                <h2 className="font-['Lora'] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+                <h2 className=" text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
                   New Arrivals
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -85,8 +83,6 @@ export default async function Home() {
           </section>
         )}
 
-        {/* 4. How It Works Section - 3-Step Process */}
-        <HowItWorks />
 
         {/* 5. Featured Products Section - Horizontal Scroll */}
         {featuredProducts && featuredProducts.length > 0 && (
@@ -97,7 +93,7 @@ export default async function Home() {
                 <Badge variant="outline" className="mb-2 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
                   ⭐ Best Sellers
                 </Badge>
-                <h2 className="font-['Lora'] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+                <h2 className=" text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
                   Featured Products
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -134,19 +130,14 @@ export default async function Home() {
           </section>
         )}
 
+
+        {/* 4. How It Works Section - 3-Step Process */}
+        <HowItWorks />
         {/* 6. Bento Grid Section - Creative Highlight */}
         <BentoGrid />
 
-        {/* 7. Social Feed Section - Instagram-Style Grid */}
-        <SocialFeed />
-
-        {/* 8. Testimonials Section */}
-        {testimonials && testimonials.length > 0 && (
-          <TestimonialsCarousel testimonials={testimonials} />
-        )}
-
-        {/* 9. Enhanced CTA Section - Full Gradient with Parallax */}
-        <EnhancedCTA />
+{/* 7. Testimonials Section */}
+<TestimonialsSection />
       </main>
     </>
   )
