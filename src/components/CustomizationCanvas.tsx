@@ -49,7 +49,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
             const canvas = new fabric.Canvas(canvasRef.current, {
                 width,
                 height,
-                backgroundColor: null,
+                backgroundColor: undefined,
                 preserveObjectStacking: true, // Keep selected objects at their respective stack position
                 selection: true,
                 // Selection box styling - professional dark blue
@@ -290,7 +290,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
 
                     // Process image to remove white background
                     const element = img.getElement();
-                    if (element) {
+                    if (element && element instanceof HTMLImageElement) {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         if (ctx) {
@@ -443,7 +443,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
 
                     // Process image to remove white background
                     const element = img.getElement();
-                    if (element) {
+                    if (element && element instanceof HTMLImageElement) {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         if (ctx) {

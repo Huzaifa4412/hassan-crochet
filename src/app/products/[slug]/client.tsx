@@ -234,9 +234,8 @@ export default function ProductClient({ product }: ProductClientProps) {
   const badges = getBadgeLabels(product.badges)
 
   return (
-    <div className="bg-gradient-to-b from-background to-muted/10 flex flex-col" style={{ height: 'calc(100vh - 64px)' }}>
-      <div className="flex-1 overflow-y-auto">
-        <div className="mx-auto px-4 py-8 md:py-12 max-w-7xl w-full">
+    <div className="bg-gradient-to-b from-background to-muted/10">
+      <div className="mx-auto px-4 py-8 md:py-12 max-w-7xl w-full">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
           <a href="/" className="hover:text-foreground transition-colors shrink-0">Home</a>
@@ -792,7 +791,6 @@ export default function ProductClient({ product }: ProductClientProps) {
             </div>
           </CardContent>
         </Card>
-      </div>
       </div>
     </div>
   )
