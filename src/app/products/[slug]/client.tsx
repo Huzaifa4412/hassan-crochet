@@ -234,7 +234,7 @@ export default function ProductClient({ product }: ProductClientProps) {
   const badges = getBadgeLabels(product.badges)
 
   return (
-    <div className="bg-gradient-to-b from-background to-muted/10">
+    <div className="bg-gradient-to-b from-background to-muted/10 min-h-screen">
       <div className="mx-auto px-4 py-8 md:py-12 max-w-7xl w-full">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-8">
@@ -273,11 +273,11 @@ export default function ProductClient({ product }: ProductClientProps) {
 
         {/* Main Content - Flex container with sticky */}
         <div className="flex flex-col lg:flex-row lg:gap-6 lg:items-start w-full">
-          {/* Left Column - Canvas (Sticky) */}
-          <div className="sticky top-4 lg:top-6 self-start flex-shrink-0 w-full lg:w-[45%] lg:max-w-lg z-20">
+          {/* Left Column - Canvas (Sticky on all devices) */}
+          <div className="sticky top-16 lg:top-20 self-start flex-shrink-0 w-full lg:w-[45%] lg:max-w-lg z-20 order-first">
             <Card className="overflow-hidden shadow-2xl border-2">
               <CardContent className="p-0">
-                <div className="relative aspect-[4/5] md:aspect-[3/4] w-full min-h-[500px] max-h-[600px] bg-gradient-to-br from-muted/30 via-muted/20 to-muted/30 overflow-hidden">
+                <div className="relative aspect-square md:aspect-[4/5] lg:aspect-[3/4] w-full h-[280px] md:h-[350px] lg:min-h-[500px] lg:max-h-[600px] bg-gradient-to-br from-muted/30 via-muted/20 to-muted/30 overflow-hidden">
                   {/* Badges */}
                   <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
                     {badges.primary && (
@@ -719,10 +719,10 @@ export default function ProductClient({ product }: ProductClientProps) {
             </Card>
 
             {/* Premium CTA */}
-            <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl border-0 w-full">
-              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
-              <CardContent className="p-6 space-y-4 relative">
+            <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl border-0 w-full overflow-hidden relative">
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+              <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+              <CardContent className="p-6 space-y-4 relative z-10">
                 <div className="flex items-center justify-center">
                   <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 px-4 py-1.5 text-xs font-semibold tracking-wide shadow-md backdrop-blur-sm">
                     ORDER YOUR CUSTOM PIECE
