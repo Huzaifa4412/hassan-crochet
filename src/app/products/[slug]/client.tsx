@@ -177,9 +177,94 @@ export default function ProductClient({ product }: ProductClientProps) {
   const canvasRef = useRef<CustomizationCanvasRef>(null)
   const { addToast } = useToaster()
 
-  // Social proof state
-  const [boughtIn24h, setBoughtIn24h] = useState(() => Math.floor(Math.random() * 50) + 80)
-  const [customizingNow, setCustomizingNow] = useState(() => Math.floor(Math.random() * 30) + 70)
+  // Social proof state (fixed initial values instead of random)
+  const [boughtIn24h, setBoughtIn24h] = useState(105)
+  const [customizingNow, setCustomizingNow] = useState(87)
+
+  // Reviews data with new images
+  const reviews = [
+    {
+      id: 1,
+      name: "Sarah M.",
+      location: "Los Angeles, CA",
+      image: "/reviews/iap_600x600.7262401728_ae9vfp81.webp",
+      rating: 5,
+      text: "Absolutely love my customized crochet piece! The quality is amazing and it looks exactly like I designed it.",
+      date: "2 days ago"
+    },
+    {
+      id: 2,
+      name: "Emily R.",
+      location: "New York, NY",
+      image: "/reviews/iap_600x600.7328186625_r1km0fan.webp",
+      rating: 5,
+      text: "The customization process was so easy and fun. My order arrived quickly and exceeded my expectations!",
+      date: "1 week ago"
+    },
+    {
+      id: 3,
+      name: "Jessica T.",
+      location: "Chicago, IL",
+      image: "/reviews/iap_600x600.7339273571_jw5pkmrx.webp",
+      rating: 5,
+      text: "Perfect gift for my sister's birthday! She was thrilled with the personal touch. Will definitely order again.",
+      date: "3 days ago"
+    },
+    {
+      id: 4,
+      name: "Amanda K.",
+      location: "Miami, FL",
+      image: "/reviews/iap_600x600.7350513508_e26ewa8o.webp",
+      rating: 5,
+      text: "Beautiful craftsmanship and the colors are even better in person. Highly recommend!",
+      date: "5 days ago"
+    },
+    {
+      id: 5,
+      name: "Rachel P.",
+      location: "Seattle, WA",
+      image: "/reviews/iap_600x600.7427157934_78avfdyy.webp",
+      rating: 5,
+      text: "This is my third purchase and I'm never disappointed. The attention to detail is outstanding.",
+      date: "1 day ago"
+    },
+    {
+      id: 6,
+      name: "Jennifer L.",
+      location: "Denver, CO",
+      image: "/reviews/iap_600x600.7499091595_dm9fhjrt.webp",
+      rating: 5,
+      text: "Fast shipping and excellent customer service. The final product is stunning!",
+      date: "4 days ago"
+    },
+    {
+      id: 7,
+      name: "Melissa H.",
+      location: "Phoenix, AZ",
+      image: "/reviews/iap_600x600.7582209944_dtbqy69e.webp",
+      rating: 5,
+      text: "Love how I could personalize every detail. It made for such a thoughtful gift.",
+      date: "6 days ago"
+    },
+    {
+      id: 8,
+      name: "Nicole S.",
+      location: "Boston, MA",
+      image: "/reviews/iap_600x600.7647883905_626g80nw.webp",
+      rating: 5,
+      text: "The quality exceeded my expectations. Beautiful work and great communication!",
+      date: "2 weeks ago"
+    },
+    {
+      id: 9,
+      name: "Stephanie B.",
+      location: "Dallas, TX",
+      image: "/reviews/iap_600x600.7716775214_ho4q4bo4 (1).webp",
+      rating: 5,
+      text: "Absolutely gorgeous! The personalization options are fantastic and the result is perfect.",
+      date: "1 week ago"
+    },
+  ]
 
   // Show purchase notification toast periodically
   useEffect(() => {
@@ -781,16 +866,62 @@ export default function ProductClient({ product }: ProductClientProps) {
               <Star className="w-5 h-5 fill-yellow-500 text-yellow-500" />
               Customer Reviews
             </CardTitle>
+            <CardDescription>See what our customers are saying</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8">
+            {/* Rating Summary */}
+            <div className="text-center py-6 border-b">
               <div className="flex items-center justify-center gap-1 mb-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star key={star} className="w-6 h-6 fill-yellow-500 text-yellow-500" />
                 ))}
               </div>
-              <p className="text-2xl font-bold">5.0</p>
-              <p className="text-sm text-muted-foreground">Based on {Math.floor(Math.random() * 50 + 10)} reviews</p>
+              <p className="text-3xl font-bold">5.0</p>
+              <p className="text-sm text-muted-foreground">Based on {reviews.length + 47} reviews</p>
+            </div>
+
+            {/* Reviews Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {reviews.map((review) => (
+                <Card key={review.id} className="overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="flex items-start gap-3">
+                      {/* Review Image */}
+                      <div className="flex-shrink-0">
+                        <img
+                          src={review.image}
+                          alt={review.name}
+                          className="w-16 h-16 rounded-full object-cover border-2 border-border"
+                        />
+                      </div>
+
+                      {/* Review Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h4 className="font-semibold text-sm truncate">{review.name}</h4>
+                          <span className="text-xs text-muted-foreground">{review.date}</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mb-2">{review.location}</p>
+
+                        {/* Stars */}
+                        <div className="flex items-center gap-0.5 mb-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              className={`w-3 h-3 ${star <= review.rating ? 'fill-yellow-500 text-yellow-500' : 'text-gray-300'}`}
+                            />
+                          ))}
+                        </div>
+
+                        {/* Review Text */}
+                        <p className="text-sm text-foreground leading-relaxed line-clamp-3">
+                          "{review.text}"
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>

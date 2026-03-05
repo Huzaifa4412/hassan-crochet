@@ -13,6 +13,13 @@ export default defineType({
             validation: (Rule) => Rule.required()
         }),
         defineField({
+            name:"mainImage",
+            title:"Product Image",
+            type:"image",
+            options: { hotspot: true },
+            validation: (Rule) => Rule.required()
+        }),
+        defineField({
             name: "slug",
             title: "Slug",
             type: "slug",
@@ -141,7 +148,7 @@ export default defineType({
     preview: {
         select: {
             title: "title",
-            media: "variants.0.image",
+            media: "mainImage",
             subtitle: "category.title"
         }
     }

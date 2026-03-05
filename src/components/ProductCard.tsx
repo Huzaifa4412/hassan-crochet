@@ -21,8 +21,8 @@ export function ProductCard({ product, className, showQuickView = false, onQuick
   const [isFavorite, setIsFavorite] = React.useState(false)
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
 
-  // Get the first variant image as the main image
-  const mainImage = product.variants?.[0]?.imageUrl || ""
+  // Use mainImage from the product, fallback to first variant image
+  const mainImage = product.mainImageUrl || product.variants?.[0]?.imageUrl || ""
   const variants = product.variants || []
 
   return (
@@ -209,7 +209,7 @@ interface ProductCardCompactProps {
 export function ProductCardCompact({ product, className }: ProductCardCompactProps) {
   const [isFavorite, setIsFavorite] = React.useState(false)
 
-  const mainImage = product.variants?.[0]?.imageUrl || ""
+  const mainImage = product.mainImageUrl || product.variants?.[0]?.imageUrl || ""
   const variants = product.variants || []
 
   return (
@@ -305,7 +305,7 @@ interface ProductCardFeaturedProps {
 export function ProductCardFeatured({ product, className }: ProductCardFeaturedProps) {
   const [isFavorite, setIsFavorite] = React.useState(false)
 
-  const mainImage = product.variants?.[0]?.imageUrl || ""
+  const mainImage = product.mainImageUrl || product.variants?.[0]?.imageUrl || ""
 
   return (
     <div className={cn("group", className)}>

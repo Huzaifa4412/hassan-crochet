@@ -32,9 +32,9 @@ export default async function Home() {
     <>
       <main>
         {/* 1. Hero Section - Full Width Banner Slider */}
-        {heroBanners && heroBanners.length > 0 && (
+        {/* {heroBanners && heroBanners.length > 0 && (
           <BannerSlider banners={heroBanners} />
-        )}
+        )} */}
 
         {/* 2. Brand Story Section - Heritage & Trust Building */}
         <BrandStory />

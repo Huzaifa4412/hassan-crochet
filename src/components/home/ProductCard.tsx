@@ -33,7 +33,7 @@ export function ProductCard({
   const [imageLoaded, setImageLoaded] = useState(false)
 
   const firstVariant = product.variants?.[0]
-  const productImage = firstVariant?.imageUrl
+  const productImage = product.mainImageUrl || firstVariant?.imageUrl
   const productSlug = product.slug?.current
   const isSale = comparePrice && price != null && comparePrice > price
   const isNew = product.badges?.some(b => b.toLowerCase() === "new")
@@ -292,7 +292,7 @@ export function FeaturedProductCard({
   const [isFavorited, setIsFavorited] = useState(false)
 
   const firstVariant = product.variants?.[0]
-  const productImage = firstVariant?.imageUrl
+  const productImage = product.mainImageUrl || firstVariant?.imageUrl
   const productSlug = product.slug?.current
   const isSale = comparePrice && price != null && comparePrice > price
 

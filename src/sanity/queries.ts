@@ -23,6 +23,7 @@ export interface Product {
     slug: { current: string };
     icon?: string;
   };
+  mainImageUrl?: string;
   collections?: Array<{
     _id: string;
     title: string;
@@ -52,6 +53,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     description,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     collections[]->{_id, title, slug},
     badges,
     etsyLink,
@@ -94,6 +96,7 @@ export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
     variants[]{
@@ -120,6 +123,7 @@ export async function getNewProducts(limit = 8): Promise<Product[]> {
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
     variants[]{
@@ -146,6 +150,7 @@ export async function getProducts(limit = 12, offset = 0): Promise<Product[]> {
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
     variants[]{
@@ -172,6 +177,7 @@ export async function getProductsByCategory(categorySlug: string, limit = 12): P
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
     variants[]{
@@ -198,6 +204,7 @@ export async function getProductsByCollection(collectionSlug: string, limit = 12
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
     variants[]{
@@ -313,6 +320,7 @@ export async function getCollectionBySlug(slug: string): Promise<Collection | nu
       title,
       shortDescription,
       category->{_id, title, slug, icon},
+      "mainImageUrl": mainImage.asset->url,
       badges,
       etsyLink,
       variants[]{
@@ -555,6 +563,7 @@ export async function searchProducts(searchTerm: string, limit = 12): Promise<Pr
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
     variants[]{
