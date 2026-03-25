@@ -10,6 +10,7 @@ export interface CustomizationCanvasRef {
     updateBaseImage: (url: string) => void;
     updateSelectedTextColor: (color: string, font?: string) => void;
     getSelectedObjectType: () => 'text' | 'group' | 'image' | null;
+    deleteSelected: () => void;
 }
 
 interface CustomizationCanvasProps {
@@ -17,14 +18,12 @@ interface CustomizationCanvasProps {
     onSelectionChange?: (hasSelection: boolean, selectionType: 'text' | 'group' | 'image' | null) => void;
 }
 
-// SVG Trash icon encoded as data URL for the delete control - Red version
-const deleteIcon = "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
-
 const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanvasProps>(
     ({ initialImage, onSelectionChange }, ref) => {
         const canvasRef = useRef<HTMLCanvasElement>(null);
         const containerRef = useRef<HTMLDivElement>(null);
-        const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null);
+        const [isCanvasReady, setIsCanvasReady] = useState(false);
+        const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
         const onSelectionChangeRef = useRef(onSelectionChange);
 
         // Keep the ref updated
@@ -77,55 +76,12 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 canvasRef.current.style.maxHeight = "100%";
             }
 
-            setFabricCanvas(canvas);
+            fabricCanvasRef.current = canvas;
+            requestAnimationFrame(() => setIsCanvasReady(true));
 
-            // Create Delete Control globally for objects
-            const img = document.createElement("img");
-            img.src = deleteIcon;
-
-            const renderIcon = function (
-                this: fabric.Control,
-                ctx: CanvasRenderingContext2D,
-                left: number,
-                top: number,
-                styleOverride: any,
-                fabricObject: fabric.Object
-            ) {
-                const size = 24;
-                ctx.save();
-                ctx.translate(left, top);
-                ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle || 0));
-                ctx.drawImage(img, -size / 2, -size / 2, size, size);
-                ctx.restore();
-            };
-
-            const deleteObject = function (eventData: any, transform: fabric.Transform) {
-                const target = transform.target;
-                const canvas = target.canvas;
-                if (canvas) {
-                    canvas.remove(target);
-                    canvas.requestRenderAll();
-                }
-                return true;
-            };
-
-            const customDeleteControl = new fabric.Control({
-                x: 0.5,
-                y: -0.5,
-                offsetY: 16,
-                cursorStyle: 'pointer',
-                mouseUpHandler: deleteObject,
-                render: renderIcon
-            });
-
-            // Automatically add the delete control to any object added to the canvas
+            // Automatically style any object added to the canvas
             canvas.on('object:added', (e: any) => {
                 if (e.target) {
-                    if (!e.target.controls) {
-                        e.target.controls = {};
-                    }
-                    e.target.controls.deleteControl = customDeleteControl;
-
                     // Force professional blue border colors on every object
                     e.target.set({
                         borderColor: '#1d4ed8',
@@ -188,18 +144,20 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
             // Cleanup
             return () => {
                 canvas.dispose();
+                fabricCanvasRef.current = null;
             };
         }, []);
 
         // Load initial background image
         useEffect(() => {
+            const fabricCanvas = fabricCanvasRef.current;
             if (!fabricCanvas || !initialImage) return;
 
             const loadBaseImage = async () => {
                 try {
                     // Clear any existing background
                     if (fabricCanvas.backgroundImage) {
-                        fabricCanvas.backgroundImage = undefined;
+                        fabricCanvas.set({ backgroundImage: undefined });
                     }
 
                     const img = await fabric.FabricImage.fromURL(initialImage, { crossOrigin: "anonymous" });
@@ -227,16 +185,38 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
             };
 
             loadBaseImage();
-        }, [fabricCanvas, initialImage]);
+        }, [isCanvasReady, initialImage]);
 
         // Handle Resize
         useEffect(() => {
+            const fabricCanvas = fabricCanvasRef.current;
             if (!fabricCanvas || !containerRef.current) return;
+
+            // Store last dimensions for scaling
+            let lastWidth = fabricCanvas.width || 0;
+            let lastHeight = fabricCanvas.height || 0;
 
             const resizeObserver = new ResizeObserver((entries) => {
                 for (let entry of entries) {
                     const { width, height } = entry.contentRect;
+                    if (width === 0 || height === 0) continue;
+
+                    const scaleX = width / lastWidth;
+                    const scaleY = height / lastHeight;
+
                     fabricCanvas.setDimensions({ width, height });
+
+                    // Scale all objects proportionally
+                    const objects = fabricCanvas.getObjects();
+                    objects.forEach(obj => {
+                        obj.set({
+                            left: (obj.left || 0) * scaleX,
+                            top: (obj.top || 0) * scaleY,
+                            scaleX: (obj.scaleX || 1) * scaleX,
+                            scaleY: (obj.scaleY || 1) * scaleY,
+                        });
+                        obj.setCoords();
+                    });
 
                     // Re-center background image if it exists
                     if (fabricCanvas.backgroundImage) {
@@ -250,16 +230,20 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                             top: height / 2,
                         });
                     }
+
+                    lastWidth = width;
+                    lastHeight = height;
                     fabricCanvas.requestRenderAll();
                 }
             });
 
             resizeObserver.observe(containerRef.current);
             return () => resizeObserver.disconnect();
-        }, [fabricCanvas]);
+        }, [isCanvasReady]);
 
         // Handle drops from outside (e.g. icons list)
         useEffect(() => {
+            const fabricCanvas = fabricCanvasRef.current;
             if (!fabricCanvas || !containerRef.current) return;
 
             const container = containerRef.current;
@@ -333,11 +317,12 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 container.removeEventListener("dragover", handleDragOver);
                 container.removeEventListener("drop", handleDrop);
             };
-        }, [fabricCanvas]);
+        }, [isCanvasReady]);
 
         // Expose methods to parent
         useImperativeHandle(ref, () => ({
             addText: (text, font, color) => {
+                const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
 
                 // Color palettes for multicolor options - matching swatch colors from UI
@@ -428,6 +413,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 }
             },
             addIcon: async (url) => {
+                const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
                 try {
                     const img = await fabric.FabricImage.fromURL(url, { crossOrigin: "anonymous" });
@@ -479,6 +465,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 }
             },
             download: () => {
+                const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
                 // Deselect objects to avoid bounding boxes in export
                 fabricCanvas.discardActiveObject();
@@ -498,6 +485,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 document.body.removeChild(link);
             },
             updateBaseImage: async (url) => {
+                const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
                 try {
                     const img = await fabric.FabricImage.fromURL(url, { crossOrigin: "anonymous" });
@@ -523,6 +511,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 }
             },
             updateSelectedTextColor: (color, font) => {
+                const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
                 const activeObject = fabricCanvas.getActiveObject();
                 if (!activeObject) return;
@@ -664,6 +653,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 fabricCanvas.requestRenderAll();
             },
             getSelectedObjectType: () => {
+                const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return null;
                 const activeObject = fabricCanvas.getActiveObject();
                 if (!activeObject) return null;
@@ -676,6 +666,17 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     return 'image';
                 }
                 return null;
+            },
+            deleteSelected: () => {
+                const fabricCanvas = fabricCanvasRef.current;
+                if (!fabricCanvas) return;
+                
+                const activeObjects = fabricCanvas.getActiveObjects();
+                if (activeObjects.length > 0) {
+                    activeObjects.forEach(obj => fabricCanvas.remove(obj));
+                    fabricCanvas.discardActiveObject();
+                    fabricCanvas.requestRenderAll();
+                }
             }
         }));
 

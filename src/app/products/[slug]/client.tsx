@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { Download, Copy, Heart, Info, Palette, Type, Sparkles, ArrowRight, Shield, Truck, Gem, Star, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Check, ShoppingBag, ZoomIn, Award, Clock, Quote } from "lucide-react"
-import { Pacifico, Delius, Meow_Script, Borel, Mystery_Quest, Pinyon_Script } from "next/font/google"
+import { Download, Copy, Heart, Info, Palette, Type, Sparkles, ArrowRight, Shield, Truck, Gem, Star, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Check, ShoppingBag, ZoomIn, Award, Clock, Quote, Trash2 } from "lucide-react"
+import { Pacifico, Sniglet } from "next/font/google"
 
 import CustomizationCanvas, { CustomizationCanvasRef } from "@/components/CustomizationCanvas"
 import { Product } from "@/sanity/queries"
@@ -29,11 +29,7 @@ import "swiper/css/navigation"
 
 // Configure Google Fonts
 const pacifico = Pacifico({ subsets: ["latin"], weight: "400", display: "swap" })
-const delius = Delius({ subsets: ["latin"], weight: "400", display: "swap" })
-const meowScript = Meow_Script({ subsets: ["latin"], weight: "400", display: "swap" })
-const borel = Borel({ subsets: ["latin"], weight: "400", display: "swap" })
-const mysteryQuest = Mystery_Quest({ subsets: ["latin"], weight: "400", display: "swap" })
-const pinyonScript = Pinyon_Script({ subsets: ["latin"], weight: "400", display: "swap" })
+const sniglet = Sniglet({ subsets: ["latin"], weight: "400", display: "swap" })
 
 // Purchase notification data (defined outside component to avoid re-renders)
 const PURCHASE_LOCATIONS = [
@@ -69,34 +65,21 @@ const TIME_AGO_OPTIONS = [
 ]
 
 const ICONS = [
-  // Flower icons
+  // Classic Flowers
   { name: "Blue Flower", url: "/icons/Blue Flower-half.png" },
   { name: "Brown Flower", url: "/icons/Brown Flower-half.png" },
   { name: "Green Flower", url: "/icons/Green Flower-half.png" },
   { name: "Orange Flower", url: "/icons/Orange Flower-half.png" },
-  { name: "Pink Combo", url: "/icons/Pink Combo.png" },
   { name: "Pink Flower", url: "/icons/Pink Flower-half.png" },
-  { name: "Purple Flower 2", url: "/icons/Purple Flower2-half.png" },
   { name: "Purple Flower", url: "/icons/Purple Flower-half.png" },
-  { name: "White Combo", url: "/icons/White Combo.png" },
+  { name: "Purple Flower 2", url: "/icons/Purple Flower2-half.png" },
   { name: "White Flower", url: "/icons/White Flower-half.png" },
-  { name: "Yellow Combo", url: "/icons/Yellow Combo.png" },
   { name: "Yellow Flower", url: "/icons/Yellow Flower-half.png" },
-  // Color swatch icons
-  { name: "Blue Icon 1", url: "/icons/image-swatches-2_1_1742280999062-1748241688.avif" },
-  { name: "Pink Icon", url: "/icons/image-swatches-2_15_1742281294612-1748241738.avif" },
-  { name: "Light Blue Icon", url: "/icons/image-swatches-2_2_1742281000795-1748241695.avif" },
-  { name: "Gray Icon", url: "/icons/image-swatches-2_20_1748241835490-1748241838.avif" },
-  { name: "Green Icon", url: "/icons/image-swatches-2_3_1713509294243-1748241701.webp" },
-  { name: "Orange Icon", url: "/icons/image-swatches-2_3_1713509300624-1713509328.webp" },
-  { name: "Red Icon", url: "/icons/image-swatches-2_4_1742281000196-1748241704.webp" },
-  { name: "Purple Icon", url: "/icons/image-swatches-2_5_1714127302243-1748241706.avif" },
-  { name: "Pink Icon 2", url: "/icons/image-swatches-2_6_1742281001781-1748241710.avif" },
-  { name: "Multi Icon", url: "/icons/image-swatches-2_8_1742281002277-1748241715.avif" },
-  { name: "Dark Icon", url: "/icons/image-swatches-2_9_1742281002744-1748241718.webp" },
-  { name: "Swatch 1", url: "/icons/swatch-17645549500664.webp" },
-  { name: "Swatch 2", url: "/icons/swatch-17645549949216.avif" },
-  // New AI-generated decorative icons
+  { name: "Pink Combo", url: "/icons/Pink Combo.png" },
+  { name: "White Combo", url: "/icons/White Combo.png" },
+  { name: "Yellow Combo", url: "/icons/Yellow Combo.png" },
+
+  // Gemini Special
   { name: "Gemini Bloom 1", url: "/icons/Gemini_Generated_Image_15cep015cep015ce_transparent.png" },
   { name: "Gemini Bloom 2", url: "/icons/Gemini_Generated_Image_3p152x3p152x3p15_transparent.png" },
   { name: "Gemini Blossom", url: "/icons/Gemini_Generated_Image_4br2gd4br2gd4br2_transparent.png" },
@@ -109,6 +92,19 @@ const ICONS = [
   { name: "Gemini Rose", url: "/icons/Gemini_Generated_Image_whgm4rwhgm4rwhgm_transparent.png" },
   { name: "Gemini Vine", url: "/icons/Gemini_Generated_Image_wlzslpwlzslpwlzs_transparent.png" },
   { name: "Gemini Heart", url: "/icons/Screenshot 2026-03-14 025500_transparent.png" },
+  { name: "Gemini Bloom 3", url: "/icons/Gemini_Generated_Image_rtzdburtzdburtzd.png" },
+  { name: "Gemini Bloom 4", url: "/icons/Gemini_Generated_Image_wdhx6vwdhx6vwdhx.png" },
+  { name: "Gemini Bloom 5", url: "/icons/Gemini_Generated_Image_y23u4gy23u4gy23u.png" },
+  { name: "Crochet Artist", url: "/icons/@Canva Improve the Image, Resolution make it high quality image, as this is formed with crochet ( hand made ). Also remove the background of image.png" },
+
+  // Spring Collection
+  { name: "Spring Bloom 1", url: "/icons/Generated Image March 25, 2026 - 9_53PM.png" },
+  { name: "Spring Bloom 2", url: "/icons/Generated Image March 25, 2026 - 9_59PM.png" },
+  { name: "Spring Bloom 3", url: "/icons/Generated Image March 25, 2026 - 10_00PM.png" },
+  { name: "Spring Bloom 4", url: "/icons/Generated Image March 25, 2026 - 10_00PM (1).png" },
+  { name: "Spring Bloom 5", url: "/icons/Generated Image March 25, 2026 - 10_01PM.png" },
+  { name: "Spring Bloom 6", url: "/icons/Generated Image March 25, 2026 - 10_02PM.png" },
+  { name: "Spring Bloom 7", url: "/icons/Generated Image March 25, 2026 - 10_03PM.png" },
 ]
 
 // Single color options
@@ -156,13 +152,8 @@ const MULTI_COLOR_PALETTES = [
 ]
 
 const FONTS = [
-  { name: "Cursive", value: "cursive" },
   { name: "Pacifico", value: "Pacifico, cursive" },
-  { name: "Delius", value: "Delius, cursive" },
-  { name: "Meow Script", value: "Meow Script, cursive" },
-  { name: "Borel", value: "Borel, cursive" },
-  { name: "Mystery Quest", value: "Mystery Quest, cursive" },
-  { name: "Pinyon Script", value: "Pinyon Script, cursive" },
+  { name: "Sniglet", value: "Sniglet, cursive" },
 ]
 
 interface ProductClientProps {
@@ -458,6 +449,10 @@ export default function ProductClient({ product }: ProductClientProps) {
     setSelectedObjectType(selectionType)
   }
 
+  const handleDeleteSelected = () => {
+    canvasRef.current?.deleteSelected()
+  }
+
   // Handle color change - update selected object if exists
   const handleTextColorChange = (newColor: string, multiColor: boolean) => {
     setTextColor(newColor)
@@ -592,6 +587,21 @@ export default function ProductClient({ product }: ProductClientProps) {
                     </div>
                   </div>
 
+                  {/* Remove Selected Button */}
+                  {selectedObjectType && (
+                    <div className="absolute bottom-3 left-3 z-20">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={handleDeleteSelected}
+                        className="h-8 gap-1.5 shadow-lg animate-in fade-in slide-in-from-bottom-2 bg-red-600 hover:bg-red-700 text-white border-0"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        Remove
+                      </Button>
+                    </div>
+                  )}
+
                   <CustomizationCanvas
                     ref={canvasRef}
                     initialImage={colors[0]?.imageUrl || ""}
@@ -701,7 +711,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                         </div>
                       </div>
 
- {/* Font Selection */}
+                      {/* Font Selection */}
                       <div className="space-y-1.5 sm:space-y-2">
                         <Label htmlFor="text-font" className="text-xs sm:text-sm font-medium">Font Style</Label>
                         <Select value={textFont} onValueChange={handleFontChange}>
@@ -808,7 +818,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                         </div>
                       </div>
 
-                     
+
                     </AccordionContent>
                   </AccordionItem>
 
@@ -943,7 +953,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                     <span>Premium handmade craftsmanship</span>
                   </div>
                 </div>
-                <Button 
+                <Button
                   onClick={() => setIsOrderDialogOpen(true)}
                   className="w-full bg-white text-primary hover:bg-white/90 h-10 sm:h-12 font-semibold shadow-xl text-sm sm:text-base"
                 >
@@ -993,7 +1003,7 @@ export default function ProductClient({ product }: ProductClientProps) {
           </div>
 
           {/* Rating Summary */}
-          
+
 
           {/* Swiper Carousel */}
           <div className="relative px-4 sm:px-6 md:px-0">
@@ -1064,7 +1074,7 @@ export default function ProductClient({ product }: ProductClientProps) {
 
         {/* Order Dialog */}
         <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-106.25">
             <DialogHeader>
               <DialogTitle>Complete Your Customization</DialogTitle>
               <DialogDescription>
@@ -1074,44 +1084,44 @@ export default function ProductClient({ product }: ProductClientProps) {
             <form onSubmit={handleOrderSubmit} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
-                <Input 
-                  id="name" 
-                  value={orderForm.name} 
-                  onChange={(e) => setOrderForm(prev => ({ ...prev, name: e.target.value }))} 
-                  placeholder="John Doe" 
-                  required 
+                <Input
+                  id="name"
+                  value={orderForm.name}
+                  onChange={(e) => setOrderForm(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="John Doe"
+                  required
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input 
-                  id="email" 
-                  type="email" 
-                  value={orderForm.email} 
-                  onChange={(e) => setOrderForm(prev => ({ ...prev, email: e.target.value }))} 
-                  placeholder="john@example.com" 
-                  required 
+                <Input
+                  id="email"
+                  type="email"
+                  value={orderForm.email}
+                  onChange={(e) => setOrderForm(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="john@example.com"
+                  required
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
-                <Input 
-                  id="phone" 
-                  type="tel" 
-                  value={orderForm.phone} 
-                  onChange={(e) => setOrderForm(prev => ({ ...prev, phone: e.target.value }))} 
-                  placeholder="+1 (555) 000-0000" 
-                  required 
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={orderForm.phone}
+                  onChange={(e) => setOrderForm(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="+1 (555) 000-0000"
+                  required
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">Shipping Address</Label>
-                <Input 
-                  id="address" 
-                  value={orderForm.address} 
-                  onChange={(e) => setOrderForm(prev => ({ ...prev, address: e.target.value }))} 
-                  placeholder="123 Main St, City, Country" 
-                  required 
+                <Input
+                  id="address"
+                  value={orderForm.address}
+                  onChange={(e) => setOrderForm(prev => ({ ...prev, address: e.target.value }))}
+                  placeholder="123 Main St, City, Country"
+                  required
                 />
               </div>
               <DialogFooter className="pt-4">
