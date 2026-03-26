@@ -36,7 +36,8 @@
       "mcp__playwright__browser_take_screenshot",
       "Bash(bun dev)",
       "Bash(bun run lint)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(git add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
