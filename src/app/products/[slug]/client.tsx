@@ -91,65 +91,78 @@ const TIME_AGO_OPTIONS = [
 
 const ICONS = [
   // Classic Flowers
-  { name: "Blue Flower", url: "/icons/Blue Flower-half.png" },
-  { name: "Brown Flower", url: "/icons/Brown Flower-half.png" },
-  { name: "Green Flower", url: "/icons/Green Flower-half.png" },
-  { name: "Orange Flower", url: "/icons/Orange Flower-half.png" },
-  { name: "Pink Flower", url: "/icons/Pink Flower-half.png" },
-  { name: "Purple Flower", url: "/icons/Purple Flower-half.png" },
-  { name: "Purple Flower 2", url: "/icons/Purple Flower2-half.png" },
-  { name: "White Flower", url: "/icons/White Flower-half.png" },
-  { name: "Yellow Flower", url: "/icons/Yellow Flower-half.png" },
-  { name: "Sun Flower", url: "/icons/Sun Flower.png" },
-  { name: "Pink Sun Flower", url: "/icons/Pink Sun Flower.png" },
-  { name: "Pink Combo", url: "/icons/Pink Combo.png" },
-  { name: "White Combo", url: "/icons/White Combo.png" },
-  { name: "Yellow Combo", url: "/icons/Yellow Combo.png" },
+  { name: "Blue Flower", url: "/icons/Blue Flower-half.png", price: 4 },
+  { name: "Brown Flower", url: "/icons/Brown Flower-half.png", price: 4 },
+  { name: "Green Flower", url: "/icons/Green Flower-half.png", price: 4 },
+  { name: "Orange Flower", url: "/icons/Orange Flower-half.png", price: 4 },
+  { name: "Pink Flower", url: "/icons/Pink Flower-half.png", price: 4 },
+  { name: "Purple Flower", url: "/icons/Purple Flower-half.png", price: 4 },
+  { name: "Purple Flower 2", url: "/icons/Purple Flower2-half.png", price: 4 },
+  { name: "White Flower", url: "/icons/White Flower-half.png", price: 4 },
+  { name: "Yellow Flower", url: "/icons/Yellow Flower-half.png", price: 4 },
+  { name: "Sun Flower", url: "/icons/Sun Flower.png", price: 4 },
+  { name: "Pink Sun Flower", url: "/icons/Pink Sun Flower.png", price: 4 },
+  { name: "Pink Combo", url: "/icons/Pink Combo.png", price: 4 },
+  { name: "White Combo", url: "/icons/White Combo.png", price: 4 },
+  { name: "Yellow Combo", url: "/icons/Yellow Combo.png", price: 4 },
 
   // Nature & Animals
-  { name: "Bee", url: "/icons/Bee.png" },
-  { name: "Bee 2", url: "/icons/Bee 2.png" },
-  { name: "Bee Flying", url: "/icons/Bee Flying.png" },
-  { name: "Banana", url: "/icons/Banana.png" },
-  { name: "Cherry", url: "/icons/Cherry.png" },
-  { name: "Cherry 2", url: "/icons/cherry 2.png" },
-  { name: "Strawberry", url: "/icons/Strawberry.png" },
-  { name: "Leaf", url: "/icons/Leaf.png" },
-  { name: "Green Leaf", url: "/icons/Green Leaf.png" },
-  { name: "Sun", url: "/icons/Sun.png" },
-  { name: "Star", url: "/icons/Star.png" },
-  { name: "Heart", url: "/icons/Heart.png" },
-  { name: "Dear", url: "/icons/Dear.png" },
-  { name: "Mushroom", url: "/icons/Mashroom.png" },
-  { name: "Grarvo", url: "/icons/Grarvo.png" },
-  { name: "Pine Apple", url: "/icons/Pine Apply.png" },
-  { name: "Tree", url: "/icons/Tree.png" },
-  { name: "Decor", url: "/icons/decore.png" },
+  { name: "Bee", url: "/icons/Bee.png", price: 4 },
+  { name: "Bee 2", url: "/icons/Bee 2.png", price: 4 },
+  { name: "Bee Flying", url: "/icons/Bee Flying.png", price: 4 },
+  { name: "Banana", url: "/icons/Banana.png", price: 4 },
+  { name: "Cherry", url: "/icons/Cherry.png", price: 4 },
+  { name: "Cherry 2", url: "/icons/cherry 2.png", price: 4 },
+  { name: "Strawberry", url: "/icons/Strawberry.png", price: 4 },
+  { name: "Leaf", url: "/icons/Leaf.png", price: 4 },
+  { name: "Green Leaf", url: "/icons/Green Leaf.png", price: 4 },
+  { name: "Sun", url: "/icons/Sun.png", price: 4 },
+  { name: "Star", url: "/icons/Star.png", price: 4 },
+  { name: "Heart", url: "/icons/Heart.png", price: 4 },
+  { name: "Dear", url: "/icons/Dear.png", price: 4 },
+  { name: "Mushroom", url: "/icons/Mashroom.png", price: 4 },
+  { name: "Grarvo", url: "/icons/Grarvo.png", price: 4 },
+  { name: "Pine Apple", url: "/icons/Pine Apply.png", price: 4 },
+  { name: "Tree", url: "/icons/Tree.png", price: 4 },
+  { name: "Decor", url: "/icons/decore.png", price: 4 },
 
   // Holiday
-  { name: "Christmas Tree", url: "/icons/Chrisman Tree.png" },
-  { name: "Santa", url: "/icons/Santa.png" },
-  { name: "Ring Bell", url: "/icons/Ring Bell.png" },
+  { name: "Christmas Tree", url: "/icons/Chrisman Tree.png", price: 4 },
+  { name: "Santa", url: "/icons/Santa.png", price: 4 },
+  { name: "Ring Bell", url: "/icons/Ring Bell.png", price: 4 },
 ]
 
 // Single color options
 const SINGLE_TEXT_COLORS = [
-  { name: "White", value: "#FFFFFF", preview: "#FFFFFF" },
-  { name: "Cream", value: "#FFFDD0", preview: "#FFFDD0" },
-  { name: "Oat", value: "#E8DCC4", preview: "#E8DCC4" },
-  { name: "Mustard", value: "#E1AD01", preview: "#E1AD01" },
-  { name: "Rust", value: "#B7410E", preview: "#B7410E" },
-  { name: "Pink", value: "#FFC0CB", preview: "#FFC0CB" },
-  { name: "Purple", value: "#9B59B6", preview: "#9B59B6" },
-  { name: "Light blue", value: "#ADD8E6", preview: "#ADD8E6" },
-  { name: "Royal blue", value: "#4169E1", preview: "#4169E1" },
-  { name: "Light pink", value: "#FFB6C1", preview: "#FFB6C1" },
-  { name: "Coffee", value: "#6F4E37", preview: "#6F4E37" },
-  { name: "Ash gray", value: "#B2BEB5", preview: "#B2BEB5" },
-  { name: "Rose Red", value: "#C21E56", preview: "#C21E56" },
-  { name: "Navy Blue", value: "#000080", preview: "#000080" },
-  { name: "Natural white", value: "#F5F5DC", preview: "#F5F5DC" },
-  { name: "Grass Green", value: "#4CAF50", preview: "#4CAF50" },
+  { name: "Midnight Black", value: "#1A1A1D", preview: "#1A1A1D" }, // A1
+  { name: "Deep Maroon", value: "#800020", preview: "#800020" },    // A2
+  { name: "Rosewood", value: "#9E5B53", preview: "#9E5B53" },       // A3
+  { name: "Charcoal Grey", value: "#545454", preview: "#545454" },  // A4
+  { name: "Royal Blue", value: "#2B3399", preview: "#2B3399" },     // A5
+  { name: "Sand", value: "#D2B48C", preview: "#D2B48C" },           // A6
+  { name: "Baby Pink", value: "#F4C2C2", preview: "#F4C2C2" },      // A7
+  { name: "Grass Green", value: "#567D46", preview: "#567D46" },    // A8
+  { name: "Sunflower Yellow", value: "#FFC300", preview: "#FFC300" }, // A9
+  { name: "Grape Purple", value: "#6F2DA8", preview: "#6F2DA8" },   // A10
+  { name: "Sage Green", value: "#8A9A5B", preview: "#8A9A5B" },     // A11
+  { name: "Denim Blue", value: "#5D8AA8", preview: "#5D8AA8" },     // A12
+  { name: "Deep Cobalt", value: "#0047AB", preview: "#0047AB" },    // A13
+  { name: "Turquoise", value: "#00CED1", preview: "#00CED1" },     // A14
+  { name: "Hot Pink", value: "#FF69B4", preview: "#FF69B4" },       // A15
+  { name: "Terracotta", value: "#E2725B", preview: "#E2725B" },     // A16
+  { name: "Bright Orange", value: "#FF8C00", preview: "#FF8C00" },  // A17
+  { name: "Dusty Rose", value: "#DCAE96", preview: "#DCAE96" },     // A18
+  { name: "Lavender", value: "#B57EDC", preview: "#B57EDC" },       // A19
+  { name: "Pale Mint", value: "#F5FFFA", preview: "#F5FFFA" },      // A20
+  { name: "Forest Green", value: "#014421", preview: "#014421" },   // A21
+  { name: "Olive Green", value: "#BAB86C", preview: "#BAB86C" },    // A22
+  { name: "Mustard", value: "#E1AD01", preview: "#E1AD01" },        // A23
+  { name: "Stone Grey", value: "#888581", preview: "#888581" },     // A24
+  { name: "Antique Rose", value: "#9B5D65", preview: "#9B5D65" },   // A25
+  { name: "Dark Moss", value: "#4A5D23", preview: "#4A5D23" },      // A26
+  { name: "Neon Lime", value: "#CCFF00", preview: "#CCFF00" },      // A27
+  { name: "Taupe", value: "#B38B6D", preview: "#B38B6D" },          // A28
+  { name: "Seafoam Blue", value: "#93A8AC", preview: "#93A8AC" },   // A29
 ]
 
 // Multi-color palette options with individual swatches
@@ -478,6 +491,14 @@ export default function ProductClient({ product }: ProductClientProps) {
     canvasRef.current?.deleteSelected()
   }
 
+  const handleObjectRemoved = (type: 'text' | 'icon', name: string) => {
+    if (type === 'icon') {
+      setAddedIcons((prev) => prev.filter(i => i !== name))
+    } else if (type === 'text') {
+      setAddedTexts((prev) => prev.filter(t => t.text !== name))
+    }
+  }
+
   // Handle color change - update selected object if exists
   const handleTextColorChange = (newColor: string, multiColor: boolean) => {
     setTextColor(newColor)
@@ -629,8 +650,9 @@ export default function ProductClient({ product }: ProductClientProps) {
 
                   <CustomizationCanvas
                     ref={canvasRef}
-                    initialImage={colors[0]?.imageUrl || ""}
+                    initialImage={selectedColor?.imageUrl || colors[0]?.imageUrl || ""}
                     onSelectionChange={handleSelectionChange}
+                    onObjectRemoved={handleObjectRemoved}
                   />
                 </div>
               </CardContent>
@@ -888,8 +910,9 @@ export default function ProductClient({ product }: ProductClientProps) {
                                   )}
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent>
+                              <TooltipContent className="flex flex-col items-center">
                                 <p>{icon.name}</p>
+                                <p>(+ $ {icon.price} USD)</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -963,7 +986,7 @@ export default function ProductClient({ product }: ProductClientProps) {
             </Card>
 
             {/* Premium CTA */}
-            <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl border-0 w-full overflow-hidden relative">
+            <Card className="bg-gradient-to-br from-primary/80 to-primary/70 text-primary-foreground shadow-xl border-0 w-full overflow-hidden relative">
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
               <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
               <CardContent className="p-4 sm:p-6 space-y-3 sm:space-y-4 relative z-10">
@@ -986,6 +1009,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                   Order on Etsy
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
                 </Button>
+                <p className="text-center text-xs sm:text-lg">Pricing starts at $16. Choose your perfect size and complete your order securely on Etsy.</p>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
                   <div className="text-center">
                     <div className="w-7 h-7 sm:w-9 sm:h-9 mx-auto mb-1 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
@@ -1129,7 +1153,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">Phone Number ( For Order Confirmation )</Label>
                 <Input
                   id="phone"
                   type="tel"
