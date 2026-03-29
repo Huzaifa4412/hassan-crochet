@@ -13,23 +13,31 @@ export interface CustomizationCanvasRef {
     deleteSelected: () => void;
 }
 
+interface CustomFabricObject extends fabric.Object {
+    customType?: 'text' | 'icon';
+    customName?: string;
+}
+
 interface CustomizationCanvasProps {
     initialImage: string;
     onSelectionChange?: (hasSelection: boolean, selectionType: 'text' | 'group' | 'image' | null) => void;
+    onObjectRemoved?: (type: 'text' | 'icon', name: string) => void;
 }
 
 const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanvasProps>(
-    ({ initialImage, onSelectionChange }, ref) => {
+    ({ initialImage, onSelectionChange, onObjectRemoved }, ref) => {
         const canvasRef = useRef<HTMLCanvasElement>(null);
         const containerRef = useRef<HTMLDivElement>(null);
         const [isCanvasReady, setIsCanvasReady] = useState(false);
         const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
         const onSelectionChangeRef = useRef(onSelectionChange);
+        const onObjectRemovedRef = useRef(onObjectRemoved);
 
-        // Keep the ref updated
+        // Keep the refs updated
         useEffect(() => {
             onSelectionChangeRef.current = onSelectionChange;
-        }, [onSelectionChange]);
+            onObjectRemovedRef.current = onObjectRemoved;
+        }, [onSelectionChange, onObjectRemoved]);
 
         // Initialize Fabric Canvas
         useEffect(() => {
@@ -135,6 +143,13 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 onSelectionChangeRef.current?.(false, null);
             });
 
+            canvas.on('object:removed', (e: { target: CustomFabricObject | any }) => {
+                const target = e.target as CustomFabricObject;
+                if (target && target.customType && target.customName) {
+                    onObjectRemovedRef.current?.(target.customType, target.customName);
+                }
+            });
+
             // Cleanup
             return () => {
                 canvas.dispose();
@@ -156,11 +171,11 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
 
                     const img = await fabric.FabricImage.fromURL(initialImage, { crossOrigin: "anonymous" });
 
-                    // Scale to fit canvas, then multiply by 1.4 to make it bigger
+                    // Scale to fit canvas, then multiply by 1.0 to fit perfectly
                     const scale = Math.min(
                         fabricCanvas.width! / img.width!,
                         fabricCanvas.height! / img.height!
-                    ) * 1.4;
+                    ) * 1.0;
 
                     img.set({
                         scaleX: scale,
@@ -215,8 +230,8 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     // Re-center background image if it exists
                     if (fabricCanvas.backgroundImage) {
                         const bg = fabricCanvas.backgroundImage as fabric.FabricImage;
-                        // Scale to fit canvas, then multiply by 1.4 to make it bigger
-                        const scale = Math.min(width / bg.width!, height / bg.height!) * 1.4;
+                        // Scale to fit canvas, then multiply by 1.0 to fit perfectly
+                        const scale = Math.min(width / bg.width!, height / bg.height!) * 1.0;
                         bg.set({
                             scaleX: scale,
                             scaleY: scale,
@@ -295,6 +310,12 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                             img.setElement(canvas as HTMLCanvasElement);
                         }
                     }
+
+                    // Attach metadata for synchronization
+                    const filename = url.split('/').pop() || "";
+                    const iconName = filename.split('.')[0].replace(/-/g, ' ');
+                    (img as CustomFabricObject).customType = 'icon';
+                    (img as CustomFabricObject).customName = iconName;
 
                     fabricCanvas.add(img);
                     fabricCanvas.setActiveObject(img);
@@ -385,6 +406,10 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                         originY: "center",
                     });
 
+                    // Attach metadata
+                    (group as CustomFabricObject).customType = 'text';
+                    (group as CustomFabricObject).customName = text;
+
                     fabricCanvas.add(group);
                     fabricCanvas.setActiveObject(group);
                     fabricCanvas.requestRenderAll();
@@ -401,6 +426,10 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                         width: 200,
                         textAlign: "center",
                     });
+                    // Attach metadata
+                    (textObj as CustomFabricObject).customType = 'text';
+                    (textObj as CustomFabricObject).customName = text;
+
                     fabricCanvas.add(textObj);
                     fabricCanvas.setActiveObject(textObj);
                     fabricCanvas.requestRenderAll();
@@ -453,6 +482,12 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
 
                     fabricCanvas.add(img);
                     fabricCanvas.setActiveObject(img);
+
+                    // Attach metadata
+                    const filename = url.split('/').pop() || "";
+                    const iconName = filename.split('.')[0].replace(/-/g, ' ');
+                    (img as CustomFabricObject).customType = 'icon';
+                    (img as CustomFabricObject).customName = iconName;
                     fabricCanvas.requestRenderAll();
                 } catch (error) {
                     console.error("Failed to load icon:", error);
@@ -483,11 +518,11 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 if (!fabricCanvas) return;
                 try {
                     const img = await fabric.FabricImage.fromURL(url, { crossOrigin: "anonymous" });
-                    // Scale to fit canvas, then multiply by 1.4 to make it bigger
+                    // Scale to fit canvas, then multiply by 1.0 to fit perfectly
                     const scale = Math.min(
                         fabricCanvas.width! / img.width!,
                         fabricCanvas.height! / img.height!
-                    ) * 1.4;
+                    ) * 1.0;
 
                     img.set({
                         scaleX: scale,

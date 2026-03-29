@@ -106,7 +106,6 @@ export function TestimonialsSection({ className }: TestimonialsSectionProps) {
         <div className="flex justify-center items-center  animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
           <TestimonialsCard
             items={testimonials}
-            width={450}
             autoPlay={true}
             autoPlayInterval={4000}
             showNavigation={true}
