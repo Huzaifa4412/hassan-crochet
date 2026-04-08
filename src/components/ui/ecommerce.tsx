@@ -243,6 +243,17 @@ interface CountdownTimerProps {
   className?: string
 }
 
+const TimeBlock = ({ value, label }: { value: number; label: string }) => (
+  <div className="flex flex-col items-center">
+    <div className="bg-muted rounded-lg px-4 py-3 min-w-[70px]">
+      <span className="text-2xl font-semibold tabular-nums">
+        {String(value).padStart(2, "0")}
+      </span>
+    </div>
+    <span className="text-xs text-muted-foreground mt-1">{label}</span>
+  </div>
+)
+
 export function CountdownTimer({ endDate, onComplete, className }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = React.useState({
     days: 0,
@@ -277,16 +288,6 @@ export function CountdownTimer({ endDate, onComplete, className }: CountdownTime
     return () => clearInterval(timer)
   }, [endDate, onComplete])
 
-  const TimeBlock = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center">
-      <div className="bg-muted rounded-lg px-4 py-3 min-w-[70px]">
-        <span className="text-2xl font-semibold tabular-nums">
-          {String(value).padStart(2, "0")}
-        </span>
-      </div>
-      <span className="text-xs text-muted-foreground mt-1">{label}</span>
-    </div>
-  )
 
   return (
     <div className={cn("space-y-3", className)}>
