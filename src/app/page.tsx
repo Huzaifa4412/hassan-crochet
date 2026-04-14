@@ -1,160 +1,40 @@
-import Link from "next/link"
-import { ArrowRight, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
-import { BannerSlider } from "@/components/home/BannerSlider"
-import { ProductCard, FeaturedProductCard } from "@/components/home/ProductCard"
-import { BentoGrid } from "@/components/home/BentoGrid"
-import { TestimonialsCarousel } from "@/components/home/TestimonialsCarousel"
-import { BrandStory } from "@/components/home/BrandStory"
-import { HowItWorks } from "@/components/home/HowItWorks"
-import { SocialFeed } from "@/components/home/SocialFeed"
-import { EnhancedCTA } from "@/components/home/EnhancedCTA"
-import {
-  getBanners,
-  getNewProducts,
-  getFeaturedProducts,
-  type Product,
-} from "@/sanity/queries"
-import { TestimonialsSection } from "@/components/home/Testimonials"
 
-export default async function Home() {
-  // Fetch all data in parallel
-  const [heroBanners, newProducts, featuredProducts] = await Promise.all([
-    getBanners("hero"),
-    getNewProducts(8),
-    getFeaturedProducts(4),
-  ])
+import BestSeller from "@/components/home/best-seller";
+import HeroBanner from "@/components/home/HeroBanner";
+import OurProducts from "@/components/home/our-products";
+import Personalized from "@/components/home/Personalized";
+import TestimonialsSection from "@/components/home/Testimonials";
 
+import React from "react";
+
+const page = () => {
   return (
-    <>
-      <main>
-        {/* 1. Hero Section - Full Width Banner Slider */}
-        {/* {heroBanners && heroBanners.length > 0 && (
-          <BannerSlider banners={heroBanners} />
-        )} */}
+    <div>
 
-        {/* 2. Brand Story Section - Heritage & Trust Building */}
-        <BrandStory />
+      <HeroBanner />
+      <BestSeller />
 
-        {/* 3. New Arrivals Section */}
-        {newProducts && newProducts.length > 0 && (
-          <section className="py-12 md:py-16 lg:py-24 bg-background">
-            <div className="container mx-auto px-4 md:px-6">
-              {/* Section Header */}
-              <div className="text-center mb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <Badge variant="outline" className="mb-2 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Just In
-                </Badge>
-                <h2 className=" text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                  New Arrivals
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Fresh from our crochet studio - the latest customizable designs
-                </p>
-              </div>
+      {/* Page Divider */}
+      <div className="relative">
+        <svg
+          className="absolute"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+        >
+          <path
+            fill="#ffff"
+            fill-opacity="1"
+            d="M0,128L30,133.3C60,139,120,149,180,138.7C240,128,300,96,360,106.7C420,117,480,171,540,165.3C600,160,660,96,720,64C780,32,840,32,900,48C960,64,1020,96,1080,133.3C1140,171,1200,213,1260,213.3C1320,213,1380,171,1410,149.3L1440,128L1440,0L1410,0C1380,0,1320,0,1260,0C1200,0,1140,0,1080,0C1020,0,960,0,900,0C840,0,780,0,720,0C660,0,600,0,540,0C480,0,420,0,360,0C300,0,240,0,180,0C120,0,60,0,30,0L0,0Z"
+          ></path>
+        </svg>
+        <img src="/banner2.jpg" alt="" />
+      </div>
 
-              {/* Products Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {newProducts.map((product, index) => (
-                  <div
-                    key={product._id}
-                    className="animate-in fade-in zoom-in-95 duration-700"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
+      <OurProducts />
+      <Personalized />
+      <TestimonialsSection />
+    </div>
+  );
+};
 
-              {/* View All Button */}
-              <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <Button variant="outline" size="lg" asChild>
-                  <Link href="/products?sort=new" className="group">
-                    View All New Arrivals
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </section>
-        )}
-
-
-        {/* 5. Featured Products Section - Horizontal Scroll */}
-        {featuredProducts && featuredProducts.length > 0 && (
-          <section className="py-12 md:py-16 lg:py-24 bg-muted/30 overflow-hidden">
-            <div className="container mx-auto px-4 md:px-6">
-              {/* Section Header */}
-              <div className="text-center mb-12 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <Badge variant="outline" className="mb-2 bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
-                  ⭐ Best Sellers
-                </Badge>
-                <h2 className=" text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                  Featured Products
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Our most loved customizable pieces
-                </p>
-              </div>
-
-              {/* Horizontal Scroll Container */}
-              <div className="relative -mx-4 md:mx-0">
-                <div className="flex gap-6 overflow-x-auto pb-6 px-4 md:px-0 scrollbar-hide snap-x snap-mandatory">
-                  {featuredProducts.map((product, index) => (
-                    <div
-                      key={product._id}
-                      className="flex-shrink-0 w-[280px] md:w-[320px] snap-start animate-in fade-in zoom-in-95 duration-700"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
-                      <FeaturedProductCard product={product} />
-                    </div>
-                  ))}
-                </div>
-
-                {/* Scroll Indicators */}
-                <div className="hidden md:flex justify-center gap-2 mt-4">
-                  {featuredProducts.map((_, index) => (
-                    <button
-                      key={index}
-                      className="w-2 h-2 rounded-full bg-primary/20 hover:bg-primary transition-colors"
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-
-        {/* 4. How It Works Section - 3-Step Process */}
-        <HowItWorks />
-        {/* 6. Bento Grid Section - Creative Highlight */}
-        <BentoGrid />
-
-        {/* 7. Testimonials Section */}
-        <TestimonialsSection />
-      </main>
-    </>
-  )
-}
-
-// SEO Metadata
-export async function generateMetadata() {
-  return {
-    title: "Knitty Petit - Handmade Customizable Crochet Products",
-    description:
-      "Discover unique handmade crochet products you can customize. Add names, icons, and personal touches to sweaters, accessories, and more. Handcrafted with love.",
-    keywords: "crochet, handmade, customizable, personalized, embroidery, gifts",
-    openGraph: {
-      title: "Knitty Petit - Handmade Customizable Crochet Products",
-      description:
-        "Discover unique handmade crochet products you can customize. Add names, icons, and personal touches to sweaters, accessories, and more.",
-      type: "website",
-    },
-  }
-}
+export default page;
