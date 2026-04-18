@@ -1,10 +1,5 @@
 {
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
-    "ANTHROPIC_AUTH_TOKEN": "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",
-    "ANTHROPIC_API_KEY": "",
-    "ANTHROPIC_MODEL": "stepfun/step-3.5-flash:free"
-  },
+
   "permissions": {
     "allow": [
       "Bash(npx tsc:*)",
@@ -49,5 +44,13 @@
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "shadcn"
-  ]
+  ],
+  
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+    "ANTHROPIC_AUTH_TOKEN": "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",
+    "ANTHROPIC_API_KEY": "",
+    "ANTHROPIC_MODEL": "openrouter/free"
+  }
+
 }
