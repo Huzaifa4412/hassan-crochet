@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils"
 import { AnnouncementBar } from "./AnnouncementBar"
 import { SearchDropdown } from "@/components/search/SearchDropdown"
+import Image from "next/image"
 
 interface MenuItem {
   label: string
@@ -94,10 +95,10 @@ export function Header({ className }: HeaderProps) {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold text-xl">
-                H
+                <img src="/logo.png" alt="Logo" width={250} height={250} className="scale-130" />
               </div>
               <span className="text-xl font-bold tracking-tight hidden sm:inline-block">
-                Hassan Crochet
+                Knitty Petit
               </span>
             </Link>
 

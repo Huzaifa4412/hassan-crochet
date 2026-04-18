@@ -10,16 +10,16 @@ export function SiteFooter() {
           <Link href="/" className="flex flex-col items-center md:items-start space-y-1">
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-                <ShoppingCart className="h-4 w-4 text-white" />
+                <img src="/logo.png" className="scale-150" alt="logo" />
               </div>
-              <span className="font-semibold">Hassan Crochet</span>
+              <span className="font-semibold">Knitty Petit</span>
             </div>
             <p className="text-sm text-muted-foreground">Handmade crochet products crafted with love</p>
           </Link>
 
           {/* Copyright */}
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Hassan Crochet. Made with <Heart className="h-3 w-3 inline fill-red-500" />
+            © {new Date().getFullYear()} Knitty Petit. Made with <Heart className="h-3 w-3 inline fill-red-500" />
           </p>
         </div>
       </div>

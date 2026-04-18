@@ -98,7 +98,7 @@ export async function generateMetadata({ params }: CategoryPageProps) {
   }
 
   return {
-    title: `${category.title} - Hassan Crochet`,
+    title: `${category.title} - Knitty Petit`,
     description: category.description,
   }
 }

@@ -1,5 +1,6 @@
 import { searchProducts } from "@/sanity/queries"
 import { ProductCard } from "@/components/home/ProductCard"
+import Link from "next/link"
 
 interface SearchResultsProps {
   query: string
@@ -18,13 +19,13 @@ export async function SearchResults({ query }: SearchResultsProps) {
         </div>
         <h2 className="text-xl font-semibold mb-2">No products found</h2>
         <p className="text-muted-foreground mb-6">
-          We couldn't find any products matching "{query}"
+          We couldn&apos;t find any products matching &quot;{query}&quot;
         </p>
         <p className="text-sm text-muted-foreground">
-          Try searching for "crochet", "sweater", "basket", or browse our{" "}
-          <a href="/products" className="text-primary hover:underline">
+          Try searching for &quot;crochet&quot;, &quot;sweater&quot;, &quot;basket&quot;, or browse our{" "}
+          <Link href="/products" className="text-primary hover:underline">
             all products
-          </a>
+          </Link>
         </p>
       </div>
     )

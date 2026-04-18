@@ -4,6 +4,7 @@ import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import Header from "@/components/layout/Header";
 import "./globals.css"
+import { FacebookPixel } from "@/components";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hassan Crochet - Handmade Crochet Products",
+  title: "Knitty Petit - Handmade Crochet Products",
   description: "Beautiful handmade crochet products with customization options. Shop unique trays, decor, and accessories.",
 };
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">
             {children}
+            <FacebookPixel />
           </main>
           <SiteFooter />
         </Providers>

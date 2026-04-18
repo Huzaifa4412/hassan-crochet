@@ -74,7 +74,7 @@ export function TestimonialsSection({ className }: TestimonialsSectionProps) {
           </h2>
 
           <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-            Don't just take our word for it. Here's what our happy customers have to say about their
+            Don&apos;t just take our word for it. Here&apos;s what our happy customers have to say about their
             handmade crochet pieces.
           </p>
 

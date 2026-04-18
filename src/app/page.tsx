@@ -136,8 +136,8 @@ export default async function Home() {
         {/* 6. Bento Grid Section - Creative Highlight */}
         <BentoGrid />
 
-{/* 7. Testimonials Section */}
-<TestimonialsSection />
+        {/* 7. Testimonials Section */}
+        <TestimonialsSection />
       </main>
     </>
   )
@@ -146,12 +146,12 @@ export default async function Home() {
 // SEO Metadata
 export async function generateMetadata() {
   return {
-    title: "Hassan Crochet - Handmade Customizable Crochet Products",
+    title: "Knitty Petit - Handmade Customizable Crochet Products",
     description:
       "Discover unique handmade crochet products you can customize. Add names, icons, and personal touches to sweaters, accessories, and more. Handcrafted with love.",
     keywords: "crochet, handmade, customizable, personalized, embroidery, gifts",
     openGraph: {
-      title: "Hassan Crochet - Handmade Customizable Crochet Products",
+      title: "Knitty Petit - Handmade Customizable Crochet Products",
       description:
         "Discover unique handmade crochet products you can customize. Add names, icons, and personal touches to sweaters, accessories, and more.",
       type: "website",

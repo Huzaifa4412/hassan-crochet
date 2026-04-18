@@ -22,7 +22,8 @@ const nextConfig: NextConfig = {
       }
     ],
     unoptimized: false,
-  }
+
+  },
 };
 
 export default nextConfig;

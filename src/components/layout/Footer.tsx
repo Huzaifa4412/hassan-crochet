@@ -118,7 +118,7 @@ export function Footer() {
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold text-xl">
                 H
               </div>
-              <span className="text-xl font-bold tracking-tight">Hassan Crochet</span>
+              <span className="text-xl font-bold tracking-tight">Knitty Petit</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Handmade crochet treasures crafted with love and attention to detail.
@@ -127,30 +127,18 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex gap-2">
               <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <Link href="https://instagram.com/knittypetit" target="_blank" rel="noopener noreferrer">
                   <Facebook className="h-4 w-4" />
                 </Link>
               </Button>
               <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <Link href="https://instagram.com/knittypetit" target="_blank" rel="noopener noreferrer">
                   <Instagram className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <Link href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                  <Youtube className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild className="h-9 w-9">
-                <Link href="mailto:hello@hassancrochet.com">
-                  <Mail className="h-4 w-4" />
-                </Link>
-              </Button>
+
+
+
             </div>
           </div>
 
@@ -243,7 +231,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <p className="flex items-center gap-1">
-            © {currentYear} Hassan Crochet. Made with
+            © {currentYear} Knitty Petit. Made with
             <Heart className="w-3 h-3 fill-red-500 text-red-500" />
             and lots of yarn.
           </p>
@@ -256,7 +244,7 @@ export function Footer() {
             >
               <span>Shop on Etsy</span>
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 14.954c-.083.425-.26.833-.529 1.182-.268.35-.607.634-.995.832-.387.198-.812.304-1.245.312-.433.009-.862-.081-1.256-.267-.395-.186-.744-.462-1.024-.808-.28-.347-.486-.751-.603-1.186-.118-.434-.144-.889-.077-1.335l.846-5.073c.033-.198.011-.4-.065-.586-.076-.186-.202-.349-.367-.471-.165-.123-.362-.199-.569-.22-.206-.021-.415.014-.603.101-.188.087-.349.224-.463.396l-.633.903c-.234.333-.548.603-.911.786-.363.183-.766.273-1.172.262-.407-.011-.804-.123-1.156-.326-.352-.202-.652-.489-.868-.835-.216-.346-.342-.742-.366-1.149-.025-.407.056-.815.236-1.184.18-.369.452-.685.792-.914.34-.229.735-.363 1.143-.389.408-.026.817.056 1.186.236.369.18.685.452.914.792l.633.903c.114.172.275.309.463.396.188.087.397.122.603.101.207-.021.404-.097.569-.22.165-.123.291-.285.367-.471.076-.186.098-.388.065-.586l-.846-5.073c-.067-.446-.041-.901.077-1.335.117-.435.323-.839.603-1.186.28-.346.629-.622 1.024-.808.394-.186.823-.276 1.256-.267.433.008.858.114 1.245.312.388.198.727.482.995.832.269.349.446.757.529 1.182l.846 5.073c.23 1.377-.076 2.785-.846 3.956-.77 1.171-1.952 2.031-3.311 2.436z"/>
+                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 14.954c-.083.425-.26.833-.529 1.182-.268.35-.607.634-.995.832-.387.198-.812.304-1.245.312-.433.009-.862-.081-1.256-.267-.395-.186-.744-.462-1.024-.808-.28-.347-.486-.751-.603-1.186-.118-.434-.144-.889-.077-1.335l.846-5.073c.033-.198.011-.4-.065-.586-.076-.186-.202-.349-.367-.471-.165-.123-.362-.199-.569-.22-.206-.021-.415.014-.603.101-.188.087-.349.224-.463.396l-.633.903c-.234.333-.548.603-.911.786-.363.183-.766.273-1.172.262-.407-.011-.804-.123-1.156-.326-.352-.202-.652-.489-.868-.835-.216-.346-.342-.742-.366-1.149-.025-.407.056-.815.236-1.184.18-.369.452-.685.792-.914.34-.229.735-.363 1.143-.389.408-.026.817.056 1.186.236.369.18.685.452.914.792l.633.903c.114.172.275.309.463.396.188.087.397.122.603.101.207-.021.404-.097.569-.22.165-.123.291-.285.367-.471.076-.186.098-.388.065-.586l-.846-5.073c-.067-.446-.041-.901.077-1.335.117-.435.323-.839.603-1.186.28-.346.629-.622 1.024-.808.394-.186.823-.276 1.256-.267.433.008.858.114 1.245.312.388.198.727.482.995.832.269.349.446.757.529 1.182l.846 5.073c.23 1.377-.076 2.785-.846 3.956-.77 1.171-1.952 2.031-3.311 2.436z" />
               </svg>
             </Link>
           </div>

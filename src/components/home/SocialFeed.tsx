@@ -91,7 +91,7 @@ export function SocialFeed({ className }: SocialFeedProps) {
           </h2>
           <p className="text-muted-foreground text-base md:text-lg">
             See how our customers style their personalized pieces. Share yours with
-            @hassancrochet for a chance to be featured!
+            @knittypetit for a chance to be featured!
           </p>
         </div>
 
@@ -158,13 +158,13 @@ export function SocialFeed({ className }: SocialFeedProps) {
         {/* Instagram CTA */}
         <div className="text-center mt-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <a
-            href="https://instagram.com/hassancrochet"
+            href="https://instagram.com/knittypetit"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
           >
             <Instagram className="w-5 h-5" />
-            Follow @hassancrochet on Instagram
+            Follow @knittypetit on Instagram
           </a>
         </div>
       </div>

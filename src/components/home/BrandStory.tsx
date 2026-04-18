@@ -16,7 +16,15 @@ export function BrandStory({ className }: BrandStoryProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(true)
   const [isMuted, setIsMuted] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [showControls, setShowControls] = useState(false)
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const currentProgress = (videoRef.current.currentTime / videoRef.current.duration) * 100
+      setProgress(currentProgress)
+    }
+  }
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -67,7 +75,7 @@ export function BrandStory({ className }: BrandStoryProps) {
                 Handcrafted with Love Since 2020
               </h2>
               <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-                Since 2020, Hassan Crochet has been creating unique, customizable crochet pieces that
+                Since 2020, Knitty Petit has been creating unique, customizable crochet pieces that
                 bring warmth and personality to your home. Each product is lovingly handcrafted with
                 attention to detail and quality materials.
               </p>
@@ -115,6 +123,7 @@ export function BrandStory({ className }: BrandStoryProps) {
                 loop
                 playsInline
                 muted={isMuted}
+                onTimeUpdate={handleTimeUpdate}
                 className="w-full h-full object-cover"
               />
               {/* Overlay Gradient */}
@@ -133,9 +142,7 @@ export function BrandStory({ className }: BrandStoryProps) {
                     <div
                       className="h-full bg-white rounded-full transition-all duration-100"
                       style={{
-                        width: videoRef.current
-                          ? `${(videoRef.current.currentTime / videoRef.current.duration) * 100}%`
-                          : "0%"
+                        width: `${progress}%`
                       }}
                     />
                   </div>

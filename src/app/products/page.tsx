@@ -1,11 +1,10 @@
 import Link from "next/link"
-import { ArrowRight, Filter, Grid3x3, List } from "lucide-react"
+import { Grid3x3, List } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
+
 import { ProductCard, ProductCardCompact } from "@/components/ProductCard"
-import { getProducts, getFeaturedProducts, getNewProducts, getCategories, getCollections } from "@/sanity/queries"
+import { getProducts, getCategories, getCollections } from "@/sanity/queries"
 import { Suspense } from "react"
 
 interface ProductsPageProps {

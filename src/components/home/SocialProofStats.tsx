@@ -57,12 +57,7 @@ function getLocation(): string {
 export function SocialProofStats({ className = "" }: { className?: string }) {
   const [viewers, setViewers] = useState(() => Math.floor(Math.random() * 25) + 8)
   const [soldToday, setSoldToday] = useState(() => Math.floor(Math.random() * 40) + 15)
-  const [recentPurchases, setRecentPurchases] = useState<RecentPurchase[]>([])
-  const [currentPurchaseIndex, setCurrentPurchaseIndex] = useState(0)
-  const [isVisible, setIsVisible] = useState(true)
-
-  // Generate initial recent purchases
-  useEffect(() => {
+  const [recentPurchases, setRecentPurchases] = useState<RecentPurchase[]>(() => {
     const purchases: RecentPurchase[] = []
     for (let i = 0; i < 5; i++) {
       purchases.push({
@@ -71,8 +66,10 @@ export function SocialProofStats({ className = "" }: { className?: string }) {
         location: getLocation(),
       })
     }
-    setRecentPurchases(purchases)
-  }, [])
+    return purchases
+  })
+  const [currentPurchaseIndex, setCurrentPurchaseIndex] = useState(0)
+  const [isVisible, setIsVisible] = useState(true)
 
   // Update viewers with natural fluctuation
   useEffect(() => {

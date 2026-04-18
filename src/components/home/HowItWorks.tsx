@@ -21,7 +21,7 @@ const steps: Step[] = [
   {
     number: 1,
     title: "Choose",
-    description: "Select from 50+ handmade products including tray tables, decor, and accessories",
+    description: "Select from 50+ handmade products Sweaters, Cardigans, and more",
     icon: Palette,
   },
   {

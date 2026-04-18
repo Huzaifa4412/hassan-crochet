@@ -1,4 +1,5 @@
 import { fetchSanity, fetchSanityArray } from "./lib/fetch";
+import { applyVariantOverrides } from "@/lib/product-variants";
 
 // ============================================================================
 // PRODUCT TYPES & QUERIES
@@ -81,7 +82,8 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     saleEndDate
   }`;
 
-  return fetchSanity<Product>(query, { slug });
+  const result = await fetchSanity<Product>(query, { slug });
+  return result ? applyVariantOverrides(result) : null;
 }
 
 // Get all products (for static generation)
@@ -118,7 +120,8 @@ export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
     slug
   }[0...${limit}]`;
 
-  return fetchSanityArray<Product>(query);
+  const results = await fetchSanityArray<Product>(query);
+  return results.map(applyVariantOverrides);
 }
 
 // Get new products
@@ -145,7 +148,8 @@ export async function getNewProducts(limit = 8): Promise<Product[]> {
     slug
   }[0...${limit}]`;
 
-  return fetchSanityArray<Product>(query);
+  const results = await fetchSanityArray<Product>(query);
+  return results.map(applyVariantOverrides);
 }
 
 // Get all products with basic info
@@ -172,7 +176,8 @@ export async function getProducts(limit = 12, offset = 0): Promise<Product[]> {
     slug
   }[${offset}...${offset + limit}]`;
 
-  return fetchSanityArray<Product>(query);
+  const results = await fetchSanityArray<Product>(query);
+  return results.map(applyVariantOverrides);
 }
 
 // Get products by category
@@ -199,7 +204,8 @@ export async function getProductsByCategory(categorySlug: string, limit = 12): P
     slug
   }[0...${limit}]`;
 
-  return fetchSanityArray<Product>(query, { categorySlug });
+  const results = await fetchSanityArray<Product>(query, { categorySlug });
+  return results.map(applyVariantOverrides);
 }
 
 // Get products by collection
@@ -226,7 +232,8 @@ export async function getProductsByCollection(collectionSlug: string, limit = 12
     slug
   }[0...${limit}]`;
 
-  return fetchSanityArray<Product>(query, { collectionSlug });
+  const results = await fetchSanityArray<Product>(query, { collectionSlug });
+  return results.map(applyVariantOverrides);
 }
 
 // ============================================================================
@@ -345,7 +352,11 @@ export async function getCollectionBySlug(slug: string): Promise<Collection | nu
     isActive
   }`;
 
-  return fetchSanity<Collection>(query, { slug });
+  const result = await fetchSanity<Collection>(query, { slug });
+  if (result && result.products) {
+    result.products = result.products.map(applyVariantOverrides);
+  }
+  return result;
 }
 
 // ============================================================================
@@ -585,5 +596,6 @@ export async function searchProducts(searchTerm: string, limit = 12): Promise<Pr
     slug
   }[0...${limit}]`;
 
-  return fetchSanityArray<Product>(searchQuery, { searchTerm: `*${searchTerm}*` });
+  const results = await fetchSanityArray<Product>(searchQuery, { searchTerm: `*${searchTerm}*` });
+  return results.map(applyVariantOverrides);
 }
