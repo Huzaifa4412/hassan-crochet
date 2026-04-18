@@ -4,11 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { SearchDropdown } from "@/components/search/SearchDropdown";
-import { X } from "lucide-react";
+import { X, Menu } from "lucide-react";
 import TimerClock from "../TimerClock";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Journal", href: "/blog" },
+    { name: "About", href: "/about" },
+    { name: "Products", href: "/products" },
+  ];
 
   return (
     <>
@@ -25,66 +34,28 @@ export default function Header() {
           {/* LEFT: Nav Links (Wraps into two lines automatically if needed) */}
           <div className="hidden lg:flex flex-col gap-3 w-1/3 mt-2">
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-lg  text-gray-800">
-              <li>
-                <Link
-                  href="/"
-                  className="hover:text-gray-500 transition-colors"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  className="hover:text-gray-500 transition-colors"
-                >
-                  Journal
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="hover:text-gray-500 transition-colors"
-                >
-                  About
-                </Link>
-              </li>
-
-              {/* Dropdown item example */}
-              {/* <li className="flex items-center gap-1 cursor-pointer hover:text-gray-500 transition-colors">
-                Kids Daily Essentials
-                <svg
-                  className="w-3 h-3 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              </li> */}
-
-              <li className="flex items-center gap-1 cursor-pointer hover:text-gray-500 transition-colors">
-                <Link href="/products">Products</Link>
-                {/* <svg
-                  className="w-3 h-3 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg> */}
-              </li>
+              {navLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="hover:text-gray-500 transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
+          </div>
+
+          {/* MOBILE MENU TOGGLE: Visible on smaller screens */}
+          <div className="lg:hidden flex items-center w-1/3 mt-3">
+            <button
+              onClick={() => setIsMenuOpen(true)}
+              className="p-2 -ml-2 text-gray-700 hover:text-gray-900 transition-colors focus:outline-none"
+              aria-label="Open menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
           </div>
 
           {/* CENTER: Logo */}
@@ -198,6 +169,75 @@ export default function Header() {
           </svg>
         </div>
       </header>
+      {/* MOBILE MENU OVERLAY */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] lg:hidden"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[70] shadow-2xl lg:hidden p-6 flex flex-col"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <Link
+                  href="/"
+                  className="flex items-center gap-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Image
+                    alt="Logo"
+                    src={"/logo.png"}
+                    width={40}
+                    height={40}
+                    className="size-8"
+                  />
+                  <span className="font-light tracking-widest text-sm text-gray-500">
+                    KNITTY BABY
+                  </span>
+                </Link>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 -mr-2 text-gray-500 hover:text-gray-900 transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <ul className="flex flex-col gap-6">
+                {navLinks.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="text-2xl font-light text-gray-800 hover:text-orange-400 transition-colors block"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-auto pt-10 border-t border-gray-100">
+                <p className="text-sm text-gray-400 font-light">
+                  Handmade with love for your little ones.
+                </p>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }
