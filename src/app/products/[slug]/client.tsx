@@ -549,13 +549,17 @@ export default function ProductClient({ product }: ProductClientProps) {
         body: JSON.stringify({
           ...orderForm,
           productName: product.title,
-          productLink: product.etsyLink || "https://www.etsy.com",
+          productLink: product.etsyLink || "Link Not Provided",
           customizationDetails: currentSummary,
         }),
       })
 
       if (response.ok) {
-        window.open(product.etsyLink || "https://www.etsy.com", "_blank", "noopener,noreferrer")
+        if (product.etsyLink) {
+          window.open(product.etsyLink, "_blank", "noopener,noreferrer")
+        } else {
+          addToast({ variant: 'default', message: 'Etsy link for this product is not available. Please contact us.', duration: 5000 })
+        }
         setIsOrderDialogOpen(false)
         setOrderForm({ name: '', email: '', phone: '', address: '' })
       } else {

@@ -198,11 +198,11 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
   const variants = product.variants || []
 
   return (
-    <Link href={`/products/${product.slug.current}`} className={cn("group", className)}>
+    <div className={cn("group", className)}>
       <Card className="overflow-hidden border-border/40 bg-background hover:shadow-lg transition-all duration-300 hover:border-primary/30">
         <CardContent className="p-3 flex gap-4">
           {/* Image */}
-          <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-muted/30">
+          <Link href={`/products/${product.slug.current}`} className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-muted/30">
             {mainImage && (
               <Image
                 src={mainImage}
@@ -216,7 +216,7 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
                 {product.badges[0]}
               </Badge>
             )}
-          </div>
+          </Link>
 
           {/* Content */}
           <div className="flex-1 min-w-0 space-y-1">
@@ -225,38 +225,52 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
                 {product.category.title}
               </p>
             )}
-            <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors line-clamp-2">
-              {product.title}
-            </h4>
+            <Link href={`/products/${product.slug.current}`}>
+              <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                {product.title}
+              </h4>
+            </Link>
             {product.shortDescription && (
               <p className="text-xs text-muted-foreground line-clamp-1">
                 {product.shortDescription}
               </p>
             )}
             <div className="flex items-center justify-between pt-1">
-              {variants.length > 0 && (
-                <div className="flex gap-1">
-                  {variants.slice(0, 3).map((variant, index) => {
-                    const bgColor = variant.colorValue?.startsWith("bg-")
-                      ? variant.colorValue
-                      : undefined
-                    const styleColor = variant.colorValue && !variant.colorValue.startsWith("bg-")
-                      ? { backgroundColor: variant.colorValue }
-                      : undefined
+              <div className="flex items-center gap-2">
+                {variants.length > 0 && (
+                  <div className="flex gap-1">
+                    {variants.slice(0, 3).map((variant, index) => {
+                      const bgColor = variant.colorValue?.startsWith("bg-")
+                        ? variant.colorValue
+                        : undefined
+                      const styleColor = variant.colorValue && !variant.colorValue.startsWith("bg-")
+                        ? { backgroundColor: variant.colorValue }
+                        : undefined
 
-                    return (
-                      <div
-                        key={index}
-                        className={cn(
-                          "w-3 h-3 rounded-full border border-background shadow-sm",
-                          bgColor
-                        )}
-                        style={styleColor}
-                      />
-                    )
-                  })}
-                </div>
-              )}
+                      return (
+                        <div
+                          key={index}
+                          className={cn(
+                            "w-3 h-3 rounded-full border border-background shadow-sm",
+                            bgColor
+                          )}
+                          style={styleColor}
+                        />
+                      )
+                    })}
+                  </div>
+                )}
+                {product.etsyLink && (
+                  <a
+                    href={product.etsyLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-0.5 ml-1"
+                  >
+                    Etsy <ArrowRight className="w-2.5 h-2.5" />
+                  </a>
+                )}
+              </div>
               <Button
                 variant="ghost"
                 size="icon"
@@ -277,7 +291,7 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
           </div>
         </CardContent>
       </Card>
-    </Link>
+    </div>
   )
 }
 
