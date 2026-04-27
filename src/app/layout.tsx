@@ -34,11 +34,11 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <FacebookPixel />
         <Providers>
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">
             {children}
-            <FacebookPixel />
           </main>
           <SiteFooter />
         </Providers>
