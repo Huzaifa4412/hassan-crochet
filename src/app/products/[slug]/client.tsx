@@ -279,62 +279,65 @@ function ReviewCard({ review }: { review: Review }) {
   return (
     <motion.div
       initial={false}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -5 }}
       transition={{ type: "spring", stiffness: 260, damping: 24 }}
       className="h-full"
     >
-    <Card className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_16px_45px_rgba(124,82,58,0.08)] transition-all duration-300 hover:border-[#cf6f3f]/40 hover:shadow-[0_20px_60px_rgba(124,82,58,0.14)]">
-      {/* Review Image - Compact display */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#f6eee8] sm:aspect-[4/3] lg:h-[360px] lg:aspect-auto">
-        <img
-          src={review.image}
-          alt={`Customer photo from ${review.name}`}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        {/* Verified Badge - Smaller on mobile */}
-        <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-md backdrop-blur-sm">
-          <Check className="w-3 h-3 text-green-600" />
-          <span className="hidden text-[10px] font-semibold text-[#4d3b34] sm:inline">
-            Verified
-          </span>
-        </div>
-      </div>
-
-      <CardContent className="p-3 sm:p-4 flex-1 flex flex-col">
-        {/* Stars - Smaller on mobile */}
-        <div className="flex items-center gap-0.5 mb-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star
-              key={star}
-              className={`w-3 h-3 sm:w-4 sm:h-4 ${star <= review.rating ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`}
-            />
-          ))}
-        </div>
-
-        {/* Review Text - Clamp lines */}
-        <blockquote className="flex-1 mb-2 sm:mb-3">
-          <p className="line-clamp-3 text-xs leading-relaxed text-[#4d3b34] sm:text-sm">
-            &ldquo;{review.text}&rdquo;
-          </p>
-        </blockquote>
-
-        {/* Author Info - Compact */}
-        <div className="border-t border-[#ead7c7] pt-2 sm:pt-3">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-xs font-bold text-[#251611] sm:text-sm">{review.name}</p>
-              <p className="flex items-center gap-1 text-[10px] text-[#7a6258] sm:text-xs">
-                <span className="h-1 w-1 rounded-full bg-[#cf6f3f]" />
-                {review.location}
-              </p>
+      <Card className="group flex h-full min-h-[560px] overflow-hidden rounded-[1.75rem] border border-[#ead7c7] bg-[#fffdf9] shadow-[0_18px_50px_rgba(91,54,37,0.1)] transition-all duration-300 hover:border-[#cf6f3f]/50 hover:shadow-[0_28px_70px_rgba(91,54,37,0.16)]">
+        <div className="p-3 pb-0">
+          <div className="relative overflow-hidden rounded-[1.35rem] border border-[#ead7c7] bg-[#f4e8dd] shadow-inner">
+            <div className="h-[310px] w-full overflow-hidden bg-[#f4e8dd]">
+              <img
+                src={review.image}
+                alt={`Customer photo from ${review.name}`}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.035]"
+              />
             </div>
-            <span className="text-[10px] text-[#7a6258] sm:text-xs">
+            <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-white/70 bg-white/92 px-3 py-1.5 shadow-md backdrop-blur">
+              <Check className="size-3.5 text-[#3f7b4b]" />
+              <span className="text-[11px] font-bold text-[#4d3b34]">
+                Verified
+              </span>
+            </div>
+            <div className="absolute bottom-3 right-3 rounded-full border border-[#ead7c7] bg-white/92 px-3 py-1.5 text-[11px] font-bold text-[#bf6036] shadow-lg backdrop-blur">
+              Customer photo
+            </div>
+          </div>
+        </div>
+
+        <CardContent className="flex flex-1 flex-col p-4 sm:p-5">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-0.5">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={`size-3.5 ${star <= review.rating ? "fill-[#f5b301] text-[#f5b301]" : "fill-[#ead7c7] text-[#ead7c7]"}`}
+                />
+              ))}
+            </div>
+            <span className="text-[11px] font-semibold text-[#9a7867]">
               {review.date}
             </span>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+
+          <blockquote className="flex-1 rounded-[1.25rem] bg-[#fff7ef] px-4 py-3">
+            <p className="text-center text-sm font-semibold leading-6 text-[#321f18]">
+              &ldquo;{review.text}&rdquo;
+            </p>
+          </blockquote>
+
+          <div className="mt-4 flex items-end justify-between gap-3 border-t border-[#ead7c7] pt-3">
+            <div>
+              <p className="text-sm font-black text-[#251611]">{review.name}</p>
+              <p className="mt-0.5 flex items-center gap-1.5 text-xs text-[#7a6258]">
+                <span className="size-1 rounded-full bg-[#cf6f3f]" />
+                {review.location}
+              </p>
+            </div>
+            <Quote className="size-5 text-[#cf6f3f]/55" />
+          </div>
+        </CardContent>
+      </Card>
     </motion.div>
   );
 }
@@ -1316,33 +1319,60 @@ export default function ProductClient({ product }: ProductClientProps) {
         </div>
 
         {/* Reviews Section */}
-        <section className="mt-16 space-y-8 rounded-[2rem] border border-[#ead7c7] bg-white/60 px-4 py-8 shadow-[0_18px_55px_rgba(124,82,58,0.08)] sm:px-6 lg:px-8">
+        <section className="relative mt-16 overflow-hidden rounded-[2.25rem] border border-[#ead7c7] bg-[#fff7ef] px-4 py-6 shadow-[0_24px_80px_rgba(124,82,58,0.12)] sm:px-6 sm:py-8 lg:px-8">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/80 to-transparent" />
+          <div className="pointer-events-none absolute -left-24 bottom-10 h-48 w-48 rounded-full bg-[#e9b896]/20 blur-3xl" />
           {/* Section Header */}
-          <div className="text-center space-y-2 sm:space-y-4 px-4">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ead7c7] bg-[#fffaf4] px-3 py-1.5 sm:gap-2 sm:px-4 sm:py-2">
-              <Quote className="w-3 h-3 text-[#bf6036] sm:w-4 sm:h-4" />
-              <span className="text-xs font-bold text-[#bf6036] sm:text-sm">
-                Happy Customers
-              </span>
+          <div className="relative grid gap-5 px-1 sm:px-2 lg:grid-cols-[1fr_360px] lg:items-end">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-[#dfbea9] bg-white px-3 py-1.5 shadow-sm sm:gap-2 sm:px-4 sm:py-2">
+                <Quote className="w-3 h-3 text-[#bf6036] sm:w-4 sm:h-4" />
+                <span className="text-xs font-bold text-[#bf6036] sm:text-sm">
+                  Customer gallery
+                </span>
+              </div>
+              <div className="max-w-2xl space-y-3">
+                <h2 className="text-3xl font-black leading-[0.98] tracking-tight text-[#251611] sm:text-4xl md:text-5xl">
+                  Real little moments, stitched into sweaters.
+                </h2>
+                <p className="max-w-xl text-sm leading-7 text-[#7a6258] sm:text-base">
+                  Browse customer photos, names, colors, and keepsake details
+                  from families who customized their own crochet piece.
+                </p>
+              </div>
             </div>
-            <h2 className="text-2xl font-black tracking-tight text-[#251611] sm:text-3xl md:text-4xl">
-              Tiny sweaters, big reactions
-            </h2>
-            <p className="mx-auto max-w-2xl px-4 text-xs leading-6 text-[#7a6258] sm:text-sm">
-              Real photos from real customers. See how our crochet pieces look
-              on adorable little ones!
-            </p>
+
+            <div className="grid grid-cols-3 overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_18px_45px_rgba(124,82,58,0.08)]">
+              <div className="border-r border-[#ead7c7] p-4 text-center">
+                <p className="text-2xl font-black text-[#251611]">5.0</p>
+                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a7867]">
+                  Rating
+                </p>
+              </div>
+              <div className="border-r border-[#ead7c7] p-4 text-center">
+                <p className="text-2xl font-black text-[#251611]">300+</p>
+                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a7867]">
+                  Orders
+                </p>
+              </div>
+              <div className="p-4 text-center">
+                <p className="text-2xl font-black text-[#251611]">Photo</p>
+                <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a7867]">
+                  Proof
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Rating Summary */}
 
           {/* Swiper Carousel */}
-          <div className="relative px-4 sm:px-6 md:px-0">
+          <div className="relative mt-8 px-1 sm:px-2">
             <Swiper
               modules={[Autoplay, Pagination, Navigation]}
-              spaceBetween={12}
-              slidesPerView={1.2}
-              centeredSlides={true}
+              spaceBetween={18}
+              slidesPerView="auto"
+              centeredSlides={false}
               autoplay={{
                 delay: 5000,
                 disableOnInteraction: false,
@@ -1351,38 +1381,21 @@ export default function ProductClient({ product }: ProductClientProps) {
               pagination={{
                 clickable: true,
                 bulletClass:
-                  "w-2 h-2 rounded-full bg-primary/30 opacity-100 transition-all",
-                bulletActiveClass: "w-6 bg-primary",
+                  "w-2 h-2 rounded-full bg-[#cf6f3f]/25 opacity-100 transition-all",
+                bulletActiveClass: "w-7 bg-[#cf6f3f]",
               }}
               navigation={{
                 nextEl: ".reviews-button-next",
                 prevEl: ".reviews-button-prev",
               }}
               loop={true}
-              className="reviews-swiper pb-12"
-              breakpoints={{
-                480: {
-                  slidesPerView: 1.5,
-                  spaceBetween: 12,
-                },
-                640: {
-                  slidesPerView: 2,
-                  spaceBetween: 16,
-                },
-                768: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                  centeredSlides: false,
-                },
-                1024: {
-                  slidesPerView: 3,
-                  spaceBetween: 24,
-                  centeredSlides: false,
-                },
-              }}
+              className="reviews-swiper !overflow-visible pb-12"
             >
               {reviews.map((review) => (
-                <SwiperSlide key={review.id}>
+                <SwiperSlide
+                  key={review.id}
+                  className="!h-auto !w-[84vw] sm:!w-[360px] lg:!w-[350px]"
+                >
                   <ReviewCard review={review} />
                 </SwiperSlide>
               ))}
@@ -1390,13 +1403,13 @@ export default function ProductClient({ product }: ProductClientProps) {
 
             {/* Navigation Buttons - Hidden on mobile */}
             <button
-              className="reviews-button-prev group absolute left-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
+              className="reviews-button-prev group absolute -left-2 top-[42%] z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
               aria-label="Previous review"
             >
               <ChevronLeft className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
             <button
-              className="reviews-button-next group absolute right-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
+              className="reviews-button-next group absolute -right-2 top-[42%] z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
               aria-label="Next review"
             >
               <ChevronRight className="w-4 h-4 group-hover:scale-110 transition-transform" />
