@@ -1,18 +1,18 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import Header from "@/components/layout/Header"
-import Footer from "@/components/layout/Footer"
 import { ProductCard } from "@/components/ProductCard"
 import { getProductsByCategory, getCategoryBySlug } from "@/sanity/queries"
+import { absoluteUrl, buildMetadata } from "@/lib/seo"
 
 interface CategoryPageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
-  const { slug } = params
+  const { slug } = await params
 
   const [category, products] = await Promise.all([
     getCategoryBySlug(slug),
@@ -23,8 +23,32 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     notFound()
   }
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Products",
+        item: absoluteUrl("/products"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: category.title,
+        item: absoluteUrl(`/category/${category.slug.current}`),
+      },
+    ],
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <main className="min-h-screen bg-background">
         {/* Header */}
         <div className="border-b border-border/40 bg-muted/30">
@@ -88,17 +112,25 @@ export async function generateStaticParams() {
   return []
 }
 
-export async function generateMetadata({ params }: CategoryPageProps) {
-  const category = await getCategoryBySlug(params.slug)
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { slug } = await params
+  const category = await getCategoryBySlug(slug)
 
   if (!category) {
-    return {
+    return buildMetadata({
       title: "Category Not Found",
-    }
+      description: "This Knitty Petit product category could not be found.",
+      path: `/category/${slug}`,
+      noIndex: true,
+    })
   }
 
-  return {
-    title: `${category.title} - Knitty Petit`,
-    description: category.description,
-  }
+  return buildMetadata({
+    title: `${category.title} Crochet Products`,
+    description:
+      category.description ||
+      `Shop handmade ${category.title.toLowerCase()} crochet products and customizable gifts from Knitty Petit.`,
+    path: `/category/${category.slug.current}`,
+    image: category.image?.url || "/logo.png",
+  })
 }

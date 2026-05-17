@@ -1,397 +1,259 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Heart, ArrowRight, Eye, Sparkles } from "lucide-react"
-import type { Product } from "@/sanity/queries"
+import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "motion/react";
+import { ArrowRight, Heart, Sparkles } from "lucide-react";
+import type { Product } from "@/sanity/queries";
+import { cn } from "@/lib/utils";
 
 interface ProductCardProps {
-  product: Product
-  className?: string
-  showQuickView?: boolean
-  onQuickView?: (product: Product) => void
+  product: Product;
+  className?: string;
+  showQuickView?: boolean;
+  onQuickView?: (product: Product) => void;
 }
 
-export function ProductCard({ product, className, showQuickView = false, onQuickView }: ProductCardProps) {
-  const [isFavorite, setIsFavorite] = React.useState(false)
-  const [isImageLoaded, setIsImageLoaded] = React.useState(false)
+function getProductImage(product: Product) {
+  return product.mainImageUrl || product.variants?.[0]?.imageUrl || "";
+}
 
-  // Use mainImage from the product, fallback to first variant image
-  const mainImage = product.mainImageUrl || product.variants?.[0]?.imageUrl || ""
-  const variants = product.variants || []
+export function ProductCard({
+  product,
+  className,
+  showQuickView = false,
+  onQuickView,
+}: ProductCardProps) {
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  const [isImageLoaded, setIsImageLoaded] = React.useState(false);
+  const mainImage = getProductImage(product);
+  const variants = product.variants || [];
 
   return (
-    <div className={cn("group", className)}>
-      <Card className="overflow-hidden border-border/40 bg-background hover:shadow-xl transition-all duration-500 hover:border-primary/30 relative">
-        {/* Favorite Button */}
-        <Button
-          variant="ghost"
-          size="icon"
+    <motion.article
+      whileHover={{ y: -8 }}
+      transition={{ type: "spring", stiffness: 260, damping: 24 }}
+      className={cn("group h-full", className)}
+    >
+      <div className="relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[#ead7c7] bg-white shadow-[0_18px_50px_rgba(79,48,30,0.08)] transition-shadow duration-300 group-hover:shadow-[0_30px_70px_rgba(79,48,30,0.16)]">
+        <button
           onClick={(e) => {
-            e.preventDefault()
-            setIsFavorite(!isFavorite)
+            e.preventDefault();
+            setIsFavorite((value) => !value);
           }}
           className={cn(
-            "absolute top-3 right-3 z-20 h-9 w-9 rounded-full bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110",
-            isFavorite && "opacity-100"
+            "absolute right-4 top-4 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/80 bg-white/85 text-[#6f5a50] shadow-[0_12px_30px_rgba(50,30,20,0.12)] backdrop-blur transition-all hover:bg-white hover:text-[#bf6036] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bf6036]",
+            isFavorite && "text-[#bf6036]",
           )}
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           <Heart
-            className={cn(
-              "h-4 w-4 transition-all",
-              isFavorite ? "fill-current text-destructive" : "text-foreground"
-            )}
+            className={cn("h-4 w-4", isFavorite && "fill-current")}
           />
-        </Button>
+        </button>
 
-        {/* Badges */}
-        {product.badges && product.badges.length > 0 && (
-          <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-            {product.badges.map((badge, index) => (
-              <Badge
-                key={index}
-                variant={index === 0 ? "default" : "secondary"}
-                className="text-[10px] px-2.5 py-0.5 font-medium shadow-sm backdrop-blur-sm"
-              >
-                {badge}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {/* Image Container */}
-        <div className="block relative aspect-square overflow-hidden bg-muted/30">
-          {/* Primary Image */}
+        <Link
+          href={`/products/${product.slug.current}`}
+          className="relative block aspect-[4/4.6] overflow-hidden bg-[#f6eee8]"
+        >
           {mainImage && (
             <Image
               src={mainImage}
               alt={product.title}
               fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               className={cn(
-                "object-cover transition-all duration-700 group-hover:scale-110",
-                !isImageLoaded && "scale-110 blur-xl"
+                "object-cover transition duration-700 group-hover:scale-105",
+                !isImageLoaded && "scale-105 blur-xl",
               )}
               onLoad={() => setIsImageLoaded(true)}
             />
           )}
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0)_45%,rgba(45,28,20,0.28)_100%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-          {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-          {/* Quick Action Buttons on Hover */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex gap-2">
-
-
-            <Button
-              asChild
-              size="sm"
-              className={cn(
-                "flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium shadow-lg shadow-orange-500/25",
-                !showQuickView && "w-full"
-              )}
-            >
-              <a
-                href={product.etsyLink || "#"}
-                target="_blank"
+          <div className="absolute left-4 top-4 flex flex-wrap gap-2 pr-14">
+            {(product.badges?.length ? product.badges : product.featured ? ["Featured"] : []).slice(0, 2).map((badge) => (
+              <span
+                key={badge}
+                className="rounded-full border border-white/70 bg-white/82 px-3 py-1 text-[11px] font-semibold text-[#8a4a2b] shadow-sm backdrop-blur"
               >
-                View On Etsy
-                <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
-              </a>
-            </Button>
+                {badge}
+              </span>
+            ))}
           </div>
 
-          {/* Sparkle Effect on Hover */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-            <div className="relative">
-              <Sparkles className="w-16 h-16 text-primary/20 animate-pulse" />
-            </div>
+          <div className="absolute bottom-4 left-4 right-4 flex translate-y-3 items-center justify-between gap-3 rounded-2xl bg-white/88 p-3 opacity-0 shadow-[0_14px_36px_rgba(48,29,19,0.14)] backdrop-blur transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+            <span className="text-xs font-semibold text-[#6f5a50]">
+              Preview and personalize
+            </span>
+            <ArrowRight className="h-4 w-4 text-[#bf6036]" />
           </div>
-        </div>
+        </Link>
 
-        {/* Content */}
-        <CardContent className="p-4 space-y-3">
-          {/* Category */}
-          {product.category && (
-            <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-              {product.category.title}
-            </p>
-          )}
+        <div className="flex flex-1 flex-col p-5">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            {product.category && (
+              <p className="text-xs font-semibold uppercase text-[#9b7a68]">
+                {product.category.title}
+              </p>
+            )}
+            {variants.length > 0 && (
+              <div className="flex -space-x-1">
+                {variants.slice(0, 4).map((variant, index) => {
+                  const styleColor =
+                    variant.colorValue && !variant.colorValue.startsWith("bg-")
+                      ? { backgroundColor: variant.colorValue }
+                      : undefined;
+                  return (
+                    <span
+                      key={`${variant.colorName}-${index}`}
+                      className={cn(
+                        "h-5 w-5 rounded-full border-2 border-white shadow-sm",
+                        variant.colorValue?.startsWith("bg-")
+                          ? variant.colorValue
+                          : "bg-[#e8d5c4]",
+                      )}
+                      style={styleColor}
+                      title={variant.colorName}
+                    />
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
-          {/* Title */}
           <Link href={`/products/${product.slug.current}`}>
-            <h3 className="font-semibold text-lg leading-tight group-hover:text-primary transition-colors line-clamp-2">
+            <h3 className="line-clamp-2 text-xl font-semibold leading-tight text-[#2f211b] transition-colors group-hover:text-[#a94f2c]">
               {product.title}
             </h3>
           </Link>
 
-          {/* Description - Optional */}
           {product.shortDescription && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="mt-3 line-clamp-2 text-sm leading-6 text-[#7b665c]">
               {product.shortDescription}
             </p>
           )}
 
-          {/* Color Variants Preview */}
-          {variants.length > 0 && (
-            <div className="flex items-center gap-1.5 pt-1">
-              {variants.slice(0, 4).map((variant, index) => {
-                const bgColor = variant.colorValue?.startsWith("bg-")
-                  ? variant.colorValue
-                  : undefined
-                const styleColor = variant.colorValue && !variant.colorValue.startsWith("bg-")
-                  ? { backgroundColor: variant.colorValue }
-                  : undefined
-
-                return (
-                  <div
-                    key={index}
-                    className={cn(
-                      "w-5 h-5 rounded-full border-2 border-background shadow-sm",
-                      bgColor
-                    )}
-                    style={styleColor}
-                    title={variant.colorName}
-                  />
-                )
-              })}
-              {variants.length > 4 && (
-                <span className="text-xs text-muted-foreground ml-1">
-                  +{variants.length - 4}
-                </span>
-              )}
-            </div>
-          )}
-
-          {/* Premium CTA Button */}
-          <Link
-            href={`/products/${product.slug.current}`}
-            rel="noopener noreferrer"
-            className="group/btn relative block"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 rounded-lg blur opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300"></div>
-            <button className="relative w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-md shadow-orange-500/20 hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-300 flex items-center justify-center gap-2 text-sm group-hover/btn:scale-[1.02] active:scale-[0.98]">
-              <span>Customize Now</span>
-              <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-0.5 transition-transform" />
-            </button>
-          </Link>
-        </CardContent>
-      </Card>
-    </div >
-  )
-}
-
-// Compact Product Card for Side/Grid Layouts
-interface ProductCardCompactProps {
-  product: Product
-  className?: string
-}
-
-export function ProductCardCompact({ product, className }: ProductCardCompactProps) {
-  const [isFavorite, setIsFavorite] = React.useState(false)
-
-  const mainImage = product.mainImageUrl || product.variants?.[0]?.imageUrl || ""
-  const variants = product.variants || []
-
-  return (
-    <div className={cn("group", className)}>
-      <Card className="overflow-hidden border-border/40 bg-background hover:shadow-lg transition-all duration-300 hover:border-primary/30">
-        <CardContent className="p-3 flex gap-4">
-          {/* Image */}
-          <Link href={`/products/${product.slug.current}`} className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-muted/30">
-            {mainImage && (
-              <Image
-                src={mainImage}
-                alt={product.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-            )}
-            {product.badges && product.badges.length > 0 && (
-              <Badge className="absolute top-1 left-1 text-[9px] px-1.5 py-0 h-4">
-                {product.badges[0]}
-              </Badge>
-            )}
-          </Link>
-
-          {/* Content */}
-          <div className="flex-1 min-w-0 space-y-1">
-            {product.category && (
-              <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                {product.category.title}
-              </p>
-            )}
-            <Link href={`/products/${product.slug.current}`}>
-              <h4 className="font-semibold text-sm leading-tight group-hover:text-primary transition-colors line-clamp-2">
-                {product.title}
-              </h4>
+          <div className="mt-auto flex flex-col gap-3 pt-5">
+            <Link
+              href={`/products/${product.slug.current}`}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#bf6036] px-5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(191,96,54,0.22)] transition-colors hover:bg-[#a94f2c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bf6036] focus-visible:ring-offset-2"
+            >
+              Customize now
+              <ArrowRight className="h-4 w-4" />
             </Link>
-            {product.shortDescription && (
-              <p className="text-xs text-muted-foreground line-clamp-1">
-                {product.shortDescription}
-              </p>
-            )}
-            <div className="flex items-center justify-between pt-1">
-              <div className="flex items-center gap-2">
-                {variants.length > 0 && (
-                  <div className="flex gap-1">
-                    {variants.slice(0, 3).map((variant, index) => {
-                      const bgColor = variant.colorValue?.startsWith("bg-")
-                        ? variant.colorValue
-                        : undefined
-                      const styleColor = variant.colorValue && !variant.colorValue.startsWith("bg-")
-                        ? { backgroundColor: variant.colorValue }
-                        : undefined
-
-                      return (
-                        <div
-                          key={index}
-                          className={cn(
-                            "w-3 h-3 rounded-full border border-background shadow-sm",
-                            bgColor
-                          )}
-                          style={styleColor}
-                        />
-                      )
-                    })}
-                  </div>
-                )}
+            {(product.etsyLink || showQuickView) && (
+              <div className="flex gap-2">
                 {product.etsyLink && (
                   <a
                     href={product.etsyLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center gap-0.5 ml-1"
+                    className="inline-flex min-h-10 flex-1 items-center justify-center rounded-full border border-[#ead7c7] text-sm font-semibold text-[#6f5a50] transition-colors hover:bg-[#fff1e6]"
                   >
-                    Etsy <ArrowRight className="w-2.5 h-2.5" />
+                    View on Etsy
                   </a>
                 )}
+                {showQuickView && (
+                  <button
+                    onClick={() => onQuickView?.(product)}
+                    className="inline-flex min-h-10 flex-1 items-center justify-center rounded-full border border-[#ead7c7] text-sm font-semibold text-[#6f5a50] transition-colors hover:bg-[#fff1e6]"
+                  >
+                    Quick view
+                  </button>
+                )}
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setIsFavorite(!isFavorite)
-                }}
-              >
-                <Heart
-                  className={cn(
-                    "h-3.5 w-3.5",
-                    isFavorite ? "fill-current text-destructive" : ""
-                  )}
-                />
-              </Button>
-            </div>
+            )}
           </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+        </div>
+      </div>
+    </motion.article>
+  );
 }
 
-// Featured Product Card - Larger, More Prominent
-interface ProductCardFeaturedProps {
-  product: Product
-  className?: string
+interface ProductCardCompactProps {
+  product: Product;
+  className?: string;
 }
 
-export function ProductCardFeatured({ product, className }: ProductCardFeaturedProps) {
-  const [isFavorite, setIsFavorite] = React.useState(false)
-
-  const mainImage = product.mainImageUrl || product.variants?.[0]?.imageUrl || ""
+export function ProductCardCompact({ product, className }: ProductCardCompactProps) {
+  const [isFavorite, setIsFavorite] = React.useState(false);
+  const mainImage = getProductImage(product);
 
   return (
-    <div className={cn("group", className)}>
-      <Card className="overflow-hidden border-border/40 bg-background hover:shadow-2xl transition-all duration-500 hover:border-primary/30 relative">
-        {/* Featured Badge */}
-        <div className="absolute top-4 left-4 z-20">
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 text-xs font-semibold shadow-lg">
-            <Sparkles className="w-3 h-3 mr-1" />
-            Featured
-          </Badge>
-        </div>
-
-        {/* Favorite Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-4 right-4 z-20 h-10 w-10 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background hover:scale-110 transition-all"
+    <motion.article
+      whileHover={{ x: 4 }}
+      className={cn("group overflow-hidden rounded-2xl border border-[#ead7c7] bg-white p-3 shadow-sm", className)}
+    >
+      <div className="flex gap-4">
+        <Link
+          href={`/products/${product.slug.current}`}
+          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#f6eee8]"
         >
-          <Heart
-            className={cn(
-              "h-5 w-5 transition-all",
-              isFavorite ? "fill-current text-destructive" : ""
-            )}
-          />
-        </Button>
-
-        {/* Image */}
-        <Link href={`/products/${product.slug.current}`} className="block relative aspect-[4/3] overflow-hidden bg-muted/30">
           {mainImage && (
             <Image
               src={mainImage}
               alt={product.title}
               fill
-              className="object-cover transition-all duration-700 group-hover:scale-105"
+              sizes="96px"
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60" />
-
-          {/* Content Overlay */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 space-y-3">
-            {product.category && (
-              <p className="text-xs font-medium text-primary uppercase tracking-widest">
-                {product.category.title}
-              </p>
-            )}
-            <h2 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
-              {product.title}
-            </h2>
-            {product.shortDescription && (
-              <p className="text-sm text-white/90 line-clamp-2 max-w-md">
-                {product.shortDescription}
-              </p>
-            )}
-          </div>
         </Link>
-
-        {/* Actions */}
-        <CardContent className="p-6 flex gap-3">
-          <Link href={`/products/${product.slug.current}`} className="flex-1">
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full group/btn"
-            >
-              Customize
-              <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-            </Button>
+        <div className="min-w-0 flex-1">
+          {product.category && (
+            <p className="text-[10px] font-semibold uppercase text-[#9b7a68]">
+              {product.category.title}
+            </p>
+          )}
+          <Link href={`/products/${product.slug.current}`}>
+            <h4 className="mt-1 line-clamp-2 font-semibold leading-tight text-[#2f211b] group-hover:text-[#a94f2c]">
+              {product.title}
+            </h4>
           </Link>
-          <a
-            href={product.etsyLink || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 group/btn relative block"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-600 to-orange-500 rounded-lg blur opacity-0 group-hover/btn:opacity-20 transition-opacity duration-300"></div>
-            <Button
-              size="lg"
-              className="relative w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25"
+          {product.shortDescription && (
+            <p className="mt-1 line-clamp-1 text-xs text-[#7b665c]">
+              {product.shortDescription}
+            </p>
+          )}
+          <div className="mt-3 flex items-center justify-between">
+            <Link
+              href={`/products/${product.slug.current}`}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-[#bf6036]"
             >
-              Order on Etsy
-            </Button>
-          </a>
-        </CardContent>
-      </Card>
-    </div>
-  )
+              Customize <ArrowRight className="h-3 w-3" />
+            </Link>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                setIsFavorite((value) => !value);
+              }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#fff1e6] text-[#8b7569]"
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart className={cn("h-3.5 w-3.5", isFavorite && "fill-current text-[#bf6036]")} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
 }
 
-export default ProductCard
+export function ProductCardFeatured({
+  product,
+  className,
+}: ProductCardCompactProps) {
+  return (
+    <div className={cn("relative", className)}>
+      <div className="absolute left-5 top-5 z-10 inline-flex items-center gap-2 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold text-[#8a4a2b] shadow-sm backdrop-blur">
+        <Sparkles className="h-3.5 w-3.5" />
+        Featured
+      </div>
+      <ProductCard product={product} />
+    </div>
+  );
+}
+
+export default ProductCard;

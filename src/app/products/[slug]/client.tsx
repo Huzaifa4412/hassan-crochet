@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { motion } from "motion/react";
 import {
   Download,
   Copy,
@@ -276,18 +277,24 @@ interface Review {
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border hover:border-primary/30 h-full flex flex-col">
+    <motion.div
+      initial={false}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 260, damping: 24 }}
+      className="h-full"
+    >
+    <Card className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_16px_45px_rgba(124,82,58,0.08)] transition-all duration-300 hover:border-[#cf6f3f]/40 hover:shadow-[0_20px_60px_rgba(124,82,58,0.14)]">
       {/* Review Image - Compact display */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#f6eee8] sm:aspect-[4/3] lg:h-[360px] lg:aspect-auto">
         <img
           src={review.image}
           alt={`Customer photo from ${review.name}`}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {/* Verified Badge - Smaller on mobile */}
-        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full shadow-md">
+        <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 shadow-md backdrop-blur-sm">
           <Check className="w-3 h-3 text-green-600" />
-          <span className="text-[10px] font-semibold text-gray-700 hidden sm:inline">
+          <span className="hidden text-[10px] font-semibold text-[#4d3b34] sm:inline">
             Verified
           </span>
         </div>
@@ -306,28 +313,29 @@ function ReviewCard({ review }: { review: Review }) {
 
         {/* Review Text - Clamp lines */}
         <blockquote className="flex-1 mb-2 sm:mb-3">
-          <p className="text-xs sm:text-sm leading-relaxed text-foreground/90 line-clamp-3">
+          <p className="line-clamp-3 text-xs leading-relaxed text-[#4d3b34] sm:text-sm">
             &ldquo;{review.text}&rdquo;
           </p>
         </blockquote>
 
         {/* Author Info - Compact */}
-        <div className="pt-2 sm:pt-3 border-t border-border/50">
+        <div className="border-t border-[#ead7c7] pt-2 sm:pt-3">
           <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-semibold text-xs sm:text-sm">{review.name}</p>
-              <p className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-primary/50" />
+              <p className="text-xs font-bold text-[#251611] sm:text-sm">{review.name}</p>
+              <p className="flex items-center gap-1 text-[10px] text-[#7a6258] sm:text-xs">
+                <span className="h-1 w-1 rounded-full bg-[#cf6f3f]" />
                 {review.location}
               </p>
             </div>
-            <span className="text-[10px] sm:text-xs text-muted-foreground">
+            <span className="text-[10px] text-[#7a6258] sm:text-xs">
               {review.date}
             </span>
           </div>
         </div>
       </CardContent>
     </Card>
+    </motion.div>
   );
 }
 
@@ -663,85 +671,118 @@ export default function ProductClient({ product }: ProductClientProps) {
   };
 
   const badges = getBadgeLabels(product.badges);
+  const trustHighlights = [
+    { icon: Shield, label: "Secure Etsy checkout" },
+    { icon: Truck, label: "Made to order" },
+    { icon: Heart, label: "Handmade keepsake" },
+  ];
 
   return (
-    <div className="bg-gradient-to-b from-background to-muted/10 min-h-screen">
-      <div className="mx-auto px-3 sm:px-4 py-6 sm:py-8 md:py-12 max-w-7xl w-full">
+    <div className="min-h-screen bg-[#fffaf4] text-[#251611]">
+      <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 md:py-12 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground mb-6 sm:mb-8">
+        <nav className="mb-5 flex items-center gap-1.5 text-xs font-medium text-[#7a6258] sm:mb-7 sm:gap-2 sm:text-sm">
           <Link
             href="/"
-            className="hover:text-foreground transition-colors shrink-0"
+            className="shrink-0 transition-colors hover:text-[#bf6036]"
           >
             Home
           </Link>
           <span className="shrink-0">/</span>
           <Link
             href="/products"
-            className="hover:text-foreground transition-colors shrink-0"
+            className="shrink-0 transition-colors hover:text-[#bf6036]"
           >
             Products
           </Link>
           <span className="shrink-0">/</span>
-          <span className="text-foreground font-medium truncate">
+          <span className="truncate text-[#251611]">
             {product.title}
           </span>
         </nav>
 
         {/* Product Header */}
-        <div className="text-center mb-6 sm:mb-8 md:mb-12 space-y-3 sm:space-y-4 px-2">
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
-            {badges.primary && (
-              <Badge className="bg-primary/10 text-primary hover:bg-primary/20 text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1">
-                {badges.primary}
-              </Badge>
-            )}
-            {badges.secondary && (
-              <Badge
-                variant="secondary"
-                className="text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1"
-              >
-                {badges.secondary}
-              </Badge>
-            )}
-            {product.category && (
-              <Badge
-                variant="outline"
-                className="text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1"
-              >
-                {product.category.title}
-              </Badge>
-            )}
-            {product.inStock === false && (
-              <Badge
-                variant="destructive"
-                className="text-xs sm:text-sm px-2 sm:px-3 py-0.5 sm:py-1"
-              >
-                Out of Stock
-              </Badge>
-            )}
+        <motion.header
+          initial={false}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-7 overflow-hidden rounded-[2rem] border border-[#ead7c7] bg-white/75 shadow-[0_24px_80px_rgba(124,82,58,0.12)] backdrop-blur sm:mb-10"
+        >
+          <div className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                {badges.primary && (
+                  <Badge className="rounded-full border border-[#e6c6b4] bg-[#fff1e6] px-3 py-1 text-xs font-semibold text-[#a84e2b] hover:bg-[#fff1e6]">
+                    {badges.primary}
+                  </Badge>
+                )}
+                {badges.secondary && (
+                  <Badge className="rounded-full border border-[#ead7c7] bg-white px-3 py-1 text-xs font-semibold text-[#6f574d] hover:bg-white">
+                    {badges.secondary}
+                  </Badge>
+                )}
+                {product.category && (
+                  <Badge className="rounded-full border border-[#ead7c7] bg-[#f7efe8] px-3 py-1 text-xs font-semibold text-[#6f574d] hover:bg-[#f7efe8]">
+                    {product.category.title}
+                  </Badge>
+                )}
+                {product.inStock === false && (
+                  <Badge variant="destructive" className="rounded-full px-3 py-1 text-xs">
+                    Out of Stock
+                  </Badge>
+                )}
+              </div>
+              <div className="space-y-3">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#bf6036]">
+                  Personalized crochet studio
+                </p>
+                <h1 className="max-w-3xl text-3xl font-black leading-[0.95] tracking-tight text-[#24130f] sm:text-5xl lg:text-6xl">
+                  {product.title}
+                </h1>
+                {product.shortDescription && (
+                  <p className="max-w-2xl text-base leading-7 text-[#735f56] sm:text-lg">
+                    {product.shortDescription}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              {trustHighlights.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-3 rounded-2xl border border-[#ead7c7] bg-[#fffaf4] px-4 py-3"
+                  >
+                    <span className="grid size-10 place-items-center rounded-full bg-[#cf6f3f] text-white shadow-[0_12px_30px_rgba(207,111,63,0.25)]">
+                      <Icon className="size-4" />
+                    </span>
+                    <span className="text-sm font-semibold text-[#4d3b34]">
+                      {item.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-            {product.title}
-          </h1>
-          {product.shortDescription && (
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              {product.shortDescription}
-            </p>
-          )}
-        </div>
+        </motion.header>
 
         {/* Main Content - Flex container with sticky */}
-        <div className="flex flex-col lg:flex-row lg:gap-6 lg:items-start w-full">
+        <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
           {/* Left Column - Canvas (Sticky on all devices) */}
-          <div className="sticky top-16 lg:top-20 self-start flex-shrink-0 w-full lg:w-[45%] lg:max-w-lg z-20 order-first">
-            <Card className="overflow-hidden shadow-2xl border-2">
+          <motion.div
+            initial={false}
+            whileHover={{ y: -4 }}
+            transition={{ type: "spring", stiffness: 260, damping: 24 }}
+            className="sticky top-16 z-20 order-first self-start lg:top-24"
+          >
+            <Card className="overflow-hidden rounded-[2rem] border border-[#ead7c7] bg-white shadow-[0_24px_70px_rgba(124,82,58,0.16)]">
               <CardContent className="p-0">
-                <div className="relative aspect-square md:aspect-[4/5] lg:aspect-[3/4] w-full h-[280px] md:h-[350px] lg:min-h-[500px] lg:max-h-[600px] bg-muted/20 overflow-hidden">
+                <div className="relative h-[310px] w-full overflow-hidden bg-[#f5ece4] sm:h-[420px] lg:min-h-[560px]">
+                  <div className="absolute inset-4 rounded-[1.5rem] border border-white/70 pointer-events-none" />
                   {/* Badges */}
                   <div className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10 flex flex-col gap-2">
                     {badges.primary && (
-                      <Badge className="shadow-lg bg-primary text-primary-foreground px-2 sm:px-3 py-1 text-[10px] sm:text-xs">
+                      <Badge className="rounded-full bg-[#251611] px-3 py-1 text-[10px] text-white shadow-lg hover:bg-[#251611] sm:text-xs">
                         {badges.primary}
                       </Badge>
                     )}
@@ -749,9 +790,9 @@ export default function ProductClient({ product }: ProductClientProps) {
 
                   {/* Interactive indicator */}
                   <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-10 pointer-events-none">
-                    <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-2 bg-background border rounded-full shadow-lg">
-                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-primary animate-pulse" />
-                      <span className="text-[10px] sm:text-xs sm:text-sm font-medium">
+                    <div className="flex items-center gap-2 rounded-full border border-[#ead7c7] bg-white/90 px-3 py-2 shadow-lg backdrop-blur">
+                      <Sparkles className="size-4 text-[#bf6036]" />
+                      <span className="text-xs font-semibold text-[#4d3b34] sm:text-sm">
                         Drag to customize
                       </span>
                     </div>
@@ -783,34 +824,40 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
 
           {/* Right Column - Customization (Scrollable) */}
-          <div className="space-y-6 w-full lg:w-[55%] lg:max-w-xl min-w-0">
+          <div className="min-w-0 space-y-5">
             {/* Action Bar */}
 
             {/* Color Selection */}
-            <Card className="shadow-sm w-full overflow-hidden">
-              <CardHeader className="pb-3 sm:pb-4 px-3 sm:px-6">
+            <motion.div
+              initial={false}
+              whileHover={{ y: -2 }}
+              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+            >
+            <Card className="w-full overflow-hidden rounded-[1.75rem] border border-[#ead7c7] bg-white/90 shadow-[0_18px_55px_rgba(124,82,58,0.1)]">
+              <CardHeader className="px-4 pb-3 sm:px-6 sm:pb-4">
                 {/* In demand text above color selection */}
                 <div className="mb-2 sm:mb-3">
-                  <p className="text-xs sm:text-sm md:text-base font-bold text-red-600 dark:text-red-500 flex items-center gap-1 flex-wrap">
-                    🔥 In demand.{" "}
+                  <p className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#a84e2b] sm:text-sm md:text-base">
+                    <span className="size-2 rounded-full bg-[#cf6f3f] shadow-[0_0_0_6px_rgba(207,111,63,0.12)]" />
+                    In demand.{" "}
                     <span className="inline-block min-w-[2ch]">
                       {boughtIn24h}
                     </span>{" "}
                     people bought this in the last 24 hours.
                   </p>
                 </div>
-                <CardTitle className="text-sm sm:text-base">
+                <CardTitle className="text-lg font-black text-[#251611] sm:text-xl">
                   Choose Your Color
                 </CardTitle>
-                <CardDescription className="text-xs sm:text-sm">
-                  Select your preferred color variant
+                <CardDescription className="text-sm text-[#7a6258]">
+                  Pick the sweater base before adding text and icon details.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="px-3 sm:px-6 pb-4 sm:pb-6">
-                <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+              <CardContent className="px-4 pb-5 sm:px-6 sm:pb-6">
+                <div className="grid grid-cols-5 gap-2 sm:gap-3">
                   {colors.map((color) => (
                     <TooltipProvider key={color.name}>
                       <Tooltip>
@@ -818,10 +865,10 @@ export default function ProductClient({ product }: ProductClientProps) {
                           <button
                             onClick={() => setSelectedColor(color)}
                             aria-label={color.name}
-                            className={`relative aspect-square rounded-md sm:rounded-lg overflow-hidden transition-all duration-200 border-2 ${
+                            className={`relative aspect-square overflow-hidden rounded-2xl border-2 bg-[#f8efe8] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#cf6f3f] focus:ring-offset-2 focus:ring-offset-white ${
                               selectedColor?.name === color.name
-                                ? "shadow-lg ring-1 sm:ring-2 ring-primary border-primary"
-                                : "border-transparent hover:shadow-md opacity-90 hover:opacity-100"
+                                ? "border-[#cf6f3f] shadow-lg ring-2 ring-[#cf6f3f]/25"
+                                : "border-[#ead7c7] opacity-90 hover:border-[#cf6f3f]/60 hover:opacity-100 hover:shadow-md"
                             }`}
                           >
                             {color.imageUrl ? (
@@ -838,7 +885,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                               </div>
                             )}
                             {selectedColor?.name === color.name && (
-                              <div className="absolute inset-0 bg-primary/20 flex items-center justify-center">
+                              <div className="absolute inset-0 flex items-center justify-center bg-[#cf6f3f]/20">
                                 <Check className="h-5 w-5 sm:h-8 sm:w-8 text-white drop-shadow-lg" />
                               </div>
                             )}
@@ -853,10 +900,11 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
 
             {/* Customization Studio */}
-            <Card className="shadow-lg border w-full overflow-hidden">
-              <CardContent className="space-y-4 sm:space-y-6 p-3 sm:p-6">
+            <Card className="w-full overflow-hidden rounded-[1.75rem] border border-[#ead7c7] bg-white/95 shadow-[0_18px_55px_rgba(124,82,58,0.1)]">
+              <CardContent className="space-y-4 p-4 sm:space-y-6 sm:p-6">
                 <Accordion
                   type="multiple"
                   defaultValue={["text", "icons"]}
@@ -869,19 +917,19 @@ export default function ProductClient({ product }: ProductClientProps) {
                   >
                     <AccordionTrigger className="hover:no-underline py-3 sm:py-4 px-1">
                       <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Type className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                        <div className="flex size-10 flex-shrink-0 items-center justify-center rounded-2xl bg-[#fff1e6] text-[#bf6036] sm:size-11">
+                          <Type className="w-4 h-4 sm:w-5 sm:h-5" />
                         </div>
                         <div className="text-left min-w-0 flex-1">
                           {/* Customizing count above Add Text */}
-                          <div className="font-semibold text-xs sm:text-sm md:text-base text-red-600 dark:text-red-500 flex items-center gap-1 flex-wrap">
-                            👀{" "}
+                          <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#a84e2b] sm:text-sm md:text-base">
+                            <span className="size-2 rounded-full bg-[#cf6f3f] shadow-[0_0_0_6px_rgba(207,111,63,0.12)]" />
                             <span className="inline-block min-w-[2ch]">
                               {customizingNow}
                             </span>{" "}
-                            peoples are customizing this right now.
+                            shoppers are customizing this right now.
                           </div>
-                          <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">
+                          <div className="mt-0.5 text-[10px] text-[#7a6258] sm:mt-1 sm:text-xs">
                             Personalize with your message
                           </div>
                         </div>
@@ -905,12 +953,12 @@ export default function ProductClient({ product }: ProductClientProps) {
                             onKeyDown={(e) =>
                               e.key === "Enter" && handleAddText()
                             }
-                            className="flex-1 h-9 sm:h-11 text-sm"
+                            className="h-10 flex-1 rounded-xl border-[#ead7c7] bg-[#fffaf4] text-sm focus-visible:ring-[#cf6f3f] sm:h-11"
                           />
                           <Button
                             onClick={handleAddText}
                             size="icon"
-                            className="h-9 w-9 sm:h-11 sm:w-11"
+                            className="h-10 w-10 rounded-xl bg-[#cf6f3f] text-white hover:bg-[#b95c33] sm:h-11 sm:w-11"
                             disabled={!customText.trim()}
                           >
                             <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -932,7 +980,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                         >
                           <SelectTrigger
                             id="text-font"
-                            className="w-full h-9 sm:h-11 text-sm"
+                            className="h-10 w-full rounded-xl border-[#ead7c7] bg-[#fffaf4] text-sm focus:ring-[#cf6f3f] sm:h-11"
                           >
                             <SelectValue>
                               <span
@@ -987,10 +1035,10 @@ export default function ProductClient({ product }: ProductClientProps) {
                                       handleTextColorChange(color.value, false)
                                     }
                                     aria-label={color.name}
-                                    className={`relative size-7 rounded-lg overflow-hidden transition-all duration-200 border-2 ${
+                                    className={`relative size-8 overflow-hidden rounded-xl border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#cf6f3f] focus:ring-offset-2 ${
                                       textColor === color.value && !isMultiColor
-                                        ? "shadow-lg ring-2 ring-primary border-primary"
-                                        : "border-border opacity-70 hover:opacity-100 shadow-sm"
+                                        ? "border-[#cf6f3f] shadow-lg ring-2 ring-[#cf6f3f]/25"
+                                        : "border-[#ead7c7] opacity-75 shadow-sm hover:opacity-100"
                                     }`}
                                   >
                                     <div
@@ -1027,8 +1075,8 @@ export default function ProductClient({ product }: ProductClientProps) {
                                 }
                                 className={`relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all ${
                                   textColor === palette.value && isMultiColor
-                                    ? "border-primary bg-primary/5 shadow-md"
-                                    : "border-border hover:border-primary/50 hover:bg-muted/30"
+                                    ? "border-[#cf6f3f] bg-[#fff1e6] shadow-md"
+                                    : "border-[#ead7c7] bg-[#fffaf4] hover:border-[#cf6f3f]/60"
                                 }`}
                               >
                                 {/* Color Swatches - compact horizontal */}
@@ -1048,8 +1096,8 @@ export default function ProductClient({ product }: ProductClientProps) {
                                 {/* Selected indicator */}
                                 {textColor === palette.value &&
                                   isMultiColor && (
-                                    <div className="absolute top-1 right-1">
-                                      <div className="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+                                      <div className="absolute top-1 right-1">
+                                      <div className="w-4 h-4 rounded-full bg-[#cf6f3f] flex items-center justify-center">
                                         <Check className="h-3 w-3 text-white" />
                                       </div>
                                     </div>
@@ -1069,19 +1117,19 @@ export default function ProductClient({ product }: ProductClientProps) {
                   >
                     <AccordionTrigger className="hover:no-underline py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                          <Sparkles className="w-5 h-5 text-primary" />
+                        <div className="flex size-11 items-center justify-center rounded-2xl bg-[#fff1e6] text-[#bf6036]">
+                          <Sparkles className="w-5 h-5" />
                         </div>
                         <div className="text-left">
-                          <div className="font-semibold">Add Icons</div>
-                          <div className="text-xs text-muted-foreground">
+                          <div className="font-bold text-[#251611]">Add Icons</div>
+                          <div className="text-xs text-[#7a6258]">
                             Decorate with beautiful icons
                           </div>
                         </div>
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="pt-4 pb-6 space-y-4">
-                      <div className="grid grid-cols-6 gap-3 max-h-[280px] overflow-y-auto pr-2 scrollbar-hide">
+                      <div className="grid max-h-[280px] grid-cols-6 gap-3 overflow-y-auto pr-2 scrollbar-hide">
                         {ICONS.map((icon) => (
                           <TooltipProvider key={icon.name}>
                             <Tooltip>
@@ -1096,7 +1144,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                                     e.dataTransfer.effectAllowed = "copy";
                                   }}
                                   draggable
-                                  className="aspect-square flex items-center justify-center bg-muted/50 hover:bg-muted border border-border hover:border-primary/50 rounded-xl transition-all cursor-grab active:cursor-grabbing group shadow-sm hover:shadow-md"
+                                  className="group relative flex aspect-square cursor-grab items-center justify-center rounded-2xl border border-[#ead7c7] bg-[#fffaf4] shadow-sm transition-all hover:border-[#cf6f3f]/60 hover:bg-[#fff1e6] hover:shadow-md active:cursor-grabbing"
                                 >
                                   <img
                                     src={icon.url}
@@ -1105,7 +1153,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                                     draggable={false}
                                   />
                                   {addedIcons.includes(icon.name) && (
-                                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-md">
+                                    <div className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#cf6f3f] shadow-md">
                                       <Check className="h-3 w-3 text-white" />
                                     </div>
                                   )}
@@ -1126,32 +1174,32 @@ export default function ProductClient({ product }: ProductClientProps) {
                   </AccordionItem>
                 </Accordion>
 
-                <Separator />
+                <Separator className="bg-[#ead7c7]" />
 
                 {/* Summary */}
-                <Alert className="bg-muted/50 border-border">
-                  <Info className="h-4 w-4 text-primary" />
+                <Alert className="rounded-2xl border-[#ead7c7] bg-[#fffaf4]">
+                  <Info className="h-4 w-4 text-[#bf6036]" />
                   <AlertDescription className="text-sm">
                     <div className="space-y-2">
-                      <p className="font-medium flex items-center gap-2">
+                      <p className="font-bold flex items-center gap-2 text-[#251611]">
                         <Award className="h-4 w-4" />
                         Your Customization
                       </p>
                       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
-                        <span className="text-muted-foreground">Color:</span>
-                        <span className="font-medium text-foreground">
+                        <span className="text-[#7a6258]">Color:</span>
+                        <span className="font-medium text-[#251611]">
                           {selectedColor?.name}
                         </span>
-                        <span className="text-muted-foreground">Text:</span>
-                        <span className="font-medium text-foreground">
+                        <span className="text-[#7a6258]">Text:</span>
+                        <span className="font-medium text-[#251611]">
                           {addedTexts.length > 0
                             ? addedTexts.map((t) => t.text).join(", ")
                             : "None"}
                         </span>
-                        <span className="text-muted-foreground">
+                        <span className="text-[#7a6258]">
                           Text Color:
                         </span>
-                        <span className="font-medium text-foreground">
+                        <span className="font-medium text-[#251611]">
                           {isMultiColor
                             ? MULTI_COLOR_PALETTES.find(
                                 (p) => p.value === textColor,
@@ -1160,8 +1208,8 @@ export default function ProductClient({ product }: ProductClientProps) {
                                 (c) => c.value === textColor,
                               )?.name}
                         </span>
-                        <span className="text-muted-foreground">Icons:</span>
-                        <span className="font-medium text-foreground">
+                        <span className="text-[#7a6258]">Icons:</span>
+                        <span className="font-medium text-[#251611]">
                           {addedIcons.length > 0
                             ? addedIcons.join(", ")
                             : "None"}
@@ -1176,7 +1224,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                   <Button
                     variant="outline"
                     onClick={handleDownloadPreview}
-                    className="h-11 gap-2"
+                    className="h-11 gap-2 rounded-xl border-[#d9bca9] bg-white text-[#5c4036] hover:bg-[#fff1e6] hover:text-[#251611]"
                   >
                     <Download className="w-4 h-4" />
                     Download
@@ -1184,7 +1232,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                   <Button
                     variant="outline"
                     onClick={handleCopyCustomizations}
-                    className="h-11 gap-2"
+                    className="h-11 gap-2 rounded-xl border-[#d9bca9] bg-white text-[#5c4036] hover:bg-[#fff1e6] hover:text-[#251611]"
                   >
                     {copied ? (
                       <Check className="w-4 h-4" />
@@ -1196,14 +1244,12 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </div>
 
                 {/* Etsy Note */}
-                <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/20 border-2 border-amber-200 dark:border-amber-800 rounded-lg">
-                  <p className="text-sm font-semibold text-amber-900 dark:text-amber-100 flex items-start gap-2">
-                    <span className="text-amber-600 dark:text-amber-400 mt-0.5">
-                      💡
-                    </span>
+                <div className="mt-4 rounded-2xl border border-[#ead7c7] bg-[#f9efe2] p-4">
+                  <p className="flex items-start gap-2 text-sm font-bold text-[#5c4036]">
+                    <Info className="mt-0.5 size-4 text-[#bf6036]" />
                     <span>Important Note:</span>
                   </p>
-                  <p className="text-sm text-amber-800 dark:text-amber-200 mt-2 leading-relaxed">
+                  <p className="mt-2 text-sm leading-relaxed text-[#7a6258]">
                     Please copy the text below to Etsy&apos;s personalization
                     box, or take a screenshot and send it to the seller!
                   </p>
@@ -1212,13 +1258,12 @@ export default function ProductClient({ product }: ProductClientProps) {
             </Card>
 
             {/* Premium CTA */}
-            <Card className="bg-gradient-to-br from-primary/80 to-primary/70 text-primary-foreground shadow-xl border-0 w-full overflow-hidden relative">
-              <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-              <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+            <Card className="relative w-full overflow-hidden rounded-[1.75rem] border-0 bg-[#251611] text-white shadow-[0_24px_70px_rgba(37,22,17,0.28)]">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#f5d6bd] to-transparent" />
               <CardContent className="p-4 sm:p-6 space-y-3 sm:space-y-4 relative z-10">
                 <div className="flex items-center justify-center">
-                  <Badge className="bg-white/20 hover:bg-white/30 text-white border-0 px-3 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold tracking-wide shadow-md backdrop-blur-sm">
-                    ORDER YOUR CUSTOM PIECE
+                  <Badge className="border border-white/15 bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-[0.18em] text-[#ffe4d0] shadow-md backdrop-blur-sm hover:bg-white/10 sm:px-4 sm:py-1.5 sm:text-xs">
+                    CUSTOM ORDER
                   </Badge>
                 </div>
                 <div className="text-center">
@@ -1229,19 +1274,19 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </div>
                 <Button
                   onClick={() => setIsOrderDialogOpen(true)}
-                  className="w-full bg-white text-primary hover:bg-white/90 h-10 sm:h-12 font-semibold shadow-xl text-sm sm:text-base"
+                  className="h-11 w-full rounded-full bg-[#cf6f3f] text-sm font-bold text-white shadow-xl hover:bg-[#dd7d4e] sm:h-12 sm:text-base"
                 >
                   <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
                   Order on Etsy
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
                 </Button>
-                <p className="text-center text-xs sm:text-lg">
+                <p className="text-center text-xs leading-relaxed text-[#f5d6bd] sm:text-base">
                   Pricing starts at $18.99. Choose your perfect size ( from 0
                   months to 7 Years) and complete your order securely on Etsy.
                 </p>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
                   <div className="text-center">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 mx-auto mb-1 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                    <div className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm sm:h-9 sm:w-9">
                       <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <p className="text-[9px] sm:text-[10px] font-medium opacity-90">
@@ -1249,7 +1294,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 mx-auto mb-1 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                    <div className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm sm:h-9 sm:w-9">
                       <Truck className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <p className="text-[9px] sm:text-[10px] font-medium opacity-90">
@@ -1257,7 +1302,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 mx-auto mb-1 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                    <div className="mx-auto mb-1 flex h-7 w-7 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm sm:h-9 sm:w-9">
                       <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <p className="text-[9px] sm:text-[10px] font-medium opacity-90">
@@ -1271,19 +1316,19 @@ export default function ProductClient({ product }: ProductClientProps) {
         </div>
 
         {/* Reviews Section */}
-        <div className="mt-16 space-y-8">
+        <section className="mt-16 space-y-8 rounded-[2rem] border border-[#ead7c7] bg-white/60 px-4 py-8 shadow-[0_18px_55px_rgba(124,82,58,0.08)] sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center space-y-2 sm:space-y-4 px-4">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-primary/5 border border-primary/10">
-              <Quote className="w-3 h-3 sm:w-4 sm:h-4 text-primary" />
-              <span className="text-xs sm:text-sm font-medium text-primary">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#ead7c7] bg-[#fffaf4] px-3 py-1.5 sm:gap-2 sm:px-4 sm:py-2">
+              <Quote className="w-3 h-3 text-[#bf6036] sm:w-4 sm:h-4" />
+              <span className="text-xs font-bold text-[#bf6036] sm:text-sm">
                 Happy Customers
               </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
-              Customer Reviews
+            <h2 className="text-2xl font-black tracking-tight text-[#251611] sm:text-3xl md:text-4xl">
+              Tiny sweaters, big reactions
             </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto px-4">
+            <p className="mx-auto max-w-2xl px-4 text-xs leading-6 text-[#7a6258] sm:text-sm">
               Real photos from real customers. See how our crochet pieces look
               on adorable little ones!
             </p>
@@ -1345,19 +1390,19 @@ export default function ProductClient({ product }: ProductClientProps) {
 
             {/* Navigation Buttons - Hidden on mobile */}
             <button
-              className="reviews-button-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-background border-2 border-primary/20 hover:border-primary hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center shadow-lg group hidden sm:flex"
+              className="reviews-button-prev group absolute left-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
               aria-label="Previous review"
             >
               <ChevronLeft className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
             <button
-              className="reviews-button-next absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-background border-2 border-primary/20 hover:border-primary hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center shadow-lg group hidden sm:flex"
+              className="reviews-button-next group absolute right-0 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
               aria-label="Next review"
             >
               <ChevronRight className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
           </div>
-        </div>
+        </section>
 
         {/* Order Dialog */}
         <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>

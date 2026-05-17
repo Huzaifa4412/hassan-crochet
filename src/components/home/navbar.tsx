@@ -3,227 +3,176 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { Menu, Search, UserRound, X } from "lucide-react";
 import { SearchDropdown } from "@/components/search/SearchDropdown";
-import { X, Menu } from "lucide-react";
 import TimerClock from "../TimerClock";
-import { motion, AnimatePresence } from "framer-motion";
+
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "Products", href: "/products" },
+  { name: "Journal", href: "/blog" },
+  { name: "About", href: "/about" },
+];
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Journal", href: "/blog" },
-    { name: "About", href: "/about" },
-    { name: "Products", href: "/products" },
-  ];
-
   return (
     <>
-      {/* 1. HEADER CONTAINER: Must be relative with a high z-index so the wave overlaps the content below */}
-      <header className="relative bg-white z-50">
-        {/* Announcement Bar */}
-        <div className="fixed top-0 left-0 right-0 bg-orange-300 text-white text-sm text-center py-2.5 font-medium flex items-center justify-center gap-2">
-          <span className="text-sm">📦 Hurry! Up to 40% Off Ends Soon</span>{" "}
+      <header className="sticky top-0 z-50 border-b border-[#ead7c7]/80 bg-[#fffaf4]/88 shadow-[0_10px_40px_rgba(86,52,32,0.06)] backdrop-blur-xl">
+        <div className="flex min-h-10 items-center justify-center gap-3 bg-[#b85e37] px-4 py-2 text-center text-sm font-medium text-white">
+          <span>Up to 40% off custom keepsakes</span>
+          <span className="hidden h-1 w-1 rounded-full bg-white/55 sm:block" />
           <TimerClock />
         </div>
 
-        {/* Main Navbar */}
-        <nav className="max-w-[1600px]  mt-10 mx-auto px-4 sm:px-8 py-5 flex items-start justify-between">
-          {/* LEFT: Nav Links (Wraps into two lines automatically if needed) */}
-          <div className="hidden lg:flex flex-col gap-3 w-1/3 mt-2">
-            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-lg  text-gray-800">
-              {navLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-gray-500 transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* MOBILE MENU TOGGLE: Visible on smaller screens */}
-          <div className="lg:hidden flex items-center w-1/3 mt-3">
-            <button
+        <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 lg:hidden">
+            <motion.button
+              whileTap={{ scale: 0.94 }}
               onClick={() => setIsMenuOpen(true)}
-              className="p-2 -ml-2 text-gray-700 hover:text-gray-900 transition-colors focus:outline-none"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#e3cdbd] bg-white text-[#31211b] shadow-sm"
               aria-label="Open menu"
             >
-              <Menu className="w-6 h-6" />
-            </button>
+              <Menu className="h-5 w-5" />
+            </motion.button>
           </div>
 
-          {/* CENTER: Logo */}
-          <div className="flex-shrink-0 flex items-center justify-center w-1/3">
-            <Link href="/" className="flex items-center gap-3">
-              {/* Replace this emoji with your actual next/image sheep logo */}
+          <Link href="/" className="flex items-center gap-3">
+            <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-[0_12px_30px_rgba(70,42,26,0.08)]">
               <Image
-                alt="Logo"
-                src={"/logo.png"}
-                width={500}
-                height={500}
-                className="size-12"
+                alt="Knitty Petit logo"
+                src="/logo.png"
+                width={80}
+                height={80}
+                className="h-10 w-10 object-contain"
               />
-              <div className="text-center tracking-[0.25em] leading-[1.1] text-gray-500 font-light">
-                <div className="text-lg">KNITTY</div>
-                <div className="text-lg">BABY</div>
-              </div>
-            </Link>
+            </span>
+            <span className="leading-none">
+              <span className="block text-sm font-semibold uppercase text-[#281b16]">
+                Knitty Petit
+              </span>
+              <span className="mt-1 block text-xs font-medium text-[#8b7569]">
+                Handmade crochet studio
+              </span>
+            </span>
+          </Link>
+
+          <div className="hidden items-center rounded-full border border-[#ead7c7] bg-white/75 p-1 shadow-[0_12px_30px_rgba(70,42,26,0.06)] lg:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className="rounded-full px-4 py-2 text-sm font-semibold text-[#6f5a50] transition-colors hover:bg-[#fff1e6] hover:text-[#a94f2c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bf6036]"
+              >
+                {link.name}
+              </Link>
+            ))}
           </div>
 
-          {/* RIGHT: Utility Icons */}
-          <div className="flex items-center justify-end w-1/3 text-gray-700 mt-3">
-            {isSearchOpen ? (
-              <div className="flex items-center w-full max-w-[350px] gap-2 ml-auto z-50">
-                <div className="flex-1">
+          <div className="flex min-w-0 items-center justify-end gap-2">
+            <AnimatePresence mode="wait">
+              {isSearchOpen ? (
+                <motion.div
+                  key="search"
+                  initial={{ opacity: 0, width: 120 }}
+                  animate={{ opacity: 1, width: 330 }}
+                  exit={{ opacity: 0, width: 120 }}
+                  transition={{ duration: 0.25 }}
+                  className="hidden items-center gap-2 overflow-hidden md:flex"
+                >
                   <SearchDropdown className="w-full shadow-sm" />
-                </div>
-                <button
-                  onClick={() => setIsSearchOpen(false)}
-                  className="p-2 -mr-2 text-gray-500 hover:text-gray-900 transition-colors focus:outline-none"
-                  aria-label="Close search"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-6">
-                <button
-                  onClick={() => setIsSearchOpen(true)}
-                  className="hover:text-gray-400 transition-colors"
-                  aria-label="Search"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    ></path>
-                  </svg>
-                </button>
-                <Link href={'/studio'}>
                   <button
-                    className="hover:text-gray-400 transition-colors"
-                    aria-label="Account"
+                    onClick={() => setIsSearchOpen(false)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#7c665b] hover:bg-[#fff1e6]"
+                    aria-label="Close search"
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="1.5"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      ></path>
-                    </svg>
+                    <X className="h-5 w-5" />
                   </button>
-                </Link>
-                {/* <button
-                  className="hover:text-gray-400 transition-colors"
-                  aria-label="Cart"
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="actions"
+                  initial={false}
+                  className="flex items-center gap-2"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <motion.button
+                    whileHover={{ y: -1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsSearchOpen(true)}
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#e3cdbd] bg-white text-[#31211b] shadow-sm transition-colors hover:bg-[#fff1e6]"
+                    aria-label="Search"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                    ></path>
-                  </svg>
-                </button> */}
-              </div>
-            )}
+                    <Search className="h-5 w-5" />
+                  </motion.button>
+                  <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.95 }}>
+                    <Link
+                      href="/studio"
+                      className="hidden h-11 items-center gap-2 rounded-full bg-[#31211b] px-4 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(49,33,27,0.16)] transition-colors hover:bg-[#4a3329] sm:inline-flex"
+                    >
+                      <UserRound className="h-4 w-4" />
+                      Studio
+                    </Link>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </nav>
-
-        {/* 2. THE SVG WAVE DIVIDER */}
-        {/* translate-y-[99%] pushes it exactly to the bottom edge of the white header */}
-        <div className="absolute bottom-0 left-0 w-full translate-y-[99%] overflow-hidden leading-[0]">
-          <svg
-            className="block w-[calc(100%+1.3px)] h-[40px] md:h-[65px]"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-              className="fill-white"
-            ></path>
-          </svg>
-        </div>
       </header>
-      {/* MOBILE MENU OVERLAY */}
+
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[60] lg:hidden"
+              className="fixed inset-0 z-[60] bg-[#231814]/25 backdrop-blur-sm lg:hidden"
             />
-            {/* Drawer */}
-            <motion.div
+            <motion.aside
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[70] shadow-2xl lg:hidden p-6 flex flex-col"
+              transition={{ type: "spring", damping: 28, stiffness: 260 }}
+              className="fixed bottom-0 left-0 top-0 z-[70] flex w-[min(86vw,340px)] flex-col bg-[#fffaf4] p-6 shadow-2xl lg:hidden"
             >
-              <div className="flex items-center justify-between mb-10">
+              <div className="mb-10 flex items-center justify-between">
                 <Link
                   href="/"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-3"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Image
-                    alt="Logo"
-                    src={"/logo.png"}
-                    width={40}
-                    height={40}
-                    className="size-8"
+                    alt="Knitty Petit logo"
+                    src="/logo.png"
+                    width={44}
+                    height={44}
+                    className="h-10 w-10 object-contain"
                   />
-                  <span className="font-light tracking-widest text-sm text-gray-500">
-                    KNITTY BABY
+                  <span className="text-sm font-semibold uppercase text-[#281b16]">
+                    Knitty Petit
                   </span>
                 </Link>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="p-2 -mr-2 text-gray-500 hover:text-gray-900 transition-colors"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#6f5a50]"
                   aria-label="Close menu"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <ul className="flex flex-col gap-6">
+              <ul className="flex flex-col gap-3">
                 {navLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       href={link.href}
                       onClick={() => setIsMenuOpen(false)}
-                      className="text-2xl font-light text-gray-800 hover:text-orange-400 transition-colors block"
+                      className="block rounded-2xl border border-[#ead7c7] bg-white px-5 py-4 text-xl font-semibold text-[#31211b] shadow-sm transition-colors hover:bg-[#fff1e6]"
                     >
                       {link.name}
                     </Link>
@@ -231,12 +180,10 @@ export default function Header() {
                 ))}
               </ul>
 
-              <div className="mt-auto pt-10 border-t border-gray-100">
-                <p className="text-sm text-gray-400 font-light">
-                  Handmade with love for your little ones.
-                </p>
+              <div className="mt-auto rounded-3xl bg-[#f3dfcf] p-5 text-sm leading-6 text-[#6f5a50]">
+                Custom crochet gifts, previewed with care and finished by hand.
               </div>
-            </motion.div>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>

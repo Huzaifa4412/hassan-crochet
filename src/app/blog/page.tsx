@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { getAllPosts } from '@/sanity/queries'
 import BlogCard from '@/components/blog/BlogCard'
+import { buildMetadata } from '@/lib/seo'
 
 /**
  * ISR: the blog listing is revalidated every 60 seconds.
@@ -9,17 +10,12 @@ import BlogCard from '@/components/blog/BlogCard'
  */
 export const revalidate = 60
 
-export const metadata: Metadata = {
-  title: 'Blog — Knitty Petit',
+export const metadata: Metadata = buildMetadata({
+  title: 'Crochet Blog',
   description:
-    'Crochet tips, tutorials, behind-the-scenes stories and inspiration from the Knitty Petit studio.',
-  openGraph: {
-    title: 'Blog — Knitty Petit',
-    description:
-      'Crochet tips, tutorials, behind-the-scenes stories and inspiration from the Knitty Petit studio.',
-    type: 'website',
-  },
-}
+    'Crochet tips, tutorials, behind-the-scenes stories, and handmade gift inspiration from the Knitty Petit studio.',
+  path: '/blog',
+})
 
 export default async function BlogPage() {
   // Server Component: data fetched at request time (ISR)

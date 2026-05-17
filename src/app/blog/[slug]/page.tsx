@@ -8,6 +8,7 @@ import { getPostBySlug, getAllPostSlugs } from "@/sanity/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { portableTextComponents } from "@/components/blog/PortableTextComponents";
 import { CalendarDays, User, ArrowLeft, Tag } from "lucide-react";
+import { absoluteUrl, buildMetadata, siteName, siteUrl } from "@/lib/seo";
 
 // ── Route configuration ──────────────────────────────────────────────────────
 
@@ -44,11 +45,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : undefined;
 
   return {
-    title: `${post.title} — Knitty Petit Blog`,
+    ...buildMetadata({
+      title: `${post.title} - Crochet Blog`,
+      description: post.excerpt ?? `Read ${post.title} on the Knitty Petit blog.`,
+      path: `/blog/${post.slug.current}`,
+      image: ogImageUrl || "/logo.png",
+      type: "article",
+    }),
     description: post.excerpt ?? `Read ${post.title} on the Knitty Petit blog.`,
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: absoluteUrl(`/blog/${post.slug.current}`),
+      siteName,
       type: "article",
       publishedTime: post.publishedAt,
       authors: post.author?.name ? [post.author.name] : undefined,
@@ -105,11 +114,15 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
       ? { "@type": "Person", name: post.author.name }
       : undefined,
     image: imageUrl,
-    url: `${process.env.NEXT_PUBLIC_SITE_URL ?? ""}/blog/${post.slug.current}`,
+    url: absoluteUrl(`/blog/${post.slug.current}`),
     publisher: {
       "@type": "Organization",
-      name: "Knitty Petit",
-      url: process.env.NEXT_PUBLIC_SITE_URL ?? "",
+      name: siteName,
+      url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/logo.png"),
+      },
     },
   };
 }

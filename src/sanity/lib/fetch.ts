@@ -4,11 +4,13 @@ import { client } from "./client";
 interface FetchOptions {
   /**
    * Number of seconds for ISR revalidation.
-   * Omit (or set to undefined) to use `cache: 'no-store'` (no caching).
+   * Omit to use the site's default public-content ISR window.
    * Pass a positive integer (e.g. 60) to enable time-based ISR.
    */
   revalidate?: number;
 }
+
+const DEFAULT_REVALIDATE_SECONDS = 60;
 
 /**
  * Wrapper function to fetch a single item from Sanity with error handling.
@@ -24,11 +26,9 @@ export async function fetchSanity<T>(
   options?: FetchOptions
 ): Promise<T | null> {
   try {
-    // If revalidate is provided, use Next.js ISR; otherwise bypass cache entirely.
-    const nextOptions =
-      options?.revalidate !== undefined
-        ? { next: { revalidate: options.revalidate } }
-        : { cache: 'no-store' as const };
+    const nextOptions = {
+      next: { revalidate: options?.revalidate ?? DEFAULT_REVALIDATE_SECONDS },
+    };
 
     const result = await client.fetch<T>(query, params || {}, nextOptions);
     return result;
@@ -56,10 +56,9 @@ export async function fetchSanityArray<T>(
   options?: FetchOptions
 ): Promise<T[]> {
   try {
-    const nextOptions =
-      options?.revalidate !== undefined
-        ? { next: { revalidate: options.revalidate } }
-        : { cache: 'no-store' as const };
+    const nextOptions = {
+      next: { revalidate: options?.revalidate ?? DEFAULT_REVALIDATE_SECONDS },
+    };
 
     const result = await client.fetch<T[]>(query, params || {}, nextOptions);
     return result || [];

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { Grid3x3, List } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { ProductCard, ProductCardCompact } from "@/components/ProductCard"
 import { getProducts, getCategories, getCollections } from "@/sanity/queries"
 import { Suspense } from "react"
+import { absoluteUrl, buildMetadata } from "@/lib/seo"
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -15,6 +17,14 @@ interface ProductsPageProps {
     view?: "grid" | "list"
   }>
 }
+
+export const metadata: Metadata = buildMetadata({
+  title: "Custom Crochet Products",
+  description:
+    "Browse handmade crochet products from Knitty Petit, including customizable baby pieces, decor, and thoughtful handmade gifts.",
+  path: "/products",
+  image: "/products/sweater1.webp",
+})
 
 async function ProductsContent({ searchParams }: { searchParams: { category?: string; collection?: string; sort?: string; view?: "grid" | "list" } }) {
   const { category, collection, sort = "featured", view = "grid" } = searchParams
@@ -73,8 +83,31 @@ async function ProductsContent({ searchParams }: { searchParams: { category?: st
     return searchParams.toString()
   }
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: absoluteUrl("/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Products",
+        item: absoluteUrl("/products"),
+      },
+    ],
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <main className="min-h-screen bg-background">
         {/* Page Header */}
         <div className="border-b border-border/40 bg-muted/30">

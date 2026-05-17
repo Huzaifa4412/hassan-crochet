@@ -2,8 +2,9 @@
 
 import TestimonialsCard from "@/components/ui/testimonials-card";
 import { Badge } from "@/components/ui/badge";
-import { Quote } from "lucide-react";
+import { HeartHandshake, PackageCheck, Quote, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Reveal, StaggerItem, StaggerReveal } from "@/components/motion/Reveal";
 
 interface TestimonialsSectionProps {
   className?: string;
@@ -57,25 +58,25 @@ const testimonials = [
 
 export function TestimonialsSection({ className }: TestimonialsSectionProps) {
   return (
-    <section className={cn("py-12 md:py-16 lg:py-24 bg-background", className)}>
+    <section className={cn("bg-[#fffaf4] px-4 py-20 sm:px-6 lg:px-8", className)}>
       <div className="container mx-auto px-4 md:px-6">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <Reveal className="mx-auto mb-12 max-w-3xl text-center md:mb-16">
           <Badge
             variant="outline"
-            className="mb-4 px-4 py-1.5 text-sm font-medium border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+            className="mb-4 border-[#e5c7b2] bg-white px-4 py-1.5 text-sm font-semibold text-[#a94f2c] hover:bg-white"
           >
             <Quote className="w-3.5 h-3.5 mr-1.5" />
             Customer Love
           </Badge>
 
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-            What Our Customers Say
+          <h2 className="mb-4 text-4xl font-semibold tracking-normal text-[#241814] md:text-5xl">
+            Notes from homes that received one.
           </h2>
 
-          <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-            Don&apos;t just take our word for it. Here&apos;s what our happy customers have to say about their
-            handmade crochet pieces.
+          <p className="text-base leading-7 text-[#756156] md:text-lg">
+            Reviews, photos, and keepsake reactions help the shop feel less
+            like a catalog and more like a studio with real care behind it.
           </p>
 
           {/* Rating Summary */}
@@ -100,10 +101,10 @@ export function TestimonialsSection({ className }: TestimonialsSectionProps) {
               from {testimonials.length}+ reviews
             </span>
           </div>
-        </div>
+        </Reveal>
 
         {/* Testimonials Card */}
-        <div className="flex justify-center items-center  animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-100">
+        <Reveal className="flex items-center justify-center">
           <TestimonialsCard
             items={testimonials}
             autoPlay={true}
@@ -111,65 +112,40 @@ export function TestimonialsSection({ className }: TestimonialsSectionProps) {
             showNavigation={true}
             showCounter={true}
           />
-        </div>
+        </Reveal>
 
         {/* Trust Indicators */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6  max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-          <div className="flex flex-col items-center text-center p-6 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <svg
-                className="w-6 h-6 text-primary"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-foreground mb-1">Quality Guaranteed</h3>
-            <p className="text-sm text-muted-foreground">Every piece is handmade with premium materials</p>
-          </div>
-
-          <div className="flex flex-col items-center text-center p-6 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <svg
-                className="w-6 h-6 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-foreground mb-1">Fast Delivery</h3>
-            <p className="text-sm text-muted-foreground">Quick shipping with careful packaging</p>
-          </div>
-
-          <div className="flex flex-col items-center text-center p-6 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <svg
-                className="w-6 h-6 text-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-            </div>
-            <h3 className="font-semibold text-foreground mb-1">Made with Love</h3>
-            <p className="text-sm text-muted-foreground">Each piece crafted with care and attention</p>
-          </div>
-        </div>
+        <StaggerReveal className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-3">
+          {[
+            {
+              icon: ShieldCheck,
+              title: "Quality guaranteed",
+              copy: "Every piece is handmade with premium materials",
+            },
+            {
+              icon: PackageCheck,
+              title: "Packed carefully",
+              copy: "Soft goods shipped with a keepsake-first mindset",
+            },
+            {
+              icon: HeartHandshake,
+              title: "Made with care",
+              copy: "Each order is handled like a personal gift",
+            },
+          ].map((item) => (
+            <StaggerItem key={item.title}>
+              <div className="h-full rounded-[1.5rem] border border-[#ead7c7] bg-white p-6 text-center shadow-[0_14px_36px_rgba(79,48,30,0.07)] transition-transform hover:-translate-y-1">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#fff1e6] text-[#bf6036]">
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <h3 className="mb-1 font-semibold text-[#2f211b]">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-6 text-[#756156]">{item.copy}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerReveal>
       </div>
     </section>
   );

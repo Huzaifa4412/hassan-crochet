@@ -1,16 +1,25 @@
+import type { Metadata } from "next"
 import { Suspense } from "react"
-import { searchProducts } from "@/sanity/queries"
 import Header from "@/components/layout/Header"
 import Footer from "@/components/layout/Footer"
-import { ProductCard } from "@/components/home/ProductCard"
 import { SearchResults } from "@/components/search/SearchResults"
+import { buildMetadata } from "@/lib/seo"
 
 interface SearchPageProps {
-  searchParams: { q?: string }
+  searchParams: Promise<{ q?: string }>
 }
 
+export const metadata: Metadata = buildMetadata({
+  title: "Search Handmade Crochet Products",
+  description:
+    "Search Knitty Petit for handmade crochet products, personalized baby gifts, and customizable nursery decor.",
+  path: "/search",
+  noIndex: true,
+})
+
 export default async function SearchPage({ searchParams }: SearchPageProps) {
-  const query = searchParams.q || ""
+  const { q } = await searchParams
+  const query = q || ""
 
   return (
     <>
