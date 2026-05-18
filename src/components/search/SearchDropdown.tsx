@@ -2,14 +2,18 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Search, X, Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import type { Product } from "@/sanity/queries"
+import * as pixel from "@/lib/fpixel"
+import {
+  getProductEngagementPayload,
+  getSearchPixelPayload,
+} from "@/lib/meta-events"
 
 interface SearchDropdownProps {
   placeholder?: string
@@ -23,7 +27,6 @@ export function SearchDropdown({ placeholder = "Search products...", className }
   const [isLoading, setIsLoading] = React.useState(false)
   const [inputRef, setInputRef] = React.useState<HTMLInputElement | null>(null)
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   // Debounced search
   React.useEffect(() => {
@@ -53,6 +56,10 @@ export function SearchDropdown({ placeholder = "Search products...", className }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (query.trim()) {
+      pixel.event(
+        "Search",
+        getSearchPixelPayload(query, "search_dropdown_submit", results.length),
+      )
       router.push(`/search?q=${encodeURIComponent(query.trim())}`)
       setIsOpen(false)
       inputRef?.blur()
@@ -66,7 +73,12 @@ export function SearchDropdown({ placeholder = "Search products...", className }
     inputRef?.focus()
   }
 
-  const handleProductClick = () => {
+  const handleProductClick = (product: Product) => {
+    pixel.customEvent("SearchResultClick", {
+      ...getProductEngagementPayload(product, "search_dropdown_result"),
+      search_string: query.trim(),
+      result_count: results.length,
+    })
     setIsOpen(false)
     setQuery("")
     setResults([])
@@ -123,7 +135,7 @@ export function SearchDropdown({ placeholder = "Search products...", className }
                     <Link
                       key={product._id}
                       href={`/products/${product.slug?.current}`}
-                      onClick={handleProductClick}
+                      onClick={() => handleProductClick(product)}
                       className="flex items-center gap-4 px-4 py-3 hover:bg-muted/50 transition-colors border-b border-border/40 last:border-0"
                     >
                       {/* Product Image */}
@@ -169,7 +181,19 @@ export function SearchDropdown({ placeholder = "Search products...", className }
                   {results.length > 6 && (
                     <Link
                       href={`/search?q=${encodeURIComponent(query.trim())}`}
-                      onClick={handleProductClick}
+                      onClick={() => {
+                        pixel.event(
+                          "Search",
+                          getSearchPixelPayload(
+                            query,
+                            "search_dropdown_view_all",
+                            results.length,
+                          ),
+                        )
+                        setIsOpen(false)
+                        setQuery("")
+                        setResults([])
+                      }}
                       className="block px-4 py-3 text-center text-sm font-medium text-primary hover:bg-muted/50 transition-colors border-t border-border/40"
                     >
                       View all {results.length} results

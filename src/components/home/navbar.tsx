@@ -22,7 +22,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#ead7c7]/80 bg-[#fffaf4]/88 shadow-[0_10px_40px_rgba(86,52,32,0.06)] backdrop-blur-xl">
-        <div className="flex min-h-10 items-center justify-center gap-3 bg-[#b85e37] px-4 py-2 text-center text-sm font-medium text-white">
+        <div className="flex min-h-10 items-center justify-center gap-3 bg-[#b85e37]/70 px-4 py-2 text-center text-sm font-medium text-white">
           <span>Up to 40% off custom keepsakes</span>
           <span className="hidden h-1 w-1 rounded-full bg-white/55 sm:block" />
           <TimerClock />

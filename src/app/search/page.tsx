@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Suspense } from "react"
 import { SearchResults } from "@/components/search/SearchResults"
+import { SearchPixelTracker } from "@/components/search/SearchPixelTracker"
 import { buildMetadata } from "@/lib/seo"
 
 interface SearchPageProps {
@@ -21,6 +22,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <main className="min-h-screen bg-background">
+      <SearchPixelTracker query={query} />
       <div className="container mx-auto px-4 py-8 md:px-6 md:py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-2">

@@ -9,6 +9,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import { Heart, ShoppingCart, Star } from "lucide-react"
 import type { Product } from "@/sanity/queries"
+import * as pixel from "@/lib/fpixel"
+import { getProductEngagementPayload } from "@/lib/meta-events"
 
 interface ProductCardProps {
   product: Product
@@ -38,13 +40,23 @@ export function ProductCard({
   const isSale = comparePrice && price != null && comparePrice > price
   const isNew = product.badges?.some(b => b.toLowerCase() === "new")
   const isBestseller = product.badges?.some(b => b.toLowerCase().includes("best"))
+  const trackCustomizeClick = (source: string) => {
+    pixel.event("CustomizeProduct", getProductEngagementPayload(product, source))
+  }
+  const trackWishlist = (source: string) => {
+    pixel.event("AddToWishlist", getProductEngagementPayload(product, source))
+  }
 
   if (!productSlug) return null
 
   // Compact variant for list views
   if (variant === "compact") {
     return (
-      <Link href={`/products/${productSlug}`} className={cn("group block", className)}>
+      <Link
+        href={`/products/${productSlug}`}
+        onClick={() => trackCustomizeClick("compact_home_product_card")}
+        className={cn("group block", className)}
+      >
         <div className="flex gap-4 p-4 bg-white rounded-lg border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all">
           {/* Thumbnail */}
           <div className="relative w-20 h-20 flex-shrink-0 rounded overflow-hidden bg-gray-50">
@@ -84,6 +96,7 @@ export function ProductCard({
               <button
                 onClick={(e) => {
                   e.preventDefault()
+                  trackWishlist("compact_home_product_card")
                   setIsFavorited(!isFavorited)
                 }}
                 className="text-gray-400 hover:text-red-500 transition-colors"
@@ -104,7 +117,10 @@ export function ProductCard({
       className
     )}>
       <CardContent className="p-0">
-        <Link href={`/products/${productSlug}`}>
+        <Link
+          href={`/products/${productSlug}`}
+          onClick={() => trackCustomizeClick("home_product_card")}
+        >
           {/* Image Container */}
           <div className="relative aspect-square overflow-hidden bg-gray-50">
             {productImage && productImage.length > 0 ? (
@@ -151,6 +167,7 @@ export function ProductCard({
             <button
               onClick={(e) => {
                 e.preventDefault()
+                trackWishlist("home_product_card")
                 setIsFavorited(!isFavorited)
               }}
               className={cn(
@@ -253,7 +270,10 @@ export function ProductCard({
                   : "bg-gray-900 text-white hover:bg-gray-800"
               )}
               disabled={product.inStock === false}
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault()
+                trackCustomizeClick("home_product_card_cart_button")
+              }}
             >
               {product.inStock === false ? (
                 "Out of Stock"
@@ -295,6 +315,12 @@ export function FeaturedProductCard({
   const productImage = product.mainImageUrl || firstVariant?.imageUrl
   const productSlug = product.slug?.current
   const isSale = comparePrice && price != null && comparePrice > price
+  const trackFeaturedCustomizeClick = (source: string) => {
+    pixel.event("CustomizeProduct", getProductEngagementPayload(product, source))
+  }
+  const trackFeaturedWishlist = () => {
+    pixel.event("AddToWishlist", getProductEngagementPayload(product, "featured_home_product_card"))
+  }
 
   if (!productSlug) return null
 
@@ -304,7 +330,10 @@ export function FeaturedProductCard({
       className
     )}>
       <CardContent className="p-0">
-        <Link href={`/products/${productSlug}`}>
+        <Link
+          href={`/products/${productSlug}`}
+          onClick={() => trackFeaturedCustomizeClick("featured_home_product_card")}
+        >
           {/* Image */}
           <div className="relative aspect-[4/5] overflow-hidden bg-gray-50">
             {productImage && productImage.length > 0 ? (
@@ -340,6 +369,7 @@ export function FeaturedProductCard({
             <button
               onClick={(e) => {
                 e.preventDefault()
+                trackFeaturedWishlist()
                 setIsFavorited(!isFavorited)
               }}
               className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white shadow-md hover:shadow-lg hover:scale-105 transition-all flex items-center justify-center"
@@ -367,12 +397,16 @@ export function FeaturedProductCard({
 
             {/* Button */}
             <div className="flex gap-3 pt-2">
-              <Button className="flex-1 bg-orange-600 text-white hover:bg-orange-700 h-11 font-semibold">
+              <Button
+                onClick={() => trackFeaturedCustomizeClick("featured_home_customize_button")}
+                className="flex-1 bg-orange-600 text-white hover:bg-orange-700 h-11 font-semibold"
+              >
                 Customize
               </Button>
               <Button
                 size="icon"
                 variant="outline"
+                onClick={() => trackFeaturedCustomizeClick("featured_home_cart_button")}
                 className="h-11 border-gray-200 hover:bg-gray-50"
               >
                 <ShoppingCart className="w-4 h-4" />

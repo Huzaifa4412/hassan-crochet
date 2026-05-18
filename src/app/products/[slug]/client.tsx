@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import { motion } from "motion/react";
+import Image from "next/image";
 import {
   Download,
   Copy,
@@ -35,6 +36,10 @@ import CustomizationCanvas, {
 import { Product } from "@/sanity/queries";
 import { useToaster } from "@/components/ui/toast";
 import * as pixel from "@/lib/fpixel";
+import {
+  getCustomizationPixelPayload,
+  getProductPixelPayload,
+} from "@/lib/meta-events";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -171,35 +176,35 @@ const ICONS = [
 
 // Single color options
 const SINGLE_TEXT_COLORS = [
-  { name: "Midnight Black", value: "#1A1A1D", preview: "#1A1A1D" }, // A1
-  { name: "Deep Maroon", value: "#800020", preview: "#800020" }, // A2
-  { name: "Rosewood", value: "#9E5B53", preview: "#9E5B53" }, // A3
-  { name: "Charcoal Grey", value: "#545454", preview: "#545454" }, // A4
-  { name: "Royal Blue", value: "#2B3399", preview: "#2B3399" }, // A5
-  { name: "Sand", value: "#D2B48C", preview: "#D2B48C" }, // A6
-  { name: "Baby Pink", value: "#F4C2C2", preview: "#F4C2C2" }, // A7
-  { name: "Grass Green", value: "#567D46", preview: "#567D46" }, // A8
-  { name: "Sunflower Yellow", value: "#FFC300", preview: "#FFC300" }, // A9
-  { name: "Grape Purple", value: "#6F2DA8", preview: "#6F2DA8" }, // A10
-  { name: "Sage Green", value: "#8A9A5B", preview: "#8A9A5B" }, // A11
-  { name: "Denim Blue", value: "#5D8AA8", preview: "#5D8AA8" }, // A12
-  { name: "Deep Cobalt", value: "#0047AB", preview: "#0047AB" }, // A13
-  { name: "Turquoise", value: "#00CED1", preview: "#00CED1" }, // A14
-  { name: "Hot Pink", value: "#FF69B4", preview: "#FF69B4" }, // A15
-  { name: "Terracotta", value: "#E2725B", preview: "#E2725B" }, // A16
-  { name: "Bright Orange", value: "#FF8C00", preview: "#FF8C00" }, // A17
-  { name: "Dusty Rose", value: "#DCAE96", preview: "#DCAE96" }, // A18
-  { name: "Lavender", value: "#B57EDC", preview: "#B57EDC" }, // A19
-  { name: "Pale Mint", value: "#F5FFFA", preview: "#F5FFFA" }, // A20
-  { name: "Forest Green", value: "#014421", preview: "#014421" }, // A21
-  { name: "Olive Green", value: "#BAB86C", preview: "#BAB86C" }, // A22
-  { name: "Mustard", value: "#E1AD01", preview: "#E1AD01" }, // A23
-  { name: "Stone Grey", value: "#888581", preview: "#888581" }, // A24
-  { name: "Antique Rose", value: "#9B5D65", preview: "#9B5D65" }, // A25
-  { name: "Dark Moss", value: "#4A5D23", preview: "#4A5D23" }, // A26
-  { name: "Neon Lime", value: "#CCFF00", preview: "#CCFF00" }, // A27
-  { name: "Taupe", value: "#B38B6D", preview: "#B38B6D" }, // A28
-  { name: "Seafoam Blue", value: "#93A8AC", preview: "#93A8AC" }, // A29
+  { name: "Midnight Black (A1)", value: "#1A1A1D", preview: "#1A1A1D" },
+  { name: "Deep Maroon (A2)", value: "#800020", preview: "#800020" },
+  { name: "Rosewood (A3)", value: "#9E5B53", preview: "#9E5B53" },
+  { name: "Charcoal Grey (A4)", value: "#545454", preview: "#545454" },
+  { name: "Royal Blue (A5)", value: "#2B3399", preview: "#2B3399" },
+  { name: "Sand (A6)", value: "#D2B48C", preview: "#D2B48C" },
+  { name: "Baby Pink (A7)", value: "#F4C2C2", preview: "#F4C2C2" },
+  { name: "Grass Green (A8)", value: "#567D46", preview: "#567D46" },
+  { name: "Sunflower Yellow (A9)", value: "#FFC300", preview: "#FFC300" },
+  { name: "Grape Purple (A10)", value: "#6F2DA8", preview: "#6F2DA8" },
+  { name: "Sage Green (A11)", value: "#8A9A5B", preview: "#8A9A5B" },
+  { name: "Denim Blue (A12)", value: "#5D8AA8", preview: "#5D8AA8" },
+  { name: "Deep Cobalt (A13)", value: "#0047AB", preview: "#0047AB" },
+  { name: "Turquoise (A14)", value: "#00CED1", preview: "#00CED1" },
+  { name: "Hot Pink (A15)", value: "#FF69B4", preview: "#FF69B4" },
+  { name: "Terracotta (A16)", value: "#E2725B", preview: "#E2725B" },
+  { name: "Bright Orange (A17)", value: "#FF8C00", preview: "#FF8C00" },
+  { name: "Dusty Rose (A18)", value: "#DCAE96", preview: "#DCAE96" },
+  { name: "Lavender (A19)", value: "#B57EDC", preview: "#B57EDC" },
+  { name: "Pale Mint (A20)", value: "#F5FFFA", preview: "#F5FFFA" },
+  { name: "Forest Green (A21)", value: "#014421", preview: "#014421" },
+  { name: "Olive Green (A22)", value: "#BAB86C", preview: "#BAB86C" },
+  { name: "Mustard Yellow (A23)", value: "#E1AD01", preview: "#E1AD01" }, // A23
+  { name: "Stone Grey (A24)", value: "#888581", preview: "#888581" }, // A24
+  { name: "Antique Rose (A25)", value: "#9B5D65", preview: "#9B5D65" }, // A25
+  { name: "Dark Moss (A26)", value: "#4A5D23", preview: "#4A5D23" }, // A26
+  { name: "Neon Lime (A27)", value: "#CCFF00", preview: "#CCFF00" }, // A27
+  { name: "Taupe (A28)", value: "#B38B6D", preview: "#B38B6D" }, // A28
+  { name: "Seafoam Blue (A29)", value: "#93A8AC", preview: "#93A8AC" }, // A29
 ];
 
 // Multi-color palette options with individual swatches
@@ -533,6 +538,7 @@ export default function ProductClient({ product }: ProductClientProps) {
   // UI state
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
+  const [isColorGuideOpen, setIsColorGuideOpen] = useState(false);
   const [orderForm, setOrderForm] = useState({
     name: "",
     email: "",
@@ -542,15 +548,25 @@ export default function ProductClient({ product }: ProductClientProps) {
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
 
   const productPixelPayload = useMemo(
-    () => ({
-      content_ids: [product._id],
-      content_name: product.title,
-      content_type: "product",
-      content_category: product.category?.title || "Crochet",
-      currency: "USD",
-      value: 18.99,
-    }),
-    [product._id, product.title, product.category?.title],
+    () => getProductPixelPayload(product),
+    [product],
+  );
+
+  const textColorName = isMultiColor
+    ? MULTI_COLOR_PALETTES.find((p) => p.value === textColor)?.name
+    : SINGLE_TEXT_COLORS.find((c) => c.value === textColor)?.name;
+  const textFontName = FONTS.find((f) => f.value === textFont)?.name;
+
+  const customizationPixelPayload = useMemo(
+    () =>
+      getCustomizationPixelPayload({
+        selectedColor: selectedColor?.name,
+        addedTexts,
+        addedIcons,
+        textColorName,
+        textFontName,
+      }),
+    [selectedColor?.name, addedTexts, addedIcons, textColorName, textFontName],
   );
 
   useEffect(() => {
@@ -570,9 +586,7 @@ export default function ProductClient({ product }: ProductClientProps) {
     pixel.event("CustomizeProduct", {
       ...productPixelPayload,
       customization_type: customizationType,
-      selected_color: selectedColor?.name || "Not selected",
-      text_count: addedTexts.length,
-      icon_count: addedIcons.length,
+      ...customizationPixelPayload,
       ...details,
     });
   };
@@ -634,6 +648,16 @@ export default function ProductClient({ product }: ProductClientProps) {
     setSelectedColor(color);
   };
 
+  const handleOpenColorGuide = () => {
+    pixel.customEvent("ViewColorGuide", {
+      ...productPixelPayload,
+      selected_color: selectedColor?.name || "Not selected",
+      text_color: textColorName || "Not selected",
+      source: "text_color_selector",
+    });
+    setIsColorGuideOpen(true);
+  };
+
   // Handle color change - update selected object if exists
   const handleTextColorChange = (newColor: string, multiColor: boolean) => {
     setTextColor(newColor);
@@ -681,15 +705,34 @@ export default function ProductClient({ product }: ProductClientProps) {
   };
 
   const handleDownloadPreview = () => {
+    pixel.customEvent("DownloadCustomizationPreview", {
+      ...productPixelPayload,
+      ...customizationPixelPayload,
+      source: "product_customizer",
+    });
     canvasRef.current?.download();
   };
 
   const currentSummary = `Product: ${product.title} | Color: ${selectedColor?.name} | Text: ${addedTexts.length > 0 ? addedTexts.map((t) => t.text).join(", ") : "None"} | Text Color: ${isMultiColor ? MULTI_COLOR_PALETTES.find((p) => p.value === textColor)?.name : SINGLE_TEXT_COLORS.find((c) => c.value === textColor)?.name} | Font: ${FONTS.find((f) => f.value === textFont)?.name} | Icons: ${addedIcons.length > 0 ? addedIcons.join(", ") : "None"}`;
 
   const handleCopyCustomizations = () => {
+    pixel.customEvent("CopyCustomizationDetails", {
+      ...productPixelPayload,
+      ...customizationPixelPayload,
+      source: "product_customizer",
+    });
     navigator.clipboard.writeText(currentSummary);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleOpenOrderDialog = () => {
+    pixel.event("AddToCart", {
+      ...productPixelPayload,
+      ...customizationPixelPayload,
+      source: "product_detail_order_cta",
+    });
+    setIsOrderDialogOpen(true);
   };
 
   const handleOrderSubmit = async (e: React.FormEvent) => {
@@ -711,11 +754,16 @@ export default function ProductClient({ product }: ProductClientProps) {
         if (product.etsyLink) {
           pixel.event("Lead", {
             ...productPixelPayload,
+            ...customizationPixelPayload,
             destination: "etsy",
             lead_source: "product_customization_form",
-            selected_color: selectedColor?.name || "Not selected",
-            has_custom_text: addedTexts.length > 0,
-            icon_count: addedIcons.length,
+          });
+
+          pixel.event("InitiateCheckout", {
+            ...productPixelPayload,
+            ...customizationPixelPayload,
+            destination: "etsy",
+            checkout_source: "product_customization_form",
           });
 
           setIsOrderDialogOpen(false);
@@ -947,7 +995,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                         <TooltipTrigger asChild>
                           <button
                             onClick={() => handleProductColorChange(color)}
-                            aria-label={color.name}
+                            aria-label={`${color.name}`}
                             className={`relative aspect-square overflow-hidden rounded-2xl border-2 bg-[#f8efe8] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#cf6f3f] focus:ring-offset-2 focus:ring-offset-white ${
                               selectedColor?.name === color.name
                                 ? "border-[#cf6f3f] shadow-lg ring-2 ring-[#cf6f3f]/25"
@@ -1092,19 +1140,64 @@ export default function ProductClient({ product }: ProductClientProps) {
 
                       {/* Text Color */}
                       <div className="space-y-3 sm:space-y-4">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-xs sm:text-sm font-medium">
-                            Text Color
-                          </Label>
-                          {hasSelectedText && (
-                            <span className="text-[10px] sm:text-xs text-primary bg-primary/10 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full flex items-center gap-1">
-                              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-primary animate-pulse" />
-                              <span className="hidden sm:inline">
-                                Editing selected text
-                              </span>
-                              <span className="sm:hidden">Editing</span>
-                            </span>
-                          )}
+                        <div className="space-y-3">
+                          <div className="space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Label className="text-xs font-medium sm:text-sm">
+                                Text Color
+                              </Label>
+                              {hasSelectedText && (
+                                <span className="flex items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] text-primary sm:px-2 sm:py-1 sm:text-xs">
+                                  <span className="h-1 w-1 rounded-full bg-primary sm:h-1.5 sm:w-1.5" />
+                                  <span className="hidden sm:inline">
+                                    Editing selected text
+                                  </span>
+                                  <span className="sm:hidden">Editing</span>
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="rounded-2xl border border-[#d9bca9] bg-[#fff7ef] p-3 shadow-[0_10px_30px_rgba(124,82,58,0.08)]">
+                            <div className="flex gap-3">
+                              <button
+                                type="button"
+                                onClick={handleOpenColorGuide}
+                                className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-[#ead7c7] bg-white shadow-sm transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#cf6f3f] focus:ring-offset-2"
+                                aria-label="Open real text color guide"
+                              >
+                                <Image
+                                  src="/colors/color-guide.avif"
+                                  alt=""
+                                  fill
+                                  sizes="64px"
+                                  className="object-cover"
+                                />
+                              </button>
+                              <div className="min-w-0 flex-1">
+                                <div className="mb-1 flex flex-wrap items-center gap-2">
+                                  <span className="rounded-full bg-[#cf6f3f] px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-white">
+                                    Recommended
+                                  </span>
+                                  <span className="text-xs font-bold text-[#251611]">
+                                    Check real thread colors first
+                                  </span>
+                                </div>
+                                <p className="text-xs leading-5 text-[#7a6258]">
+                                  Website swatches are only previews. Open the
+                                  guide to compare real text/thread colors and
+                                  avoid color misunderstanding.
+                                </p>
+                              </div>
+                            </div>
+                            <Button
+                              type="button"
+                              onClick={handleOpenColorGuide}
+                              className="mt-3 h-11 w-full rounded-full bg-[#cf6f3f] text-sm font-black text-white shadow-[0_12px_24px_rgba(207,111,63,0.22)] hover:bg-[#b85e37]"
+                            >
+                              <Palette className="mr-2 h-4 w-4" />
+                              View real text color guide
+                            </Button>
+                          </div>
                         </div>
 
                         {/* Single Colors Grid */}
@@ -1137,7 +1230,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                                   </button>
                                 </TooltipTrigger>
                                 <TooltipContent side="top">
-                                  <p className="font-medium">{color.name}</p>
+                                  <p className="font-medium">{`${color.name}`}</p>
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
@@ -1356,7 +1449,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                   </div>
                 </div>
                 <Button
-                  onClick={() => setIsOrderDialogOpen(true)}
+                  onClick={handleOpenOrderDialog}
                   className="h-11 w-full rounded-full bg-[#cf6f3f] text-sm font-bold text-white shadow-xl hover:bg-[#dd7d4e] sm:h-12 sm:text-base"
                 >
                   <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
@@ -1528,7 +1621,10 @@ export default function ProductClient({ product }: ProductClientProps) {
                   type="email"
                   value={orderForm.email}
                   onChange={(e) =>
+                  {
+
                     setOrderForm((prev) => ({ ...prev, email: e.target.value }))
+                  }
                   }
                   placeholder="john@example.com"
                   required
@@ -1578,6 +1674,33 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </Button>
               </DialogFooter>
             </form>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isColorGuideOpen} onOpenChange={setIsColorGuideOpen}>
+          <DialogContent className="max-h-[92vh] overflow-y-auto border-[#ead7c7] bg-[#fffaf4] p-0 sm:max-w-3xl">
+            <DialogHeader className="px-5 pt-5 text-left sm:px-6 sm:pt-6">
+              <DialogTitle className="text-2xl font-black text-[#251611]">
+                Text Color Guide
+              </DialogTitle>
+              <DialogDescription className="text-sm leading-6 text-[#7a6258]">
+                Use this photo as the closest reference for real text/thread
+                colors. The final handmade result may still vary slightly with
+                lighting, thread dye lots, and screen display settings.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="px-5 pb-5 sm:px-6 sm:pb-6">
+              <div className="relative overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_18px_55px_rgba(124,82,58,0.12)]">
+                <Image
+                  src="/colors/color-guide.avif"
+                  alt="Real crochet text color guide"
+                  width={1400}
+                  height={1000}
+                  className="h-auto w-full"
+                  sizes="(min-width: 768px) 768px, 100vw"
+                />
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

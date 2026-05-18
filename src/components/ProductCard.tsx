@@ -7,6 +7,8 @@ import { motion } from "motion/react";
 import { ArrowRight, Heart, Sparkles } from "lucide-react";
 import type { Product } from "@/sanity/queries";
 import { cn } from "@/lib/utils";
+import * as pixel from "@/lib/fpixel";
+import { getProductEngagementPayload } from "@/lib/meta-events";
 
 interface ProductCardProps {
   product: Product;
@@ -29,6 +31,18 @@ export function ProductCard({
   const [isImageLoaded, setIsImageLoaded] = React.useState(false);
   const mainImage = getProductImage(product);
   const variants = product.variants || [];
+  const trackCustomizeClick = (source: string) => {
+    pixel.event("CustomizeProduct", getProductEngagementPayload(product, source));
+  };
+  const trackWishlist = () => {
+    pixel.event("AddToWishlist", getProductEngagementPayload(product, "product_card"));
+  };
+  const trackEtsyClick = () => {
+    pixel.event("InitiateCheckout", {
+      ...getProductEngagementPayload(product, "product_card_etsy_link"),
+      destination: "etsy",
+    });
+  };
 
   return (
     <motion.article
@@ -40,6 +54,7 @@ export function ProductCard({
         <button
           onClick={(e) => {
             e.preventDefault();
+            trackWishlist();
             setIsFavorite((value) => !value);
           }}
           className={cn(
@@ -55,6 +70,7 @@ export function ProductCard({
 
         <Link
           href={`/products/${product.slug.current}`}
+          onClick={() => trackCustomizeClick("product_card_image")}
           className="relative block aspect-[4/4.6] overflow-hidden bg-[#f6eee8]"
         >
           {mainImage && (
@@ -123,7 +139,10 @@ export function ProductCard({
             )}
           </div>
 
-          <Link href={`/products/${product.slug.current}`}>
+          <Link
+            href={`/products/${product.slug.current}`}
+            onClick={() => trackCustomizeClick("product_card_title")}
+          >
             <h3 className="line-clamp-2 text-xl font-semibold leading-tight text-[#2f211b] transition-colors group-hover:text-[#a94f2c]">
               {product.title}
             </h3>
@@ -138,6 +157,7 @@ export function ProductCard({
           <div className="mt-auto flex flex-col gap-3 pt-5">
             <Link
               href={`/products/${product.slug.current}`}
+              onClick={() => trackCustomizeClick("product_card_customize_cta")}
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#bf6036] px-5 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(191,96,54,0.22)] transition-colors hover:bg-[#a94f2c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bf6036] focus-visible:ring-offset-2"
             >
               Customize now
@@ -150,6 +170,7 @@ export function ProductCard({
                     href={product.etsyLink}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={trackEtsyClick}
                     className="inline-flex min-h-10 flex-1 items-center justify-center rounded-full border border-[#ead7c7] text-sm font-semibold text-[#6f5a50] transition-colors hover:bg-[#fff1e6]"
                   >
                     View on Etsy
@@ -180,6 +201,12 @@ interface ProductCardCompactProps {
 export function ProductCardCompact({ product, className }: ProductCardCompactProps) {
   const [isFavorite, setIsFavorite] = React.useState(false);
   const mainImage = getProductImage(product);
+  const trackCompactCustomizeClick = () => {
+    pixel.event(
+      "CustomizeProduct",
+      getProductEngagementPayload(product, "compact_product_card"),
+    );
+  };
 
   return (
     <motion.article
@@ -189,6 +216,7 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
       <div className="flex gap-4">
         <Link
           href={`/products/${product.slug.current}`}
+          onClick={trackCompactCustomizeClick}
           className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#f6eee8]"
         >
           {mainImage && (
@@ -207,7 +235,10 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
               {product.category.title}
             </p>
           )}
-          <Link href={`/products/${product.slug.current}`}>
+          <Link
+            href={`/products/${product.slug.current}`}
+            onClick={trackCompactCustomizeClick}
+          >
             <h4 className="mt-1 line-clamp-2 font-semibold leading-tight text-[#2f211b] group-hover:text-[#a94f2c]">
               {product.title}
             </h4>
@@ -220,6 +251,7 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
           <div className="mt-3 flex items-center justify-between">
             <Link
               href={`/products/${product.slug.current}`}
+              onClick={trackCompactCustomizeClick}
               className="inline-flex items-center gap-1 text-xs font-semibold text-[#bf6036]"
             >
               Customize <ArrowRight className="h-3 w-3" />
@@ -227,6 +259,10 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
             <button
               onClick={(e) => {
                 e.preventDefault();
+                pixel.event(
+                  "AddToWishlist",
+                  getProductEngagementPayload(product, "compact_product_card"),
+                );
                 setIsFavorite((value) => !value);
               }}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#fff1e6] text-[#8b7569]"
