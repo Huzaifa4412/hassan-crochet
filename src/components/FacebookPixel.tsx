@@ -2,15 +2,21 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useRef } from "react";
 import * as pixel from "@/lib/fpixel";
 
 // Inner component that reads searchParams (must be wrapped in Suspense)
 function PixelPageTracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const didTrackInitialPageview = useRef(false);
 
   useEffect(() => {
+    if (!didTrackInitialPageview.current) {
+      didTrackInitialPageview.current = true;
+      return;
+    }
+
     pixel.pageview();
   }, [pathname, searchParams]);
 

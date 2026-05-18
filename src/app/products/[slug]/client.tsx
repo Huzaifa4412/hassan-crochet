@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { motion } from "motion/react";
 import {
   Download,
@@ -34,6 +34,7 @@ import CustomizationCanvas, {
 } from "@/components/CustomizationCanvas";
 import { Product } from "@/sanity/queries";
 import { useToaster } from "@/components/ui/toast";
+import * as pixel from "@/lib/fpixel";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -344,6 +345,8 @@ function ReviewCard({ review }: { review: Review }) {
 
 export default function ProductClient({ product }: ProductClientProps) {
   const canvasRef = useRef<CustomizationCanvasRef>(null);
+  const didTrackViewContent = useRef(false);
+  const didTrackCustomizeProduct = useRef(false);
   const { addToast } = useToaster();
 
   // Social proof state (fixed initial values instead of random)
@@ -538,6 +541,42 @@ export default function ProductClient({ product }: ProductClientProps) {
   });
   const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
 
+  const productPixelPayload = useMemo(
+    () => ({
+      content_ids: [product._id],
+      content_name: product.title,
+      content_type: "product",
+      content_category: product.category?.title || "Crochet",
+      currency: "USD",
+      value: 18.99,
+    }),
+    [product._id, product.title, product.category?.title],
+  );
+
+  useEffect(() => {
+    if (didTrackViewContent.current) return;
+
+    didTrackViewContent.current = true;
+    pixel.event("ViewContent", productPixelPayload);
+  }, [productPixelPayload]);
+
+  const trackCustomizeProduct = (
+    customizationType: string,
+    details: Record<string, unknown> = {},
+  ) => {
+    if (didTrackCustomizeProduct.current) return;
+
+    didTrackCustomizeProduct.current = true;
+    pixel.event("CustomizeProduct", {
+      ...productPixelPayload,
+      customization_type: customizationType,
+      selected_color: selectedColor?.name || "Not selected",
+      text_count: addedTexts.length,
+      icon_count: addedIcons.length,
+      ...details,
+    });
+  };
+
   // Update canvas base image when color changes
   useEffect(() => {
     if (canvasRef.current && selectedColor && selectedColor.imageUrl) {
@@ -549,6 +588,12 @@ export default function ProductClient({ product }: ProductClientProps) {
   const handleAddText = () => {
     if (!customText.trim()) return;
     canvasRef.current?.addText(customText, textFont, textColor);
+    trackCustomizeProduct("text_added", {
+      text_length: customText.trim().length,
+      text_color_mode: isMultiColor ? "multi" : "single",
+      text_font: FONTS.find((font) => font.value === textFont)?.name,
+      text_count: addedTexts.length + 1,
+    });
     setAddedTexts((prev) => [
       ...prev,
       { text: customText, color: textColor, font: textFont },
@@ -579,6 +624,16 @@ export default function ProductClient({ product }: ProductClientProps) {
     }
   };
 
+  const handleProductColorChange = (color: (typeof colors)[0]) => {
+    if (selectedColor?.name !== color.name) {
+      trackCustomizeProduct("product_color_selected", {
+        selected_color: color.name,
+      });
+    }
+
+    setSelectedColor(color);
+  };
+
   // Handle color change - update selected object if exists
   const handleTextColorChange = (newColor: string, multiColor: boolean) => {
     setTextColor(newColor);
@@ -589,6 +644,9 @@ export default function ProductClient({ product }: ProductClientProps) {
       hasSelectedText &&
       (selectedObjectType === "text" || selectedObjectType === "group")
     ) {
+      trackCustomizeProduct("text_color_changed", {
+        text_color_mode: multiColor ? "multi" : "single",
+      });
       canvasRef.current?.updateSelectedTextColor(newColor, textFont);
     }
   };
@@ -602,12 +660,21 @@ export default function ProductClient({ product }: ProductClientProps) {
       hasSelectedText &&
       (selectedObjectType === "text" || selectedObjectType === "group")
     ) {
+      trackCustomizeProduct("text_font_changed", {
+        text_font: FONTS.find((font) => font.value === newFont)?.name,
+      });
       canvasRef.current?.updateSelectedTextColor(textColor, newFont);
     }
   };
 
   const handleAddIcon = (icon: (typeof ICONS)[0]) => {
     canvasRef.current?.addIcon(icon.url);
+    trackCustomizeProduct("icon_added", {
+      icon_name: icon.name,
+      icon_count: addedIcons.includes(icon.name)
+        ? addedIcons.length
+        : addedIcons.length + 1,
+    });
     if (!addedIcons.includes(icon.name)) {
       setAddedIcons((prev) => [...prev, icon.name]);
     }
@@ -642,7 +709,20 @@ export default function ProductClient({ product }: ProductClientProps) {
 
       if (response.ok) {
         if (product.etsyLink) {
-          window.open(product.etsyLink, "_blank", "noopener,noreferrer");
+          pixel.event("Lead", {
+            ...productPixelPayload,
+            destination: "etsy",
+            lead_source: "product_customization_form",
+            selected_color: selectedColor?.name || "Not selected",
+            has_custom_text: addedTexts.length > 0,
+            icon_count: addedIcons.length,
+          });
+
+          setIsOrderDialogOpen(false);
+          setOrderForm({ name: "", email: "", phone: "", address: "" });
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          window.location.assign(product.etsyLink);
+          return;
         } else {
           addToast({
             variant: "default",
@@ -866,7 +946,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <button
-                            onClick={() => setSelectedColor(color)}
+                            onClick={() => handleProductColorChange(color)}
                             aria-label={color.name}
                             className={`relative aspect-square overflow-hidden rounded-2xl border-2 bg-[#f8efe8] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#cf6f3f] focus:ring-offset-2 focus:ring-offset-white ${
                               selectedColor?.name === color.name
