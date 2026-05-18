@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { defaultDescription, siteName, siteUrl } from "@/lib/seo";
+import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
 import FacebookPixel from "@/components/FacebookPixel";
@@ -92,6 +93,7 @@ export default function RootLayout({
           </main>
           <SiteFooter />
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
