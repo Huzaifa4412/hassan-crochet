@@ -1,35 +1,37 @@
-/**
- * Skeleton placeholder displayed while blog posts are loading.
- * Matches the exact layout of BlogCard so the page doesn't jump.
- */
 export default function BlogCardSkeleton() {
   return (
-    <div className="flex flex-col bg-card border border-border rounded-xl overflow-hidden shadow-sm animate-pulse">
-      {/* Image placeholder */}
-      <div className="aspect-[16/10] bg-muted" />
+    <div className="flex flex-col h-full overflow-hidden rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 animate-pulse">
+      {/* Image skeleton */}
+      <div className="aspect-[16/10] w-full bg-stone-200/80 dark:bg-stone-800" />
 
-      {/* Body placeholder */}
-      <div className="flex flex-col gap-3 p-5">
-        {/* Meta row */}
-        <div className="flex gap-4">
-          <div className="h-3 w-24 rounded-full bg-muted" />
-          <div className="h-3 w-20 rounded-full bg-muted" />
+      {/* Body skeleton */}
+      <div className="flex flex-col flex-1 p-6 sm:p-7 justify-between gap-4">
+        <div className="space-y-3">
+          {/* Metadata */}
+          <div className="flex items-center gap-3">
+            <div className="h-3.5 w-24 rounded bg-stone-200 dark:bg-stone-800" />
+            <div className="h-3.5 w-16 rounded bg-stone-200 dark:bg-stone-800" />
+          </div>
+
+          {/* Title */}
+          <div className="space-y-2 pt-1">
+            <div className="h-5 w-full rounded bg-stone-200 dark:bg-stone-800" />
+            <div className="h-5 w-4/5 rounded bg-stone-200 dark:bg-stone-800" />
+          </div>
+
+          {/* Excerpt */}
+          <div className="space-y-1.5 pt-1">
+            <div className="h-3.5 w-full rounded bg-stone-100 dark:bg-stone-800/60" />
+            <div className="h-3.5 w-5/6 rounded bg-stone-100 dark:bg-stone-800/60" />
+          </div>
         </div>
 
-        {/* Title lines */}
-        <div className="h-4 w-full rounded bg-muted" />
-        <div className="h-4 w-3/4 rounded bg-muted" />
-
-        {/* Excerpt lines */}
-        <div className="space-y-2 pt-1">
-          <div className="h-3 w-full rounded bg-muted" />
-          <div className="h-3 w-full rounded bg-muted" />
-          <div className="h-3 w-2/3 rounded bg-muted" />
+        {/* Footer */}
+        <div className="pt-4 border-t border-stone-100 dark:border-stone-800/60 flex items-center justify-between">
+          <div className="h-3.5 w-20 rounded bg-stone-200 dark:bg-stone-800" />
+          <div className="h-3.5 w-16 rounded bg-stone-200 dark:bg-stone-800" />
         </div>
-
-        {/* CTA placeholder */}
-        <div className="h-3 w-20 rounded-full bg-muted mt-2" />
       </div>
     </div>
-  )
+  );
 }

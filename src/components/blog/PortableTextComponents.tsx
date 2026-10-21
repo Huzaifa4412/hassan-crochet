@@ -1,104 +1,123 @@
 'use client'
 
-/**
- * Custom renderers for @portabletext/react.
- *
- * Each key maps to a Sanity block type or mark and returns the
- * React element that should be rendered for it.
- *
- * Kept as a 'use client' component because PortableText itself
- * uses React context for custom components — it's fine since there
- * is no server-only data fetching here.
- */
-
 import type { PortableTextComponents } from '@portabletext/react'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
+import { slugify } from '@/lib/blog-utils'
+import { Quote } from 'lucide-react'
 
-// Helper: render a syntax-highlighted code block
-// (no external dep needed — a simple styled <pre> is sufficient)
 function CodeBlock({ children }: { children: string }) {
   return (
-    <div className="my-6 rounded-lg overflow-hidden border border-border bg-[#1e1e2e]">
-      {/* Decorative dots like a macOS terminal */}
-      <div className="flex gap-1.5 px-4 py-2.5 bg-[#181825] border-b border-border">
-        <span className="inline-block w-3 h-3 rounded-full bg-[#f38ba8]" />
-        <span className="inline-block w-3 h-3 rounded-full bg-[#f9e2af]" />
-        <span className="inline-block w-3 h-3 rounded-full bg-[#a6e3a1]" />
+    <div className="my-8 rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-800 bg-stone-900 shadow-sm">
+      <div className="flex items-center gap-2 px-4 py-3 bg-stone-950/80 border-b border-stone-800 text-stone-400 text-xs font-mono">
+        <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
+        <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
+        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
+        <span className="ml-2">snippet</span>
       </div>
-      <pre className="overflow-x-auto p-5 text-sm font-mono leading-relaxed text-[#cdd6f4]">
+      <pre className="overflow-x-auto p-5 text-xs sm:text-sm font-mono leading-relaxed text-stone-200">
         <code>{children}</code>
       </pre>
     </div>
   )
 }
 
+function getNodeText(children: React.ReactNode): string {
+  if (!children) return ''
+  if (typeof children === 'string') return children
+  if (Array.isArray(children)) return children.map(getNodeText).join('')
+  if (typeof children === 'object' && children && 'props' in children) {
+    const el = children as { props?: { children?: React.ReactNode } }
+    return getNodeText(el.props?.children)
+  }
+  return ''
+}
+
 export const portableTextComponents: PortableTextComponents = {
-  // ----------------------------------------------------------------
-  // Block-level renderers
-  // ----------------------------------------------------------------
   block: {
     normal: ({ children }) => (
-      <p className="mb-5 leading-relaxed text-foreground/90">{children}</p>
-    ),
-    h2: ({ children }) => (
-      <h2 className="mt-10 mb-4 text-2xl font-semibold tracking-tight text-foreground scroll-mt-20">
+      <p className="mb-6 text-[17px] sm:text-[18px] leading-[1.8] text-stone-700 dark:text-stone-300 font-normal">
         {children}
-      </h2>
+      </p>
     ),
-    h3: ({ children }) => (
-      <h3 className="mt-8 mb-3 text-xl font-semibold tracking-tight text-foreground scroll-mt-20">
-        {children}
-      </h3>
-    ),
+    h2: ({ children }) => {
+      const text = getNodeText(children)
+      const id = slugify(text)
+      return (
+        <h2
+          id={id}
+          className="group relative mt-12 mb-5 pt-4 text-2xl sm:text-3xl font-serif font-bold tracking-tight text-stone-900 dark:text-stone-50 scroll-mt-28 border-t border-stone-100 dark:border-stone-800/80"
+        >
+          <a
+            href={`#${id}`}
+            className="inline-flex items-center hover:text-amber-800 dark:hover:text-amber-400 transition-colors"
+          >
+            {children}
+          </a>
+        </h2>
+      )
+    },
+    h3: ({ children }) => {
+      const text = getNodeText(children)
+      const id = slugify(text)
+      return (
+        <h3
+          id={id}
+          className="mt-8 mb-4 text-xl sm:text-2xl font-serif font-semibold tracking-tight text-stone-900 dark:text-stone-100 scroll-mt-28"
+        >
+          <a
+            href={`#${id}`}
+            className="hover:text-amber-800 dark:hover:text-amber-400 transition-colors"
+          >
+            {children}
+          </a>
+        </h3>
+      )
+    },
     h4: ({ children }) => (
-      <h4 className="mt-6 mb-2 text-lg font-semibold text-foreground scroll-mt-20">
+      <h4 className="mt-6 mb-3 text-lg font-semibold text-stone-900 dark:text-stone-200 scroll-mt-28">
         {children}
       </h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-6 pl-5 border-l-4 border-primary text-foreground/75 italic leading-relaxed">
-        {children}
-      </blockquote>
+      <figure className="relative my-8 my-10 overflow-hidden rounded-2xl border-l-4 border-amber-700/60 bg-amber-50/50 dark:bg-amber-950/20 px-6 py-5 sm:px-8 sm:py-6">
+        <Quote className="h-8 w-8 text-amber-700/20 dark:text-amber-400/20 mb-2 -ml-1" />
+        <blockquote className="text-lg sm:text-xl font-serif italic text-stone-800 dark:text-stone-200 leading-relaxed">
+          {children}
+        </blockquote>
+      </figure>
     ),
   },
 
-  // ----------------------------------------------------------------
-  // List renderers
-  // ----------------------------------------------------------------
   list: {
     bullet: ({ children }) => (
-      <ul className="my-5 ml-6 list-disc space-y-2 text-foreground/90 marker:text-primary">
+      <ul className="my-6 ml-6 list-disc space-y-2.5 text-[17px] text-stone-700 dark:text-stone-300 marker:text-amber-700 dark:marker:text-amber-400">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="my-5 ml-6 list-decimal space-y-2 text-foreground/90 marker:text-primary">
+      <ol className="my-6 ml-6 list-decimal space-y-2.5 text-[17px] text-stone-700 dark:text-stone-300 marker:font-semibold marker:text-amber-800 dark:marker:text-amber-400">
         {children}
       </ol>
     ),
   },
+
   listItem: {
-    bullet: ({ children }) => <li className="leading-relaxed">{children}</li>,
-    number: ({ children }) => <li className="leading-relaxed">{children}</li>,
+    bullet: ({ children }) => <li className="leading-relaxed pl-1">{children}</li>,
+    number: ({ children }) => <li className="leading-relaxed pl-1">{children}</li>,
   },
 
-  // ----------------------------------------------------------------
-  // Inline mark renderers
-  // ----------------------------------------------------------------
   marks: {
     strong: ({ children }) => (
-      <strong className="font-semibold text-foreground">{children}</strong>
+      <strong className="font-semibold text-stone-900 dark:text-stone-100">{children}</strong>
     ),
     em: ({ children }) => <em className="italic">{children}</em>,
-    underline: ({ children }) => <span className="underline underline-offset-2">{children}</span>,
-    // Inline code (single backtick)
+    underline: ({ children }) => <span className="underline underline-offset-4 decoration-amber-400">{children}</span>,
     code: ({ children }) => (
-      <code className="rounded bg-muted px-1.5 py-0.5 text-[0.875em] font-mono text-primary">
+      <code className="rounded-md bg-stone-100 dark:bg-stone-800 px-2 py-0.5 text-[0.875em] font-mono font-medium text-amber-800 dark:text-amber-300">
         {children}
       </code>
     ),
-    // External link annotation
     link: ({ value, children }) => {
       const target = value?.blank ? '_blank' : '_self'
       const rel = target === '_blank' ? 'noopener noreferrer' : undefined
@@ -107,7 +126,7 @@ export const portableTextComponents: PortableTextComponents = {
           href={value?.href}
           target={target}
           rel={rel}
-          className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors duration-150"
+          className="font-medium text-amber-800 dark:text-amber-400 underline decoration-amber-300/70 hover:decoration-amber-800 dark:hover:decoration-amber-300 underline-offset-4 transition-colors duration-150"
         >
           {children}
         </a>
@@ -115,37 +134,35 @@ export const portableTextComponents: PortableTextComponents = {
     },
   },
 
-  // ----------------------------------------------------------------
-  // Custom block types (e.g. inline images in the body)
-  // ----------------------------------------------------------------
   types: {
     image: ({ value }) => {
       if (!value?.asset) return null
 
-      const src = urlFor(value).width(1200).fit('max').url()
-      const alt: string = value.alt ?? 'Blog post image'
+      const src = urlFor(value).width(1400).fit('max').auto('format').url()
+      const alt: string = value.alt ?? 'Knitty Petit story illustration'
       const caption: string | undefined = value.caption
 
       return (
-        <figure className="my-8">
-          <div className="relative overflow-hidden rounded-lg border border-border bg-muted">
-            {/* Next/Image with width & height derived from the Sanity asset */}
+        <figure className="my-10 overflow-hidden rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/40 p-2 sm:p-3 shadow-sm">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-stone-100 dark:bg-stone-800">
             <Image
               src={src}
               alt={alt}
-              width={1200}
-              height={750}
-              className="w-full h-auto object-cover"
-              sizes="(min-width: 768px) 768px, 100vw"
+              fill
+              className="object-cover"
+              sizes="(min-width: 1024px) 800px, 100vw"
             />
           </div>
           {caption && (
-            <figcaption className="mt-2 text-center text-sm text-muted-foreground italic">
+            <figcaption className="mt-3 px-2 text-center text-sm text-stone-500 dark:text-stone-400 font-serif italic">
               {caption}
             </figcaption>
           )}
         </figure>
       )
+    },
+    code: ({ value }) => {
+      return <CodeBlock>{value?.code || ''}</CodeBlock>
     },
   },
 }
