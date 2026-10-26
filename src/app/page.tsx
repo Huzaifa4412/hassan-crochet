@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import BestSeller from "@/components/home/best-seller";
 import HeroBanner from "@/components/home/HeroBanner";

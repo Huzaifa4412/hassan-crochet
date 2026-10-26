@@ -5,7 +5,7 @@
  * - Text slugification for anchors
  */
 
-interface PortableTextBlock {
+export interface PortableTextBlock {
   _type?: string;
   style?: string;
   children?: Array<{ _type?: string; text?: string }>;
