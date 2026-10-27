@@ -1,0 +1,46 @@
+name: Daily Autonomous Blog Pipeline
+
+on:
+  schedule:
+    # 04:00 UTC = 09:00 AM PKT (Pakistan Standard Time, UTC+5)
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  publish-blog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Autonomous Daily Blog Pipeline
+        env:
+          SANITY_API_TOKEN: ${{ secrets.SANITY_API_TOKEN }}
+          NEXT_PUBLIC_SANITY_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_SANITY_PROJECT_ID || '6m1z3oqp' }}
+          NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.NEXT_PUBLIC_SANITY_DATASET || 'production' }}
+          NEXT_PUBLIC_SANITY_API_VERSION: '2026-02-23'
+        run: node scripts/daily-blog-pipeline.js
+
+      - name: Commit and Push Generated Assets (if any)
+        run: |
+          git config --global user.name "Knitty Petit Bot"
+          git config --global user.email "bot@knittypetit.com"
+          git add public/*-infographic.png || true
+          if git diff --staged --quiet; then
+            echo "No new asset files to commit."
+          else
+            git commit -m "chore(blog): add generated infographic visual assets [skip ci]"
+            git push origin master
+          fi
