@@ -84,7 +84,7 @@ function buildBlogListingJsonLd(posts: PostPreview[]) {
             ? urlFor(post.mainImage).width(1200).height(630).url()
             : undefined,
           author: {
-            "@type": "Person",
+          "@type": post.author?.name ? "Person" : "Organization",
             name: post.author?.name || siteName,
           },
         })),

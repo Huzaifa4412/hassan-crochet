@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Allow independent local previews without overwriting an active build.
+  distDir: process.env.KNITTY_BUILD_DIR || ".next",
   async redirects() {
     return [
       {
