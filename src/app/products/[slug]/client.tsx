@@ -34,6 +34,8 @@ import CustomizationCanvas, {
   CustomizationCanvasRef,
 } from "@/components/CustomizationCanvas";
 import { Product } from "@/sanity/queries";
+import { PricingSummary } from "@/components/PricingSummary";
+import { PRODUCT_BASE_PRICE, SWEATER_ONLY_PRICE, SWEATER_ONLY_SIZE, ICON_PRICE, formatPrice, getCustomizationPrice } from "@/lib/pricing";
 import { useToaster } from "@/components/ui/toast";
 import * as pixel from "@/lib/fpixel";
 import {
@@ -128,45 +130,45 @@ const TIME_AGO_OPTIONS = [
 
 const ICONS = [
   // Classic Flowers
-  { name: "Blue Flower", url: "/icons/Blue Flower-half.png", price: 4 },
-  { name: "Brown Flower", url: "/icons/Brown Flower-half.png", price: 4 },
-  { name: "Green Flower", url: "/icons/Green Flower-half.png", price: 4 },
-  { name: "Orange Flower", url: "/icons/Orange Flower-half.png", price: 4 },
-  { name: "Pink Flower", url: "/icons/Pink Flower-half.png", price: 4 },
-  { name: "Purple Flower", url: "/icons/Purple Flower-half.png", price: 4 },
-  { name: "Purple Flower 2", url: "/icons/Purple Flower2-half.png", price: 4 },
-  { name: "White Flower", url: "/icons/White Flower-half.png", price: 4 },
-  { name: "Yellow Flower", url: "/icons/Yellow Flower-half.png", price: 4 },
-  { name: "Sun Flower", url: "/icons/Sun Flower.png", price: 4 },
-  { name: "Pink Sun Flower", url: "/icons/Pink Sun Flower.png", price: 4 },
-  { name: "Pink Combo", url: "/icons/Pink Combo.png", price: 4 },
-  { name: "White Combo", url: "/icons/White Combo.png", price: 4 },
-  { name: "Yellow Combo", url: "/icons/Yellow Combo.png", price: 4 },
+  { name: "Blue Flower", url: "/icons/Blue Flower-half.png" },
+  { name: "Brown Flower", url: "/icons/Brown Flower-half.png" },
+  { name: "Green Flower", url: "/icons/Green Flower-half.png" },
+  { name: "Orange Flower", url: "/icons/Orange Flower-half.png" },
+  { name: "Pink Flower", url: "/icons/Pink Flower-half.png" },
+  { name: "Purple Flower", url: "/icons/Purple Flower-half.png" },
+  { name: "Purple Flower 2", url: "/icons/Purple Flower2-half.png" },
+  { name: "White Flower", url: "/icons/White Flower-half.png" },
+  { name: "Yellow Flower", url: "/icons/Yellow Flower-half.png" },
+  { name: "Sun Flower", url: "/icons/Sun Flower.png" },
+  { name: "Pink Sun Flower", url: "/icons/Pink Sun Flower.png" },
+  { name: "Pink Combo", url: "/icons/Pink Combo.png" },
+  { name: "White Combo", url: "/icons/White Combo.png" },
+  { name: "Yellow Combo", url: "/icons/Yellow Combo.png" },
 
   // Nature & Animals
-  { name: "Bee", url: "/icons/Bee.png", price: 4 },
-  { name: "Bee 2", url: "/icons/Bee 2.png", price: 4 },
-  { name: "Bee Flying", url: "/icons/Bee Flying.png", price: 4 },
-  { name: "Banana", url: "/icons/Banana.png", price: 4 },
-  { name: "Cherry", url: "/icons/Cherry.png", price: 4 },
-  { name: "Cherry 2", url: "/icons/cherry 2.png", price: 4 },
-  { name: "Strawberry", url: "/icons/Strawberry.png", price: 4 },
-  { name: "Leaf", url: "/icons/Leaf.png", price: 4 },
-  { name: "Green Leaf", url: "/icons/Green Leaf.png", price: 4 },
-  { name: "Sun", url: "/icons/Sun.png", price: 4 },
-  { name: "Star", url: "/icons/Star.png", price: 4 },
-  { name: "Heart", url: "/icons/Heart.png", price: 4 },
-  { name: "Dear", url: "/icons/Dear.png", price: 4 },
-  { name: "Mushroom", url: "/icons/Mashroom.png", price: 4 },
-  { name: "Grarvo", url: "/icons/Grarvo.png", price: 4 },
-  { name: "Pine Apple", url: "/icons/Pine Apply.png", price: 4 },
-  { name: "Tree", url: "/icons/Tree.png", price: 4 },
-  { name: "Decor", url: "/icons/decore.png", price: 4 },
+  { name: "Bee", url: "/icons/Bee.png" },
+  { name: "Bee 2", url: "/icons/Bee 2.png" },
+  { name: "Bee Flying", url: "/icons/Bee Flying.png" },
+  { name: "Banana", url: "/icons/Banana.png" },
+  { name: "Cherry", url: "/icons/Cherry.png" },
+  { name: "Cherry 2", url: "/icons/cherry 2.png" },
+  { name: "Strawberry", url: "/icons/Strawberry.png" },
+  { name: "Leaf", url: "/icons/Leaf.png" },
+  { name: "Green Leaf", url: "/icons/Green Leaf.png" },
+  { name: "Sun", url: "/icons/Sun.png" },
+  { name: "Star", url: "/icons/Star.png" },
+  { name: "Heart", url: "/icons/Heart.png" },
+  { name: "Dear", url: "/icons/Dear.png" },
+  { name: "Mushroom", url: "/icons/Mashroom.png" },
+  { name: "Grarvo", url: "/icons/Grarvo.png" },
+  { name: "Pine Apple", url: "/icons/Pine Apply.png" },
+  { name: "Tree", url: "/icons/Tree.png" },
+  { name: "Decor", url: "/icons/decore.png" },
 
   // Holiday
-  { name: "Christmas Tree", url: "/icons/Chrisman Tree.png", price: 4 },
-  { name: "Santa", url: "/icons/Santa.png", price: 4 },
-  { name: "Ring Bell", url: "/icons/Ring Bell.png", price: 4 },
+  { name: "Christmas Tree", url: "/icons/Chrisman Tree.png" },
+  { name: "Santa", url: "/icons/Santa.png" },
+  { name: "Ring Bell", url: "/icons/Ring Bell.png" },
 ];
 
 // Single color options
@@ -519,6 +521,7 @@ export default function ProductClient({ product }: ProductClientProps) {
   const [textFont, setTextFont] = useState(FONTS[0].value);
   const [isMultiColor, setIsMultiColor] = useState(false);
   const [addedIcons, setAddedIcons] = useState<string[]>([]);
+  const productTotal = getCustomizationPrice(addedIcons.length);
   const [addedTexts, setAddedTexts] = useState<
     Array<{ text: string; color: string; font: string }>
   >([]);
@@ -626,9 +629,7 @@ export default function ProductClient({ product }: ProductClientProps) {
   };
 
   const handleObjectRemoved = (type: "text" | "icon", name: string) => {
-    if (type === "icon") {
-      setAddedIcons((prev) => prev.filter((i) => i !== name));
-    } else if (type === "text") {
+    if (type === "text") {
       setAddedTexts((prev) => prev.filter((t) => t.text !== name));
     }
   };
@@ -687,16 +688,11 @@ export default function ProductClient({ product }: ProductClientProps) {
   };
 
   const handleAddIcon = (icon: (typeof ICONS)[0]) => {
-    canvasRef.current?.addIcon(icon.url);
+    canvasRef.current?.addIcon(icon.url, icon.name);
     trackCustomizeProduct("icon_added", {
       icon_name: icon.name,
-      icon_count: addedIcons.includes(icon.name)
-        ? addedIcons.length
-        : addedIcons.length + 1,
+      icon_count: addedIcons.length + 1,
     });
-    if (!addedIcons.includes(icon.name)) {
-      setAddedIcons((prev) => [...prev, icon.name]);
-    }
   };
 
   const handleDownloadPreview = () => {
@@ -710,13 +706,15 @@ export default function ProductClient({ product }: ProductClientProps) {
 
   const currentSummary = `Product: ${product.title} | Color: ${selectedColor?.name} | Text: ${addedTexts.length > 0 ? addedTexts.map((t) => t.text).join(", ") : "None"} | Text Color: ${isMultiColor ? MULTI_COLOR_PALETTES.find((p) => p.value === textColor)?.name : SINGLE_TEXT_COLORS.find((c) => c.value === textColor)?.name} | Font: ${FONTS.find((f) => f.value === textFont)?.name} | Icons: ${addedIcons.length > 0 ? addedIcons.join(", ") : "None"}`;
 
+  const pricedSummary = `${currentSummary} | Base price (name included): ${formatPrice(PRODUCT_BASE_PRICE)} USD | Icons: ${addedIcons.length} x ${formatPrice(ICON_PRICE)} USD = ${formatPrice(addedIcons.length * ICON_PRICE)} USD | Shipping: Free | Product total: ${formatPrice(productTotal)} USD (any applicable taxes shown at Etsy checkout)`;
+
   const handleCopyCustomizations = () => {
     pixel.customEvent("CopyCustomizationDetails", {
       ...productPixelPayload,
       ...customizationPixelPayload,
       source: "product_customizer",
     });
-    navigator.clipboard.writeText(currentSummary);
+    navigator.clipboard.writeText(pricedSummary);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -741,7 +739,7 @@ export default function ProductClient({ product }: ProductClientProps) {
           ...orderForm,
           productName: product.title,
           productLink: product.etsyLink || "Link Not Provided",
-          customizationDetails: currentSummary,
+          customizationDetails: pricedSummary,
         }),
       });
 
@@ -799,7 +797,7 @@ export default function ProductClient({ product }: ProductClientProps) {
   const badges = getBadgeLabels(product.badges);
   const trustHighlights = [
     { icon: Shield, label: "Secure Etsy checkout" },
-    { icon: Truck, label: "Made to order" },
+    { icon: Truck, label: "Free shipping" },
     { icon: Heart, label: "Handmade keepsake" },
   ];
 
@@ -866,6 +864,12 @@ export default function ProductClient({ product }: ProductClientProps) {
                 <h1 className="max-w-3xl text-3xl font-black leading-[0.95] tracking-tight text-[#24130f] sm:text-5xl lg:text-6xl">
                   {product.title}
                 </h1>
+                <div>
+                  <p className="text-3xl font-bold text-[#a84e2b]">From {formatPrice(SWEATER_ONLY_PRICE)} <span className="text-sm font-semibold">USD</span></p>
+                  <p className="mt-2 text-sm text-[#735f56]">{formatPrice(SWEATER_ONLY_PRICE)} is for the sweater only in size {SWEATER_ONLY_SIZE}, without a name or icons.</p>
+                  <p className="mt-3 text-lg font-bold text-[#251611]">Personalized sweater with name: {formatPrice(PRODUCT_BASE_PRICE)} USD</p>
+                  <p className="mt-1 text-sm text-[#735f56]">Add icons for {formatPrice(ICON_PRICE)} each. Free shipping on all orders.</p>
+                </div>
                 {product.shortDescription && (
                   <p className="max-w-2xl text-base leading-7 text-[#735f56] sm:text-lg">
                     {product.shortDescription}
@@ -948,6 +952,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                     }
                     onSelectionChange={handleSelectionChange}
                     onObjectRemoved={handleObjectRemoved}
+                    onIconsChange={setAddedIcons}
                   />
                 </div>
               </CardContent>
@@ -1058,7 +1063,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                             shoppers are customizing this right now.
                           </div>
                           <div className="mt-0.5 text-[10px] text-[#7a6258] sm:mt-1 sm:text-xs">
-                            Personalize with your message
+                            Name personalization included in the base price
                           </div>
                         </div>
                       </div>
@@ -1296,7 +1301,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                         <div className="text-left">
                           <div className="font-bold text-[#251611]">Add Icons</div>
                           <div className="text-xs text-[#7a6258]">
-                            Decorate with beautiful icons
+                            {formatPrice(ICON_PRICE)} for each icon added
                           </div>
                         </div>
                       </div>
@@ -1315,8 +1320,10 @@ export default function ProductClient({ product }: ProductClientProps) {
                                       icon.url,
                                     );
                                     e.dataTransfer.effectAllowed = "copy";
+                                    e.dataTransfer.setData("application/x-knitty-icon-name", icon.name);
                                   }}
                                   draggable
+                                  aria-label={`Add ${icon.name} icon for ${formatPrice(ICON_PRICE)}`}
                                   className="group relative flex aspect-square cursor-grab items-center justify-center rounded-2xl border border-[#ead7c7] bg-[#fffaf4] shadow-sm transition-all hover:border-[#cf6f3f]/60 hover:bg-[#fff1e6] hover:shadow-md active:cursor-grabbing"
                                 >
                                   <img
@@ -1334,7 +1341,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                               </TooltipTrigger>
                               <TooltipContent className="flex flex-col items-center">
                                 <p>{icon.name}</p>
-                                <p>(+ $ {icon.price} USD)</p>
+                                <p>+{formatPrice(ICON_PRICE)} USD each</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -1393,6 +1400,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                 </Alert>
 
                 {/* Action Buttons */}
+                <PricingSummary iconCount={addedIcons.length} />
                 <div className="grid grid-cols-2 gap-3">
                   <Button
                     variant="outline"
@@ -1454,8 +1462,8 @@ export default function ProductClient({ product }: ProductClientProps) {
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
                 </Button>
                 <p className="text-center text-xs leading-relaxed text-[#f5d6bd] sm:text-base">
-                  Pricing starts at $18.99. Choose your perfect size ( from 0
-                  months to 7 Years) and complete your order securely on Etsy.
+                  Product total: {formatPrice(productTotal)} USD. Name included;
+                  icons add {formatPrice(ICON_PRICE)} each. Free shipping. Complete your order securely on Etsy.
                 </p>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
                   <div className="text-center">
@@ -1589,7 +1597,7 @@ export default function ProductClient({ product }: ProductClientProps) {
 
         {/* Order Dialog */}
         <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
-          <DialogContent className="sm:max-w-106.25">
+          <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-106.25">
             <DialogHeader>
               <DialogTitle>Complete Your Customization</DialogTitle>
               <DialogDescription>
@@ -1599,6 +1607,7 @@ export default function ProductClient({ product }: ProductClientProps) {
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleOrderSubmit} className="space-y-4 py-4">
+              <PricingSummary iconCount={addedIcons.length} />
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <Input

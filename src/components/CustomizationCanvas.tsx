@@ -5,7 +5,7 @@ import * as fabric from "fabric";
 
 export interface CustomizationCanvasRef {
     addText: (text: string, font: string, color: string) => void;
-    addIcon: (url: string) => void;
+    addIcon: (url: string, name: string) => void;
     download: () => void;
     updateBaseImage: (url: string) => void;
     updateSelectedTextColor: (color: string, font?: string) => void;
@@ -22,22 +22,25 @@ interface CustomizationCanvasProps {
     initialImage: string;
     onSelectionChange?: (hasSelection: boolean, selectionType: 'text' | 'group' | 'image' | null) => void;
     onObjectRemoved?: (type: 'text' | 'icon', name: string) => void;
+    onIconsChange?: (icons: string[]) => void;
 }
 
 const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanvasProps>(
-    ({ initialImage, onSelectionChange, onObjectRemoved }, ref) => {
+    ({ initialImage, onSelectionChange, onObjectRemoved, onIconsChange }, ref) => {
         const canvasRef = useRef<HTMLCanvasElement>(null);
         const containerRef = useRef<HTMLDivElement>(null);
         const [isCanvasReady, setIsCanvasReady] = useState(false);
         const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
         const onSelectionChangeRef = useRef(onSelectionChange);
         const onObjectRemovedRef = useRef(onObjectRemoved);
+        const onIconsChangeRef = useRef(onIconsChange);
 
         // Keep the refs updated
         useEffect(() => {
             onSelectionChangeRef.current = onSelectionChange;
             onObjectRemovedRef.current = onObjectRemoved;
-        }, [onSelectionChange, onObjectRemoved]);
+            onIconsChangeRef.current = onIconsChange;
+        }, [onSelectionChange, onObjectRemoved, onIconsChange]);
 
         // Initialize Fabric Canvas
         useEffect(() => {
@@ -143,7 +146,15 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 onSelectionChangeRef.current?.(false, null);
             });
 
-            canvas.on('object:removed', (e: { target: CustomFabricObject | any }) => {
+            const syncIcons = () => {
+                const icons = (canvas.getObjects() as CustomFabricObject[])
+                    .filter(object => object.customType === 'icon')
+                    .map(object => object.customName || 'Icon');
+                onIconsChangeRef.current?.(icons);
+            };
+            canvas.on('object:added', syncIcons);
+            canvas.on('object:removed', syncIcons);
+            canvas.on('object:removed', (e: { target: CustomFabricObject }) => {
                 const target = e.target as CustomFabricObject;
                 if (target && target.customType && target.customName) {
                     onObjectRemovedRef.current?.(target.customType, target.customName);
@@ -265,6 +276,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 e.preventDefault();
                 const url = e.dataTransfer?.getData("text/plain");
                 if (!url) return;
+                const droppedIconName = e.dataTransfer?.getData('application/x-knitty-icon-name');
 
                 // Calculate drop position relative to canvas
                 const rect = container.getBoundingClientRect();
@@ -313,7 +325,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
 
                     // Attach metadata for synchronization
                     const filename = url.split('/').pop() || "";
-                    const iconName = filename.split('.')[0].replace(/-/g, ' ');
+                    const iconName = droppedIconName || filename.split('.')[0].replace(/-/g, ' ');
                     (img as CustomFabricObject).customType = 'icon';
                     (img as CustomFabricObject).customName = iconName;
 
@@ -435,7 +447,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     fabricCanvas.requestRenderAll();
                 }
             },
-            addIcon: async (url) => {
+            addIcon: async (url, name) => {
                 const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
                 try {
@@ -480,14 +492,11 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                         }
                     }
 
+                    // Attach metadata
+                    (img as CustomFabricObject).customType = 'icon';
+                    (img as CustomFabricObject).customName = name;
                     fabricCanvas.add(img);
                     fabricCanvas.setActiveObject(img);
-
-                    // Attach metadata
-                    const filename = url.split('/').pop() || "";
-                    const iconName = filename.split('.')[0].replace(/-/g, ' ');
-                    (img as CustomFabricObject).customType = 'icon';
-                    (img as CustomFabricObject).customName = iconName;
                     fabricCanvas.requestRenderAll();
                 } catch (error) {
                     console.error("Failed to load icon:", error);

@@ -1,7 +1,8 @@
 import type { Product } from "@/sanity/queries";
+import { PRODUCT_BASE_PRICE, PRODUCT_CURRENCY, getCustomizationPrice } from "@/lib/pricing";
 
-export const DEFAULT_PIXEL_CURRENCY = "USD";
-export const DEFAULT_PRODUCT_VALUE = 18.99;
+export const DEFAULT_PIXEL_CURRENCY = PRODUCT_CURRENCY;
+export const DEFAULT_PRODUCT_VALUE = PRODUCT_BASE_PRICE;
 
 type ProductLike = Pick<
   Product,
@@ -63,6 +64,8 @@ export function getCustomizationPixelPayload({
     text_count: addedTexts.length,
     text_lengths: addedTexts.map((item) => item.text.trim().length),
     icon_count: addedIcons.length,
+    value: getCustomizationPrice(addedIcons.length),
+    currency: PRODUCT_CURRENCY,
     icon_names: addedIcons,
     text_color: textColorName || "Not selected",
     text_font: textFontName || "Not selected",
