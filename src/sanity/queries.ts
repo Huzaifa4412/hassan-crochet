@@ -82,18 +82,18 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     saleEndDate
   }`;
 
-  const result = await fetchSanity<Product>(query, { slug });
+  const result = await fetchSanity<Product>(query, { slug }, { throwOnError: true });
   return result ? applyVariantOverrides(result) : null;
 }
 
 // Get all products (for static generation)
 export async function getAllProducts(): Promise<Pick<Product, "title" | "slug">[]> {
-  const query = `*[_type == "product" && !(_id in path("drafts.**"))]{
+  const query = `*[_type == "product" && defined(slug.current) && slug.current != "" && !(_id in path("drafts.**"))]{
     title,
     slug
   }`;
 
-  return fetchSanityArray(query);
+  return fetchSanityArray(query, undefined, { throwOnError: true });
 }
 
 // Get featured products
@@ -153,12 +153,13 @@ export async function getNewProducts(limit = 8): Promise<Product[]> {
 }
 
 // Get all products with basic info
-export async function getProducts(limit = 12, offset = 0): Promise<Product[]> {
+export async function getProducts(limit: number | null = 12, offset = 0): Promise<Product[]> {
   const query = `*[_type == "product" && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
     category->{_id, title, slug, icon},
+    collections[]->{_id, title, slug},
     "mainImageUrl": mainImage.asset->url,
     badges,
     etsyLink,
@@ -174,14 +175,14 @@ export async function getProducts(limit = 12, offset = 0): Promise<Product[]> {
     isNew,
     sortOrder,
     slug
-  }[${offset}...${offset + limit}]`;
+  }${limit === null ? "" : `[${offset}...${offset + limit}]`}`;
 
-  const results = await fetchSanityArray<Product>(query);
+  const results = await fetchSanityArray<Product>(query, undefined, { throwOnError: true });
   return results.map(applyVariantOverrides);
 }
 
 // Get products by category
-export async function getProductsByCategory(categorySlug: string, limit = 12): Promise<Product[]> {
+export async function getProductsByCategory(categorySlug: string, limit: number | null = 12): Promise<Product[]> {
   const query = `*[_type == "product" && category->slug.current == $categorySlug && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
@@ -202,9 +203,9 @@ export async function getProductsByCategory(categorySlug: string, limit = 12): P
     isNew,
     sortOrder,
     slug
-  }[0...${limit}]`;
+  }${limit === null ? "" : `[0...${limit}]`}`;
 
-  const results = await fetchSanityArray<Product>(query, { categorySlug });
+  const results = await fetchSanityArray<Product>(query, { categorySlug }, { throwOnError: true });
   return results.map(applyVariantOverrides);
 }
 
@@ -269,7 +270,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  const query = `*[_type == "category" && slug.current == $slug && !(_id in path("drafts.**"))][0]{
+  const query = `*[_type == "category" && isActive == true && slug.current == $slug && !(_id in path("drafts.**"))][0]{
     _id,
     title,
     slug,
@@ -280,7 +281,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
     isActive
   }`;
 
-  return fetchSanity<Category>(query, { slug });
+  return fetchSanity<Category>(query, { slug }, { throwOnError: true });
 }
 
 // ============================================================================
@@ -630,6 +631,7 @@ export type BlogCategory = string;
  */
 export interface PostPreview {
   _id: string;
+  _updatedAt?: string;
   title: string;
   slug: { current: string };
   mainImage?: {
@@ -657,8 +659,9 @@ export interface Post extends PostPreview {
 // getAllPosts — returns PostPreview[] for the blog listing page
 // -----------------------------------------------------------------------
 export async function getAllPosts(): Promise<PostPreview[]> {
-  const query = `*[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+  const query = `*[_type == "post" && defined(slug.current) && slug.current != "" && defined(publishedAt) && dateTime(publishedAt) <= dateTime(now()) && !(_id in path("drafts.**"))] | order(publishedAt desc) {
     _id,
+    _updatedAt,
     title,
     slug,
     mainImage { asset, alt },
@@ -669,15 +672,16 @@ export async function getAllPosts(): Promise<PostPreview[]> {
   }`;
 
   // ISR: revalidate every 60 s — matches the page-level `export const revalidate = 60`
-  return fetchSanityArray<PostPreview>(query, undefined, { revalidate: 60 });
+  return fetchSanityArray<PostPreview>(query, undefined, { revalidate: 60, throwOnError: true });
 }
 
 // -----------------------------------------------------------------------
 // getPostBySlug — returns full Post for the detail page
 // -----------------------------------------------------------------------
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const query = `*[_type == "post" && slug.current == $slug && !(_id in path("drafts.**"))][0] {
+  const query = `*[_type == "post" && slug.current == $slug && defined(publishedAt) && dateTime(publishedAt) <= dateTime(now()) && !(_id in path("drafts.**"))][0] {
     _id,
+    _updatedAt,
     title,
     slug,
     mainImage { asset, alt },
@@ -689,17 +693,17 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   }`;
 
   // ISR: revalidate every 60 s — matches the page-level `export const revalidate = 60`
-  return fetchSanity<Post>(query, { slug }, { revalidate: 60 });
+  return fetchSanity<Post>(query, { slug }, { revalidate: 60, throwOnError: true });
 }
 
 // -----------------------------------------------------------------------
 // getAllPostSlugs — minimal query used by generateStaticParams
 // -----------------------------------------------------------------------
 export async function getAllPostSlugs(): Promise<Array<{ slug: { current: string } }>> {
-  const query = `*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  const query = `*[_type == "post" && defined(slug.current) && slug.current != "" && defined(publishedAt) && dateTime(publishedAt) <= dateTime(now()) && !(_id in path("drafts.**"))] {
     slug { current }
   }`;
 
   // No ISR needed for static params — build time only, cache doesn't matter
-  return fetchSanityArray<{ slug: { current: string } }>(query);
+  return fetchSanityArray<{ slug: { current: string } }>(query, undefined, { throwOnError: true });
 }

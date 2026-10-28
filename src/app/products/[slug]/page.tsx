@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/sanity/queries";
+import { getAllProducts, getProductBySlug } from "@/sanity/queries";
 import ProductClient from "./client";
-import { absoluteUrl, buildMetadata, siteName, truncateDescription } from "@/lib/seo";
+import { absoluteUrl, buildMetadata, serializeJsonLd, truncateDescription } from "@/lib/seo";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -24,7 +24,7 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: product.seoTitle || `${product.title} - Custom Crochet Product`,
+    title: product.seoTitle || product.title,
     description:
       product.seoDescription ||
       product.shortDescription ||
@@ -46,30 +46,18 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const productImage =
     product.mainImageUrl || product.variants?.[0]?.imageUrl || undefined;
   const productUrl = absoluteUrl(`/products/${product.slug.current}`);
+  // Emit page/breadcrumb markup until verified visible pricing is available.
+  // A partial Offer without a price causes Google product rich-result errors.
   const productJsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "ItemPage",
     name: product.title,
     description: truncateDescription(
       product.seoDescription || product.shortDescription || product.description,
     ),
-    image: productImage ? [productImage] : undefined,
-    brand: {
-      "@type": "Brand",
-      name: siteName,
-    },
-    category: product.category?.title,
+    primaryImageOfPage: productImage ? { "@type": "ImageObject", url: productImage } : undefined,
     url: productUrl,
-    offers: product.etsyLink
-      ? {
-          "@type": "Offer",
-          url: product.etsyLink,
-          availability:
-            product.inStock === false
-              ? "https://schema.org/OutOfStock"
-              : "https://schema.org/InStock",
-        }
-      : undefined,
+    relatedLink: product.etsyLink,
   };
 
   const breadcrumbJsonLd = {
@@ -96,23 +84,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(productJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <ProductClient product={product} />
+      {product.description && (
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="product-details">
+          <h2 id="product-details" className="text-2xl font-semibold">Product details</h2>
+          <p className="mt-4 max-w-3xl whitespace-pre-line leading-8 text-muted-foreground">
+            {product.description}
+          </p>
+        </section>
+      )}
     </>
   );
 }
 
 // Generate static params for all products (optional, for static generation)
 export async function generateStaticParams() {
-  const { client } = await import("@/sanity/lib/client");
-  const products = await client.fetch(
-    `*[_type == "product"]{ slug { current } }`
-  );
+  const products = await getAllProducts();
 
   return products.map((product: { slug: { current: string } }) => ({
     slug: product.slug.current,

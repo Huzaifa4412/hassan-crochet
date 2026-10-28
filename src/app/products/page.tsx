@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { ProductCard, ProductCardCompact } from "@/components/ProductCard"
 import { getProducts, getCategories, getCollections } from "@/sanity/queries"
 import { Suspense } from "react"
-import { absoluteUrl, buildMetadata } from "@/lib/seo"
+import { absoluteUrl, buildMetadata, serializeJsonLd } from "@/lib/seo"
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -19,19 +19,19 @@ interface ProductsPageProps {
 }
 
 export const metadata: Metadata = buildMetadata({
-  title: "Custom Crochet Products",
+  title: "Personalized Baby Sweaters & Embroidered Gifts",
   description:
-    "Browse handmade crochet products from Knitty Petit, including customizable baby pieces, decor, and thoughtful handmade gifts.",
+    "Browse personalized baby name sweaters and hand-embroidered gifts. Preview your design, compare available styles, and review final options on Etsy.",
   path: "/products",
   image: "/products/sweater1.webp",
 })
 
 async function ProductsContent({ searchParams }: { searchParams: { category?: string; collection?: string; sort?: string; view?: "grid" | "list" } }) {
-  const { category, collection, sort = "featured", view = "grid" } = searchParams
+  const { category, collection, sort = "all", view = "grid" } = searchParams
 
   // Fetch data
   const [products, categories, collectionsData] = await Promise.all([
-    getProducts(50), // Get more for filtering
+    getProducts(null), // Filter the complete catalogue, not a truncated first page.
     getCategories(),
     getCollections(),
   ])
@@ -106,7 +106,7 @@ async function ProductsContent({ searchParams }: { searchParams: { category?: st
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <main className="min-h-screen bg-background">
         {/* Page Header */}
@@ -132,7 +132,7 @@ async function ProductsContent({ searchParams }: { searchParams: { category?: st
               )}
             </nav>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-              {activeCollection?.title || activeCategory?.title || "All Products"}
+              {activeCollection?.title || activeCategory?.title || "Personalized baby sweaters & gifts"}
             </h1>
             {activeCollection?.description && (
               <p className="text-muted-foreground mt-2 max-w-2xl">
@@ -142,6 +142,13 @@ async function ProductsContent({ searchParams }: { searchParams: { category?: st
             {activeCategory?.description && (
               <p className="text-muted-foreground mt-2 max-w-2xl">
                 {activeCategory.description}
+              </p>
+            )}
+            {!activeCategory && !activeCollection && (
+              <p className="text-muted-foreground mt-2 max-w-2xl">
+                Explore name sweaters with hand embroidery. Choose a style and
+                preview lettering, colors, and motifs before reviewing sizes,
+                prices, and delivery details on the Etsy listing.
               </p>
             )}
           </div>
@@ -169,7 +176,7 @@ async function ProductsContent({ searchParams }: { searchParams: { category?: st
                   {categories.map((cat) => (
                     <li key={cat._id}>
                       <Link
-                        href={`/products?category=${cat.slug.current}`}
+                        href={`/category/${cat.slug.current}`}
                         className={`text-sm hover:text-primary transition-colors block py-1 ${category === cat.slug.current ? "text-primary font-medium" : "text-muted-foreground"
                           }`}
                       >

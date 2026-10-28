@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllPosts, type PostPreview } from "@/sanity/queries";
 import BlogCard from "@/components/blog/BlogCard";
-import { absoluteUrl, buildMetadata, siteName, siteUrl } from "@/lib/seo";
+import { absoluteUrl, buildMetadata, serializeJsonLd, siteName, siteUrl } from "@/lib/seo";
 import { urlFor } from "@/sanity/lib/image";
 import { CalendarDays, Clock, ArrowRight, Sparkles, BookOpen, HeartHandshake } from "lucide-react";
 import { calculateReadingTime } from "@/lib/blog-utils";
@@ -12,7 +12,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   ...buildMetadata({
-    title: "The Journal | Baby Keepsake Stories, Guides & Gift Inspiration",
+    title: "Baby Gift Guides, Sweater Sizing & Care",
     description:
       "Explore thoughtful baby shower gift guides, custom name sweater inspiration, embroidery care tips, and handmade keepsake stories from Knitty Petit.",
     path: "/blog",
@@ -103,7 +103,7 @@ export default async function BlogPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       <main className="min-h-screen bg-[#faf8f5] dark:bg-stone-950 text-stone-900 dark:text-stone-100">

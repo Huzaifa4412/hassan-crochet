@@ -1,41 +1,48 @@
 import type { MetadataRoute } from "next";
-import { getAllPostSlugs, getAllProducts, getCategories } from "@/sanity/queries";
+import { getSitemapContent, type SitemapDocument } from "@/sanity/lib/sitemap";
 import { absoluteUrl } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, categories, posts] = await Promise.all([
-    getAllProducts(),
-    getCategories(),
-    getAllPostSlugs(),
-  ]);
-
-  const now = new Date();
+  const { products, categories, posts } = await getSitemapContent();
 
   const staticRoutes: MetadataRoute.Sitemap = [
-    { url: absoluteUrl("/"), lastModified: now, priority: 1 },
-    { url: absoluteUrl("/products"), lastModified: now, priority: 0.9 },
-    { url: absoluteUrl("/about"), lastModified: now, priority: 0.7 },
-    { url: absoluteUrl("/blog"), lastModified: now, priority: 0.7 },
+    { url: absoluteUrl("/"), priority: 1 },
+    { url: absoluteUrl("/products"), priority: 0.9 },
+    { url: absoluteUrl("/about"), priority: 0.7 },
+    { url: absoluteUrl("/blog"), priority: 0.7 },
   ];
 
-  return [
-    ...staticRoutes,
-    ...products.map((product) => ({
-      url: absoluteUrl(`/products/${product.slug.current}`),
-      lastModified: now,
-      priority: 0.8,
-    })),
-    ...categories.map((category) => ({
-      url: absoluteUrl(`/category/${category.slug.current}`),
-      lastModified: now,
-      priority: 0.65,
-    })),
-    ...posts.map((post) => ({
-      url: absoluteUrl(`/blog/${post.slug.current}`),
-      lastModified: now,
-      priority: 0.6,
-    })),
-  ];
+  const routes = new Map(staticRoutes.map((route) => [route.url, route]));
+
+  const addDocuments = (documents: SitemapDocument[], prefix: string, priority: number) => {
+    for (const document of documents) {
+      const slug = document?.slug;
+      if (
+        typeof slug !== "string" ||
+        !slug ||
+        slug.trim() !== slug ||
+        /[\\/?#\s]/.test(slug) ||
+        slug === "." ||
+        slug === ".."
+      ) {
+        continue;
+      }
+
+      const url = absoluteUrl(`${prefix}/${slug}`);
+      const updatedAt = document._updatedAt ? new Date(document._updatedAt) : undefined;
+      const lastModified = updatedAt && Number.isFinite(updatedAt.getTime()) ? updatedAt : undefined;
+      const previous = routes.get(url);
+      if (!previous || (lastModified && (!previous.lastModified || lastModified > new Date(previous.lastModified)))) {
+        routes.set(url, { url, ...(lastModified ? { lastModified } : {}), priority });
+      }
+    }
+  };
+
+  addDocuments(products, "/products", 0.8);
+  addDocuments(categories, "/category", 0.65);
+  addDocuments(posts, "/blog", 0.6);
+
+  return [...routes.values()];
 }

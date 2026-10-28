@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
 
 export const siteName = "Knitty Petit";
-export const siteUrl = (
-  process.env.NEXT_PUBLIC_SITE_URL || "https://knittypetit.shop"
-).replace(/\/$/, "");
+const configuredUrl = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.knittypetit.shop",
+);
+// The verified Search Console property and public links use www.
+if (["knittypetit.shop", "www.knittypetit.shop"].includes(configuredUrl.hostname)) {
+  configuredUrl.protocol = "https:";
+  configuredUrl.hostname = "www.knittypetit.shop";
+}
+export const siteUrl = configuredUrl.origin;
 
 export const defaultDescription =
-  "Shop handmade crochet products, personalized baby gifts, nursery decor, and custom accessories made with soft yarn and thoughtful detail.";
+  "Explore personalized baby name sweaters and hand-embroidered gifts. Preview lettering, colors, and motifs at Knitty Petit, then complete your order on Etsy.";
+
+export function serializeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
+}
 
 export function absoluteUrl(path = "/") {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -38,7 +48,7 @@ export function buildMetadata({
   const imageUrl = image.startsWith("http") ? image : absoluteUrl(image);
 
   return {
-    title,
+    title: { absolute: `${title} | ${siteName}` },
     description: metaDescription,
     alternates: {
       canonical: url,
@@ -46,7 +56,8 @@ export function buildMetadata({
     robots: noIndex
       ? {
           index: false,
-          follow: false,
+          follow: true,
+          googleBot: { index: false, follow: true },
         }
       : {
           index: true,

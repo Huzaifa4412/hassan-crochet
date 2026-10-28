@@ -8,6 +8,8 @@ interface FetchOptions {
    * Pass a positive integer (e.g. 60) to enable time-based ISR.
    */
   revalidate?: number;
+  /** Propagate CMS failures on indexable routes instead of returning a false 404. */
+  throwOnError?: boolean;
 }
 
 const DEFAULT_REVALIDATE_SECONDS = 60;
@@ -33,6 +35,7 @@ export async function fetchSanity<T>(
     const result = await client.fetch<T>(query, params || {}, nextOptions);
     return result;
   } catch (error) {
+    if (options?.throwOnError) throw error;
     console.error("Sanity fetch error:", error);
     if (error instanceof Error) {
       console.error("Error message:", error.message);
@@ -63,6 +66,7 @@ export async function fetchSanityArray<T>(
     const result = await client.fetch<T[]>(query, params || {}, nextOptions);
     return result || [];
   } catch (error) {
+    if (options?.throwOnError) throw error;
     console.error("Sanity fetch array error:", error);
     if (error instanceof Error) {
       console.error("Error message:", error.message);

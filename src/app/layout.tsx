@@ -7,7 +7,6 @@ import { defaultDescription, siteName, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
 import FacebookPixel from "@/components/FacebookPixel";
-import TawkTo from "@/components/TawkTo";
 import Header from "@/components/home/navbar";
 
 const geistSans = Geist({
@@ -24,15 +23,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: siteName,
   title: {
-    default: "Knitty Petit - Handmade Crochet Gifts & Custom Baby Decor",
+    default: "Knitty Petit - Personalized Baby Name Sweaters",
     template: `%s | ${siteName}`,
   },
   description: defaultDescription,
   keywords: [
-    "handmade crochet",
-    "custom crochet gifts",
+    "baby name sweaters",
+    "hand embroidered sweaters",
     "personalized baby gifts",
-    "crochet nursery decor",
     "Knitty Petit",
   ],
   authors: [{ name: siteName }],
@@ -42,7 +40,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Knitty Petit - Handmade Crochet Gifts & Custom Baby Decor",
+    title: "Knitty Petit - Personalized Baby Name Sweaters",
     description: defaultDescription,
     url: "/",
     siteName,
@@ -52,13 +50,13 @@ export const metadata: Metadata = {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Knitty Petit handmade crochet products",
+        alt: "Knitty Petit personalized sweaters",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Knitty Petit - Handmade Crochet Gifts & Custom Baby Decor",
+    title: "Knitty Petit - Personalized Baby Name Sweaters",
     description: defaultDescription,
     images: ["/logo.png"],
   },
@@ -90,7 +88,6 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <FacebookPixel />
-        <TawkTo />
         <Providers>
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">
@@ -98,7 +95,23 @@ export default function RootLayout({
           </main>
           <SiteFooter />
         </Providers>
-      <Analytics />
+        <Analytics />
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+              (function(){
+              var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+              s1.async=true;
+              s1.src='https://embed.tawk.to/6ae2331cf6cefc34708d5c0d/1k61pfadb';
+              s1.charset='UTF-8';
+              s1.setAttribute('crossorigin','*');
+              s0.parentNode.insertBefore(s1,s0);
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );

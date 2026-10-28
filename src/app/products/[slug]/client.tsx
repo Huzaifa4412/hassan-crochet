@@ -847,9 +847,11 @@ export default function ProductClient({ product }: ProductClientProps) {
                   </Badge>
                 )}
                 {product.category && (
+                  <Link href={`/category/${product.category.slug.current}`}>
                   <Badge className="rounded-full border border-[#ead7c7] bg-[#f7efe8] px-3 py-1 text-xs font-semibold text-[#6f574d] hover:bg-[#f7efe8]">
                     {product.category.title}
                   </Badge>
+                  </Link>
                 )}
                 {product.inStock === false && (
                   <Badge variant="destructive" className="rounded-full px-3 py-1 text-xs">

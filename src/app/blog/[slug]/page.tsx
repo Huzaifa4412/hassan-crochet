@@ -28,7 +28,7 @@ import {
   BookOpen,
   Send,
 } from "lucide-react";
-import { absoluteUrl, buildMetadata, siteName, siteUrl } from "@/lib/seo";
+import { absoluteUrl, buildMetadata, serializeJsonLd, siteName, siteUrl } from "@/lib/seo";
 import { calculateReadingTime, estimateWordCount, extractHeadings, type PortableTextBlock } from "@/lib/blog-utils";
 
 export const revalidate = 60;
@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
-  if (!post) return {};
+  if (!post) return buildMetadata({ title: "Article Not Found", path: `/blog/${slug}`, noIndex: true });
 
   const ogImageUrl = post.mainImage?.asset
     ? urlFor(post.mainImage).width(1200).height(630).fit("crop").auto("format").url()
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     ...buildMetadata({
-      title: `${post.title} | Knitty Petit Journal`,
+      title: post.title,
       description,
       path: `/blog/${post.slug.current}`,
       image: ogImageUrl,
@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName,
       type: "article",
       publishedTime: post.publishedAt,
-      modifiedTime: post.publishedAt,
+      modifiedTime: post._updatedAt || post.publishedAt,
       authors: post.author?.name ? [post.author.name] : [siteName],
       images: [
         {
@@ -159,7 +159,7 @@ function buildArticleJsonLd(post: NonNullable<Awaited<ReturnType<typeof getPostB
         headline: post.title,
         description: post.excerpt ?? "",
         datePublished: post.publishedAt,
-        dateModified: post.publishedAt,
+        dateModified: post._updatedAt || post.publishedAt,
         wordCount,
         timeRequired: `PT${readingMinutes}M`,
         inLanguage: "en-US",
@@ -169,7 +169,7 @@ function buildArticleJsonLd(post: NonNullable<Awaited<ReturnType<typeof getPostB
         },
         image: imageUrl ? [imageUrl] : undefined,
         author: {
-          "@type": "Person",
+          "@type": post.author?.name ? "Person" : "Organization",
           name: post.author?.name || siteName,
           ...(post.author?.bio ? { description: post.author.bio } : {}),
         },
@@ -201,6 +201,11 @@ export default async function BlogPostPage({ params }: Props) {
 
   const relatedPosts = allPosts
     .filter((p) => p.slug.current !== post.slug.current)
+    .sort((a, b) => {
+      const overlap = (categories?: string[]) =>
+        (categories || []).filter((category) => post.categories?.includes(category)).length;
+      return overlap(b.categories) - overlap(a.categories);
+    })
     .slice(0, 3);
 
   // Fetch flagship product to power "Shop the Story" cards
@@ -224,7 +229,7 @@ export default async function BlogPostPage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
 
       {/* Top Reading Progress Bar */}

@@ -1,0 +1,502 @@
+{
+  "mode": "HTTP server HTML; JavaScript is not executed",
+  "startedAt": "2026-10-28T18:06:14.490Z",
+  "base": "http://localhost:3005",
+  "canonicalOrigin": "https://www.knittypetit.shop",
+  "concurrency": 4,
+  "pages": [
+    {
+      "url": "https://www.knittypetit.shop/",
+      "status": 200,
+      "titles": [
+        "Personalized Baby Name Sweaters & Hand Embroidery | Knitty Petit"
+      ],
+      "descriptions": [
+        "Create a personalized baby name sweater with hand embroidery. Preview colors, lettering, and motifs at Knitty Petit, then complete your order on Etsy."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop"
+      ],
+      "h1s": [
+        "Personalized baby name sweaters for little milestones."
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": null
+    },
+    {
+      "url": "https://www.knittypetit.shop/about",
+      "status": 200,
+      "titles": [
+        "About Our Personalized Sweater Studio | Knitty Petit"
+      ],
+      "descriptions": [
+        "Meet Knitty Petit and discover the care behind our personalized baby name sweaters, hand embroidery, and custom gifts."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/about"
+      ],
+      "h1s": [
+        "Crafting Warmth, One Stitch at a Time"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 0,
+      "lastModified": null
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog",
+      "status": 200,
+      "titles": [
+        "Baby Gift Guides, Sweater Sizing & Care | Knitty Petit"
+      ],
+      "descriptions": [
+        "Explore thoughtful baby shower gift guides, custom name sweater inspiration, embroidery care tips, and handmade keepsake stories from Knitty Petit."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog"
+      ],
+      "h1s": [
+        "Little stitches. Unforgettable keepsakes."
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": null
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/baby-name-announcement-sweater-styling-ideas",
+      "status": 200,
+      "titles": [
+        "Baby Name Announcement Outfits: 7 Aesthetic Ways to Style an Embroidered Name Sweater | Knitty Petit"
+      ],
+      "descriptions": [
+        "Planning your newborn's birth reveal? Discover 7 timeless, aesthetic ways to style a personalized hand-embroidered baby name sweater for unforgettable announ..."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/baby-name-announcement-sweater-styling-ideas"
+      ],
+      "h1s": [
+        "Baby Name Announcement Outfits: 7 Aesthetic Ways to Style an Embroidered Name Sweater"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-27T16:42:06.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/baby-name-sweater-embroidery-fonts-stitches-guide",
+      "status": 200,
+      "titles": [
+        "Baby Name Sweater Embroidery Styles: The Complete Guide to Fonts, Stitches, Colors & Sensitive Skin Backing | Knitty Petit"
+      ],
+      "descriptions": [
+        "Explore the definitive guide to baby name sweater embroidery: hand chain stitch vs. duplicate stitch, cursive vs. block fonts, high-contrast yarn palettes, a..."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/baby-name-sweater-embroidery-fonts-stitches-guide"
+      ],
+      "h1s": [
+        "Baby Name Sweater Embroidery Styles: The Complete Guide to Fonts, Stitches, Colors & Sensitive Skin Backing"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-28T15:47:29.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/baby-shower-gift-ideas",
+      "status": 200,
+      "titles": [
+        "Baby Shower Gift Ideas: What to Buy and When to Personalize | Knitty Petit"
+      ],
+      "descriptions": [
+        "Explore thoughtful baby shower gift ideas, from registry essentials to personalized name sweaters, with tips on sizing, budgets, and ordering in time."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/baby-shower-gift-ideas"
+      ],
+      "h1s": [
+        "Baby Shower Gift Ideas: What to Buy and When to Personalize"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-20T16:00:47.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/cotton-vs-wool-baby-clothes-sensitive-skin-guide",
+      "status": 200,
+      "titles": [
+        "Cotton vs. Wool for Baby Sweaters: Which Fiber Is Safest for Sensitive Skin & Eczema? | Knitty Petit"
+      ],
+      "descriptions": [
+        "Comparing cotton vs. wool for baby knitwear: Learn the pediatric facts on eczema flare-ups, fiber prickle factor, lanolin allergies, and why 100% combed cott..."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/cotton-vs-wool-baby-clothes-sensitive-skin-guide"
+      ],
+      "h1s": [
+        "Cotton vs. Wool for Baby Sweaters: Which Fiber Is Safest for Sensitive Skin & Eczema?"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-27T17:16:14.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/first-birthday-personalized-sweater-keepsake-ideas",
+      "status": 200,
+      "titles": [
+        "The Ultimate 1st Birthday Keepsake Outfit: Why Parents Choose Personalized Knitwear Over Costumes | Knitty Petit"
+      ],
+      "descriptions": [
+        "Planning your baby’s first birthday portraits or cake smash? Discover why hand-embroidered name sweaters have become the #1 timeless 1st birthday outfit choice."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/first-birthday-personalized-sweater-keepsake-ideas"
+      ],
+      "h1s": [
+        "The Ultimate 1st Birthday Keepsake Outfit: Why Parents Choose Personalized Knitwear Over Costumes"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-27T16:51:25.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/how-to-wash-hand-embroidered-baby-sweater",
+      "status": 200,
+      "titles": [
+        "How to Wash and Care for a Hand-Embroidered Baby Sweater: Complete Care Guide | Knitty Petit"
+      ],
+      "descriptions": [
+        "Learn how to safely wash, dry, reshape, and store a hand-embroidered baby name sweater. Follow our step-by-step care guide to keep delicate stitches and soft..."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/how-to-wash-hand-embroidered-baby-sweater"
+      ],
+      "h1s": [
+        "How to Wash and Care for a Hand-Embroidered Baby Sweater: Complete Care Guide"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-24T09:56:17.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/the-morning-she-pulled-his-name-over-her-daughter-s-head",
+      "status": 200,
+      "titles": [
+        "The Morning She Pulled His Name Over Her Daughter's Head | Knitty Petit"
+      ],
+      "descriptions": [
+        "When Nadia's sister announced she was pregnant, Nadia knew immediately what she was giving her. Not a generic basket. Not another set of onesies. A custom ba..."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/the-morning-she-pulled-his-name-over-her-daughter-s-head"
+      ],
+      "h1s": [
+        "The Morning She Pulled His Name Over Her Daughter's Head"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-05-23T16:42:51.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/blog/what-size-baby-name-sweater-should-you-get",
+      "status": 200,
+      "titles": [
+        "What Size Baby Name Sweater Should You Get? The Complete Sizing, Fit & Gift Guide | Knitty Petit"
+      ],
+      "descriptions": [
+        "Unsure which size to pick for a personalized hand-embroidered baby name sweater? Use our definitive sizing chart, growth timeline, and gift-buying cheat shee..."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/blog/what-size-baby-name-sweater-should-you-get"
+      ],
+      "h1s": [
+        "What Size Baby Name Sweater Should You Get? The Complete Sizing, Fit & Gift Guide"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-10-26T14:01:31.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/category/crochet",
+      "status": 200,
+      "titles": [
+        "crochet & Personalized Gifts | Knitty Petit"
+      ],
+      "descriptions": [
+        "crochet"
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/category/crochet"
+      ],
+      "h1s": [
+        "crochet"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-02-24T19:06:21.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/category/sweaters",
+      "status": 200,
+      "titles": [
+        "Personalized Baby Name Sweaters | Knitty Petit"
+      ],
+      "descriptions": [
+        "Explore sweaters and personalized gifts from Knitty Petit. Preview available designs and check the Etsy listing for final options."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/category/sweaters"
+      ],
+      "h1s": [
+        "sweaters"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": "2026-02-26T12:08:27.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/products",
+      "status": 200,
+      "titles": [
+        "Personalized Baby Sweaters & Embroidered Gifts | Knitty Petit"
+      ],
+      "descriptions": [
+        "Browse personalized baby name sweaters and hand-embroidered gifts. Preview your design, compare available styles, and review final options on Etsy."
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/products"
+      ],
+      "h1s": [
+        "Personalized baby sweaters & gifts"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 1,
+      "lastModified": null
+    },
+    {
+      "url": "https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaters",
+      "status": 200,
+      "titles": [
+        "Hand embroidered kids name sweater | Knitty Petit"
+      ],
+      "descriptions": [
+        "Cozy up your little one in this soft and comfy long-sleeve knitted sweater pullover, perfect for the chilly season!"
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaters"
+      ],
+      "h1s": [
+        "Hand embroidered kids name sweater"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 2,
+      "lastModified": "2026-10-21T17:39:38.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaterss",
+      "status": 200,
+      "titles": [
+        "Hand embroidered kids name sweater | Knitty Petit"
+      ],
+      "descriptions": [
+        "Cozy up your little one in this soft and comfy long-sleeve knitted sweater pullover, perfect for the chilly season!"
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaterss"
+      ],
+      "h1s": [
+        "Hand embroidered kids name sweater"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 2,
+      "lastModified": "2026-10-21T17:43:41.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/products/hand-embroidered-kidz-name-sweater",
+      "status": 200,
+      "titles": [
+        "Hand embroidered kids name sweater | Knitty Petit"
+      ],
+      "descriptions": [
+        "Cozy up your little one in this soft and comfy long-sleeve knitted sweater pullover, perfect for the chilly season!"
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/products/hand-embroidered-kidz-name-sweater"
+      ],
+      "h1s": [
+        "Hand embroidered kids name sweater"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 2,
+      "lastModified": "2026-10-21T17:43:41.000Z"
+    },
+    {
+      "url": "https://www.knittypetit.shop/products/kids-sweater",
+      "status": 200,
+      "titles": [
+        "Hand embroidered kids name sweater | Knitty Petit"
+      ],
+      "descriptions": [
+        "Cozy up your little one in this soft and comfy long-sleeve knitted sweater pullover, perfect for the chilly season!"
+      ],
+      "canonicals": [
+        "https://www.knittypetit.shop/products/kids-sweater"
+      ],
+      "h1s": [
+        "Hand embroidered kids name sweater"
+      ],
+      "robots": [
+        "index, follow"
+      ],
+      "googlebot": [
+        "index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"
+      ],
+      "jsonLdBlocks": 2,
+      "lastModified": "2026-10-21T17:43:41.000Z"
+    }
+  ],
+  "checks": [
+    {
+      "path": "/search?q=sweater",
+      "status": 200,
+      "robots": [
+        "noindex, follow"
+      ],
+      "googlebot": [
+        "noindex, follow"
+      ]
+    },
+    {
+      "path": "/products/seo-audit-missing-route-6fe9f05a",
+      "status": 404,
+      "noindex": true
+    },
+    {
+      "path": "/blog/seo-audit-missing-route-6fe9f05a",
+      "status": 200,
+      "noindex": true
+    },
+    {
+      "path": "/category/seo-audit-missing-route-6fe9f05a",
+      "status": 404,
+      "noindex": true
+    },
+    {
+      "path": "/products?seo_audit=redirect&sort=az",
+      "host": "knittypetit.shop",
+      "status": 200,
+      "location": null
+    }
+  ],
+  "errors": [
+    {
+      "url": "https://www.knittypetit.shop/",
+      "message": "Expected one canonical equal to https://www.knittypetit.shop/; found [\"https://www.knittypetit.shop\"]."
+    },
+    {
+      "url": "/blog/seo-audit-missing-route-6fe9f05a",
+      "message": "Expected HTTP 404, received 200 with noindex (possible streamed not-found response)."
+    },
+    {
+      "url": "/products?seo_audit=redirect&sort=az",
+      "message": "Expected 308 redirect preserving path/query to https://www.knittypetit.shop/products?seo_audit=redirect&sort=az; received 200, null."
+    }
+  ],
+  "warnings": [
+    {
+      "url": "https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaters, https://www.knittypetit.shop/products/kids-sweater, https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaterss, https://www.knittypetit.shop/products/hand-embroidered-kidz-name-sweater",
+      "message": "Duplicate title \"Hand embroidered kids name sweater | Knitty Petit\"; CMS product titles need editorial differentiation."
+    }
+  ],
+  "sitemapEntries": 18,
+  "completedAt": "2026-10-28T18:06:17.193Z",
+  "summary": {
+    "sitemapEntries": 18,
+    "pagesChecked": 18,
+    "errors": 3,
+    "warnings": 1
+  }
+}

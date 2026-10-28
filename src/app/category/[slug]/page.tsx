@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ProductCard } from "@/components/ProductCard"
 import { getProductsByCategory, getCategoryBySlug } from "@/sanity/queries"
-import { absoluteUrl, buildMetadata } from "@/lib/seo"
+import { absoluteUrl, buildMetadata, serializeJsonLd } from "@/lib/seo"
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>
@@ -16,7 +16,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   const [category, products] = await Promise.all([
     getCategoryBySlug(slug),
-    getProductsByCategory(slug),
+    getProductsByCategory(slug, null),
   ])
 
   if (!category) {
@@ -47,7 +47,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <main className="min-h-screen bg-background">
         {/* Header */}
@@ -126,10 +126,10 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   }
 
   return buildMetadata({
-    title: `${category.title} Crochet Products`,
+    title: slug === "sweaters" ? "Personalized Baby Name Sweaters" : `${category.title} & Personalized Gifts`,
     description:
       category.description ||
-      `Shop handmade ${category.title.toLowerCase()} crochet products and customizable gifts from Knitty Petit.`,
+      `Explore ${category.title.toLowerCase()} and personalized gifts from Knitty Petit. Preview available designs and check the Etsy listing for final options.`,
     path: `/category/${category.slug.current}`,
     image: category.image?.url || "/logo.png",
   })

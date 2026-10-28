@@ -1,0 +1,497 @@
+{
+  "checkedAt": "2026-10-28",
+  "marketAssumption": "United States, English; validate market against owner/analytics before expansion.",
+  "searchConsole": {
+    "successful": true,
+    "data": {
+      "results": [
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "sitemap": [
+                {
+                  "contents": [
+                    {
+                      "indexed": "0",
+                      "submitted": "18",
+                      "type": "web"
+                    }
+                  ],
+                  "errors": "0",
+                  "isPending": false,
+                  "isSitemapsIndex": false,
+                  "lastDownloaded": "2026-10-28T17:36:30.788Z",
+                  "lastSubmitted": "2026-10-28T17:36:28.827Z",
+                  "path": "https://www.knittypetit.shop/sitemap.xml",
+                  "type": "sitemap",
+                  "warnings": "0"
+                }
+              ]
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_LIST_SITEMAPS",
+          "index": 0
+        },
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "responseAggregationType": "byProperty"
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_SEARCH_ANALYTICS_QUERY",
+          "index": 1
+        },
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "responseAggregationType": "byProperty"
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_SEARCH_ANALYTICS_QUERY",
+          "index": 2
+        },
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "responseAggregationType": "byPage"
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_SEARCH_ANALYTICS_QUERY",
+          "index": 3
+        },
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "responseAggregationType": "byProperty"
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_SEARCH_ANALYTICS_QUERY",
+          "index": 4
+        },
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "inspectionResult": {
+                "indexStatusResult": {
+                  "coverageState": "Alternate page with proper canonical tag",
+                  "crawledAs": "MOBILE",
+                  "googleCanonical": "https://knittypetit.shop/",
+                  "indexingState": "INDEXING_ALLOWED",
+                  "lastCrawlTime": "2026-10-23T09:44:41Z",
+                  "pageFetchState": "SUCCESSFUL",
+                  "referringUrls": [
+                    "https://www.knittypetit.shop/studio",
+                    "https://knittypetit.shop/"
+                  ],
+                  "robotsTxtState": "ALLOWED",
+                  "userCanonical": "https://knittypetit.shop/",
+                  "verdict": "NEUTRAL"
+                },
+                "inspectionResultLink": "https://search.google.com/search-console/inspect?resource_id=https://www.knittypetit.shop/&id=ZgIa5hw5EeJCyIhXruK6OQ&utm_medium=link&utm_source=api",
+                "mobileUsabilityResult": {
+                  "verdict": "VERDICT_UNSPECIFIED"
+                }
+              }
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_INSPECT_URL",
+          "index": 5
+        },
+        {
+          "response": {
+            "successful": true,
+            "data": {
+              "inspectionResult": {
+                "indexStatusResult": {
+                  "coverageState": "Submitted and indexed",
+                  "crawledAs": "MOBILE",
+                  "googleCanonical": "https://www.knittypetit.shop/products/hand-embroidered-kids-name-sweaters",
+                  "indexingState": "INDEXING_ALLOWED",
+                  "lastCrawlTime": "2026-09-13T20:43:47Z",
+                  "pageFetchState": "SUCCESSFUL",
+                  "referringUrls": [
+                    "https://knittypetit.shop/"
+                  ],
+                  "robotsTxtState": "ALLOWED",
+                  "userCanonical": "https://knittypetit.shop/products/hand-embroidered-kids-name-sweaters",
+                  "verdict": "PASS"
+                },
+                "inspectionResultLink": "https://search.google.com/search-console/inspect?resource_id=https://www.knittypetit.shop/&id=T4xyWlQ3Z6fUm6B-Fzt0pQ&utm_medium=link&utm_source=api",
+                "mobileUsabilityResult": {
+                  "verdict": "VERDICT_UNSPECIFIED"
+                },
+                "richResultsResult": {
+                  "detectedItems": [
+                    {
+                      "items": [
+                        {
+                          "issues": [
+                            {
+                              "issueMessage": "Missing field \"review\"",
+                              "severity": "WARNING"
+                            },
+                            {
+                              "issueMessage": "Missing field \"aggregateRating\"",
+                              "severity": "WARNING"
+                            },
+                            {
+                              "issueMessage": "Either \"price\" or \"priceSpecification.price\" should be specified",
+                              "severity": "ERROR"
+                            },
+                            {
+                              "issueMessage": "Either \"priceCurrency\" or \"priceSpecification.priceCurrency\" should be specified",
+                              "severity": "WARNING"
+                            }
+                          ],
+                          "name": "Hand embroidered kids name sweater"
+                        }
+                      ],
+                      "richResultType": "Product snippets"
+                    },
+                    {
+                      "items": [
+                        {
+                          "issues": [
+                            {
+                              "issueMessage": "Either \"price\" or \"priceSpecification\" should be specified",
+                              "severity": "ERROR"
+                            },
+                            {
+                              "issueMessage": "Missing field \"hasMerchantReturnPolicy\"",
+                              "severity": "WARNING"
+                            },
+                            {
+                              "issueMessage": "Missing field \"shippingDetails\"",
+                              "severity": "WARNING"
+                            }
+                          ],
+                          "name": "Hand embroidered kids name sweater"
+                        }
+                      ],
+                      "richResultType": "Merchant listings"
+                    },
+                    {
+                      "items": [
+                        {
+                          "name": "Unnamed item"
+                        }
+                      ],
+                      "richResultType": "Breadcrumbs"
+                    }
+                  ],
+                  "verdict": "FAIL"
+                }
+              }
+            }
+          },
+          "tool_slug": "GOOGLE_SEARCH_CONSOLE_INSPECT_URL",
+          "index": 6
+        }
+      ],
+      "total_count": 7,
+      "success_count": 7,
+      "error_count": 0,
+      "session": {
+        "id": "pour",
+        "instructions": "REQUIRED: Pass session_id \"pour\" in ALL subsequent meta tool calls for this workflow."
+      }
+    },
+    "error": null,
+    "log_id": "log_Z_NlT1KP0UgF"
+  },
+  "domainOverview": {
+    "domain": "knittypetit.shop",
+    "organic": 0,
+    "traffic": 0,
+    "paidKeywords": 0,
+    "paidTraffic": 0,
+    "domainAuthority": 2,
+    "backlinks": 32,
+    "refDomains": 11,
+    "follow": 18,
+    "noFollow": 14,
+    "domainTraffic": {
+      "202510": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202511": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202512": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202601": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202602": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202603": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202604": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202605": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202606": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202607": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202608": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      },
+      "202609": {
+        "paidTraffic": 0,
+        "searchTraffic": 0,
+        "paidKw": 0,
+        "searchKw": 0,
+        "topTier": 0,
+        "secondTier": 0,
+        "thirdTier": 0,
+        "fourthTier": 0
+      }
+    },
+    "organicKeywords": []
+  },
+  "keywords": [
+    {
+      "keyword": "personalized baby gifts",
+      "search_volume": 12100,
+      "cpc": 1.535,
+      "seo_difficulty": 24,
+      "paid_difficulty": 100,
+      "competition": 1,
+      "search_intent": null,
+      "language": "English",
+      "location": "United States",
+      "monthly_searches": [
+        {
+          "period": "202412",
+          "search_volume": 18100
+        },
+        {
+          "period": "202501",
+          "search_volume": 18100
+        },
+        {
+          "period": "202502",
+          "search_volume": 9900
+        },
+        {
+          "period": "202503",
+          "search_volume": 9900
+        },
+        {
+          "period": "202504",
+          "search_volume": 9900
+        },
+        {
+          "period": "202505",
+          "search_volume": 9900
+        },
+        {
+          "period": "202506",
+          "search_volume": 9900
+        },
+        {
+          "period": "202507",
+          "search_volume": 9900
+        },
+        {
+          "period": "202508",
+          "search_volume": 18100
+        },
+        {
+          "period": "202509",
+          "search_volume": 14800
+        },
+        {
+          "period": "202510",
+          "search_volume": 9900
+        },
+        {
+          "period": "202511",
+          "search_volume": 9900
+        },
+        {
+          "period": "202512",
+          "search_volume": 12100
+        }
+      ]
+    },
+    {
+      "keyword": "personalized baby sweater",
+      "search_volume": 0,
+      "cpc": 0,
+      "seo_difficulty": 12,
+      "paid_difficulty": 1,
+      "competition": 0,
+      "search_intent": null,
+      "language": "English",
+      "location": "United States",
+      "monthly_searches": []
+    },
+    {
+      "keyword": "baby name sweater",
+      "search_volume": 0,
+      "cpc": 0,
+      "seo_difficulty": 12,
+      "paid_difficulty": 1,
+      "competition": 0,
+      "search_intent": null,
+      "language": "English",
+      "location": "United States",
+      "monthly_searches": []
+    }
+  ],
+  "pagespeed": {
+    "done": true,
+    "report": {
+      "DESKTOP": {
+        "status": "ok",
+        "lab_metrics": {
+          "Speed Index": "1.1 s",
+          "First Contentful Paint": "661 ms",
+          "Largest Contentful Paint": "1.1 s",
+          "Cumulative Layout Shift": "0",
+          "Total Blocking Time": "89 ms",
+          "Time to Interactive": "3.2 s"
+        },
+        "opportunities": [
+          {
+            "opportunity": "Unused Javascript",
+            "estimated_savings": "40 ms",
+            "size_reduction_kb": 1616
+          },
+          {
+            "opportunity": "Redirects",
+            "estimated_savings": "340 ms",
+            "size_reduction_kb": null
+          }
+        ]
+      },
+      "MOBILE": {
+        "status": "ok",
+        "lab_metrics": {
+          "Time to Interactive": "9.4 s",
+          "Cumulative Layout Shift": "0",
+          "Total Blocking Time": "566 ms",
+          "Largest Contentful Paint": "4.9 s",
+          "Speed Index": "3.8 s",
+          "First Contentful Paint": "2.3 s"
+        },
+        "opportunities": [
+          {
+            "opportunity": "Unused Javascript",
+            "estimated_savings": "150 ms",
+            "size_reduction_kb": 130
+          },
+          {
+            "opportunity": "Redirects",
+            "estimated_savings": "1.1 s",
+            "size_reduction_kb": null
+          }
+        ]
+      }
+    }
+  },
+  "sourceNotes": [
+    "Ubersuggest domain report latest month is September 2026. Keyword history returned ends December 2025; query-date is not data freshness.",
+    "No search analytics rows returned for either 28-day window on the www URL-prefix property; this is not proof of zero sitewide traffic or non-indexing.",
+    "Sitemap indexed count of zero conflicts with inspected product PASS; URL inspection confirms at least that product was indexed as of its last crawl.",
+    "TinyFish automated DOM narrative conflicted with source/metadata and GSC observations; uncorroborated claims were discarded."
+  ],
+  "sources": [
+    "https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls",
+    "https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap",
+    "https://developers.google.com/search/docs/appearance/structured-data/product-snippet",
+    "https://github.com/vercel/next.js/blob/v16.1.6/docs/01-app/03-api-reference/04-functions/generate-metadata.mdx"
+  ]
+}
