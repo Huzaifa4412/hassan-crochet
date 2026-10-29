@@ -62,8 +62,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             <div className="flex items-start justify-between">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
-                  {category.title}
+                  {slug === "sweaters" ? "Personalized Baby & Kids Name Sweaters" : category.title}
                 </h1>
+                {slug === "sweaters" && (
+                  <div className="max-w-2xl space-y-3 py-4 text-muted-foreground">
+                    <p>Explore personalized baby and kids name sweaters with hand-embroidered lettering. Choose a sweater color, try a lettering style and add optional motifs in the preview before placing your order on Etsy.</p>
+                    <p>Shopping for a baby shower or birthday? Read our <Link href="/blog/what-size-baby-name-sweater-should-you-get" className="underline underline-offset-4">sweater sizing guide</Link> and <Link href="/blog/how-to-wash-hand-embroidered-baby-sweater" className="underline underline-offset-4">embroidery care guide</Link>. Check the Etsy listing for current sizes, prices and delivery options.</p>
+                  </div>
+                )}
                 {category.description && (
                   <p className="text-muted-foreground max-w-2xl">
                     {category.description}
@@ -132,5 +138,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       `Explore ${category.title.toLowerCase()} and personalized gifts from Knitty Petit. Preview available designs and check the Etsy listing for final options.`,
     path: `/category/${category.slug.current}`,
     image: category.image?.url || "/logo.png",
+    // Categories with no matching products stay out of the index.
+    noIndex: slug === "crochet",
   })
 }

@@ -2,30 +2,51 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { Menu, Search, UserRound, X } from "lucide-react";
+import { Menu, Search, Sparkles, X } from "lucide-react";
 import { SearchDropdown } from "@/components/search/SearchDropdown";
 import TimerClock from "../TimerClock";
+import { currentSale, storeFacts } from "@/lib/store-facts";
 
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
-  { name: "Journal", href: "/blog" },
+  { name: "Guides", href: "/blog" },
   { name: "About", href: "/about" },
 ];
 
 export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [saleActive, setSaleActive] = useState(currentSale.endsAt !== null);
+  useEffect(() => {
+    if (!currentSale.endsAt) return;
+    const end = Date.parse(currentSale.endsAt);
+    const update = () => setSaleActive(Number.isFinite(end) && Date.now() < end);
+    update();
+    const timer = setInterval(update, 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const saleEndLabel = currentSale.endsAt
+    ? new Date(currentSale.endsAt).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "America/Chicago" })
+    : "";
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-[#ead7c7]/80 bg-[#fffaf4]/88 shadow-[0_10px_40px_rgba(86,52,32,0.06)] backdrop-blur-xl">
-        <div className="flex min-h-10 items-center justify-center gap-3 bg-[#b85e37]/70 px-4 py-2 text-center text-sm font-medium text-white">
-          <span>Up to 40% off custom keepsakes</span>
-          <span className="hidden h-1 w-1 rounded-full bg-white/55 sm:block" />
-          <TimerClock />
+        <div className="flex min-h-10 flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-[#a94f2c] px-4 py-2 text-center text-sm font-medium text-white">
+          {saleActive && currentSale.endsAt ? (
+            <>
+              <span>
+                {currentSale.label} · ends {saleEndLabel}
+              </span>
+              <span className="hidden h-1 w-1 rounded-full bg-white/55 sm:block" />
+              <TimerClock endsAt={currentSale.endsAt} />
+            </>
+          ) : (
+            <span>Hand-embroidered names · Preview here, order on Etsy</span>
+          )}
         </div>
 
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -55,7 +76,7 @@ export default function Header() {
                 Knitty Petit
               </span>
               <span className="mt-1 block text-xs font-medium text-[#8b7569]">
-                Handmade crochet studio
+                {storeFacts.brandLine}
               </span>
             </span>
           </Link>
@@ -109,11 +130,11 @@ export default function Header() {
                   </motion.button>
                   <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.95 }}>
                     <Link
-                      href="/studio"
+                      href="/products"
                       className="hidden h-11 items-center gap-2 rounded-full bg-[#31211b] px-4 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(49,33,27,0.16)] transition-colors hover:bg-[#4a3329] sm:inline-flex"
                     >
-                      <UserRound className="h-4 w-4" />
-                      Studio
+                      <Sparkles className="h-4 w-4" />
+                      Design yours
                     </Link>
                   </motion.div>
                 </motion.div>
@@ -181,7 +202,7 @@ export default function Header() {
               </ul>
 
               <div className="mt-auto rounded-3xl bg-[#f3dfcf] p-5 text-sm leading-6 text-[#6f5a50]">
-                Custom crochet gifts, previewed with care and finished by hand.
+                Design the name sweater here, then order on Etsy. Free US shipping, sizes 0–3 months to 7T.
               </div>
             </motion.aside>
           </>

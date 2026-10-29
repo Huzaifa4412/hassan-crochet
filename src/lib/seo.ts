@@ -12,7 +12,7 @@ if (["knittypetit.shop", "www.knittypetit.shop"].includes(configuredUrl.hostname
 export const siteUrl = configuredUrl.origin;
 
 export const defaultDescription =
-  "Explore personalized baby name sweaters and hand-embroidered gifts. Preview lettering, colors, and motifs at Knitty Petit, then complete your order on Etsy.";
+  "Hand-embroidered name sweaters for babies and kids. Preview the name, colors and icons, then order on Etsy. Choose lettering, thread colors and motifs.";
 
 export function serializeJsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, "\\u003c");
@@ -76,14 +76,9 @@ export function buildMetadata({
       url,
       siteName,
       type,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
+      // Dimensions are omitted on purpose: images come in several sizes and
+      // wrong width/height values make social previews crop badly.
+      images: [{ url: imageUrl, alt: title }],
     },
     twitter: {
       card: "summary_large_image",

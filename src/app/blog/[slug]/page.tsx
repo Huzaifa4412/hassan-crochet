@@ -61,15 +61,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       image: ogImageUrl,
       type: "article",
     }),
-    keywords: [
-      post.title,
-      "baby name sweater sizing",
-      "baby shower gifts",
-      "hand embroidered baby sweater",
-      "personalized kids knitwear",
-      "knitty petit journal",
-      ...(post.categories || []),
-    ],
     openGraph: {
       title: `${post.title} | Knitty Petit Journal`,
       description,
@@ -424,12 +415,7 @@ export default async function BlogPostPage({ params }: Props) {
                       </span>
                       <span className="text-stone-300 dark:text-stone-700">•</span>
                       <div className="flex items-center text-amber-500 text-xs">
-                        <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
-                        <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
-                        <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
-                        <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
-                        <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
-                        <span className="ml-1 text-stone-600 dark:text-stone-400 font-semibold text-[11px]">4.9 (140+ reviews)</span>
+                        <span className="ml-1 text-stone-600 dark:text-stone-400 font-semibold text-[11px]">Read Etsy reviews</span>
                       </div>
                     </div>
 
@@ -602,7 +588,7 @@ export default async function BlogPostPage({ params }: Props) {
                   </h4>
                 </div>
                 <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
-                  Join 5,000+ parents receiving early seasonal drop announcements, milestone outfit ideas, and care tips.
+                  Get seasonal order-by dates, milestone outfit ideas, and care tips by email.
                 </p>
                 <div className="space-y-2 pt-1">
                   <input

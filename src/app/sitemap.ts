@@ -40,8 +40,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   };
 
-  addDocuments(products, "/products", 0.8);
-  addDocuments(categories, "/category", 0.65);
+  // Keep in sync with redirects in next.config.ts and noindexed categories.
+  const redirectedProducts = new Set([
+    "kids-sweater",
+    "hand-embroidered-kidz-name-sweater",
+    "hand-embroidered-kids-name-sweaterss",
+  ]);
+  const hiddenCategories = new Set(["crochet"]);
+  addDocuments(products.filter((p) => !redirectedProducts.has(p.slug)), "/products", 0.8);
+  addDocuments(categories.filter((c) => !hiddenCategories.has(c.slug)), "/category", 0.65);
   addDocuments(posts, "/blog", 0.6);
 
   return [...routes.values()];

@@ -24,12 +24,13 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: product.seoTitle || product.title,
+    title: product.seoTitle || (slug === "hand-embroidered-kids-name-sweaters" ? "Personalized Baby Name Sweater, Hand Embroidered" : product.title),
     description:
       product.seoDescription ||
+      (slug === "hand-embroidered-kids-name-sweaters" ? "Preview a personalized baby name sweater with hand-embroidered lettering. Choose colors and motifs, then confirm your custom order on Etsy." : undefined) ||
       product.shortDescription ||
       product.description ||
-      `Customize ${product.title}, a handmade crochet product from Knitty Petit.`,
+      `Preview ${product.title} and personalize your design at Knitty Petit before ordering on Etsy.`,
     path: `/products/${product.slug.current}`,
     image: product.mainImageUrl || product.variants?.[0]?.imageUrl || "/logo.png",
   });
@@ -95,7 +96,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="product-details">
           <h2 id="product-details" className="text-2xl font-semibold">Product details</h2>
           <p className="mt-4 max-w-3xl whitespace-pre-line leading-8 text-muted-foreground">
-            {product.description}
+            {product.description.replace(/bottoming shir\b/gi, "base layer")}
           </p>
         </section>
       )}
