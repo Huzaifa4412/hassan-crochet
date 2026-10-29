@@ -36,6 +36,7 @@ import CustomizationCanvas, {
 import { Product } from "@/sanity/queries";
 import { useToaster } from "@/components/ui/toast";
 import * as pixel from "@/lib/fpixel";
+import { ETSY_REVIEWS_URL, realReviews, storeFacts, withEtsyUtm } from "@/lib/store-facts";
 import {
   getCustomizationPixelPayload,
   getProductPixelPayload,
@@ -98,34 +99,6 @@ const pacifico = Pacifico({
 });
 const sniglet = Sniglet({ subsets: ["latin"], weight: "400", display: "swap" });
 
-// Purchase notification data (defined outside component to avoid re-renders)
-const PURCHASE_LOCATIONS = [
-  { city: "London", country: "UK" },
-  { city: "Manchester", country: "UK" },
-  { city: "Birmingham", country: "UK" },
-  { city: "Leeds", country: "UK" },
-  { city: "Bristol", country: "UK" },
-  { city: "Liverpool", country: "UK" },
-  { city: "Nottingham", country: "UK" },
-  { city: "Sheffield", country: "UK" },
-  { city: "Cardiff", country: "UK" },
-  { city: "Glasgow", country: "UK" },
-  { city: "Edinburgh", country: "UK" },
-  { city: "Brighton", country: "UK" },
-];
-
-const TIME_AGO_OPTIONS = [
-  "Just now",
-  "1 minute ago",
-  "2 minutes ago",
-  "3 minutes ago",
-  "5 minutes ago",
-  "8 minutes ago",
-  "10 minutes ago",
-  "12 minutes ago",
-  "15 minutes ago",
-];
-
 const ICONS = [
   // Classic Flowers
   { name: "Blue Flower", url: "/icons/Blue Flower-half.png", price: 4 },
@@ -156,15 +129,15 @@ const ICONS = [
   { name: "Sun", url: "/icons/Sun.png", price: 4 },
   { name: "Star", url: "/icons/Star.png", price: 4 },
   { name: "Heart", url: "/icons/Heart.png", price: 4 },
-  { name: "Dear", url: "/icons/Dear.png", price: 4 },
-  { name: "Mushroom", url: "/icons/Mashroom.png", price: 4 },
-  { name: "Grarvo", url: "/icons/Grarvo.png", price: 4 },
-  { name: "Pine Apple", url: "/icons/Pine Apply.png", price: 4 },
+  { name: "Reindeer", url: "/icons/Reindeer.png", price: 4 },
+  { name: "Mushroom", url: "/icons/Mushroom.png", price: 4 },
+  { name: "Avocado", url: "/icons/Avocado.png", price: 4 },
+  { name: "Pineapple", url: "/icons/Pineapple.png", price: 4 },
   { name: "Tree", url: "/icons/Tree.png", price: 4 },
-  { name: "Decor", url: "/icons/decore.png", price: 4 },
+  { name: "Green Squiggle", url: "/icons/Green Squiggle.png", price: 4 },
 
   // Holiday
-  { name: "Christmas Tree", url: "/icons/Chrisman Tree.png", price: 4 },
+  { name: "Christmas Tree", url: "/icons/Christmas Tree.png", price: 4 },
   { name: "Santa", url: "/icons/Santa.png", price: 4 },
   { name: "Ring Bell", url: "/icons/Ring Bell.png", price: 4 },
 ];
@@ -349,154 +322,20 @@ export default function ProductClient({ product }: ProductClientProps) {
   const didTrackCustomizeProduct = useRef(false);
   const { addToast } = useToaster();
 
-  // Social proof state (fixed initial values instead of random)
-  const [boughtIn24h, setBoughtIn24h] = useState(105);
-  const [customizingNow, setCustomizingNow] = useState(87);
-
-  // Reviews data with new images
-  const reviews = [
-    {
-      id: 1,
-      name: "Sarah M.",
-      location: "London, UK",
-      image: "/reviews/iap_600x600.7262401728_ae9vfp81.webp",
-      rating: 5,
-      text: "Absolutely chuffed with our personalised jumper. The stitching feels lovely and it looks just like the design I chose.",
-      date: "2 days ago",
-    },
-    {
-      id: 2,
-      name: "Emily R.",
-      location: "Manchester, UK",
-      image: "/reviews/iap_600x600.7328186625_r1km0fan.webp",
-      rating: 5,
-      text: "The customiser was really easy to use, and the finished piece came out beautifully. Such a thoughtful little gift.",
-      date: "1 week ago",
-    },
-    {
-      id: 3,
-      name: "Jessica T.",
-      location: "Birmingham, UK",
-      image: "/reviews/iap_600x600.7339273571_jw5pkmrx.webp",
-      rating: 5,
-      text: "Bought this for my niece and everyone loved the name detail. It felt personal without looking overdone.",
-      date: "3 days ago",
-    },
-    {
-      id: 4,
-      name: "Amanda K.",
-      location: "Leeds, UK",
-      image: "/reviews/iap_600x600.7350513508_e26ewa8o.webp",
-      rating: 5,
-      text: "Beautifully made and the colours looked even nicer in person. Proper keepsake quality.",
-      date: "5 days ago",
-    },
-    {
-      id: 5,
-      name: "Rachel P.",
-      location: "Bristol, UK",
-      image: "/reviews/iap_600x600.7427157934_78avfdyy.webp",
-      rating: 5,
-      text: "This is my second order and the attention to detail is spot on. It makes a really special baby gift.",
-      date: "1 day ago",
-    },
-    {
-      id: 6,
-      name: "Jennifer L.",
-      location: "Liverpool, UK",
-      image: "/reviews/iap_600x600.7499091595_dm9fhjrt.webp",
-      rating: 5,
-      text: "Lovely communication and the final jumper was gorgeous. It arrived ready to gift, which was a bonus.",
-      date: "4 days ago",
-    },
-    {
-      id: 7,
-      name: "Melissa H.",
-      location: "Nottingham, UK",
-      image: "/reviews/iap_600x600.7582209944_dtbqy69e.webp",
-      rating: 5,
-      text: "I liked being able to pick the text and little details myself. It made the present feel much more personal.",
-      date: "6 days ago",
-    },
-    {
-      id: 8,
-      name: "Nicole S.",
-      location: "Glasgow, UK",
-      image: "/reviews/iap_600x600.7647883905_626g80nw.webp",
-      rating: 5,
-      text: "The quality was better than I expected from the photos. Soft, neat, and really nicely finished.",
-      date: "2 weeks ago",
-    },
-    {
-      id: 9,
-      name: "Stephanie B.",
-      location: "Edinburgh, UK",
-      image: "/reviews/iap_600x600.7716775214_ho4q4bo4 (1).webp",
-      rating: 5,
-      text: "Absolutely gorgeous. The personalisation options made it easy to create something that felt made just for us.",
-      date: "1 week ago",
-    },
+  // Finished-sweater photos. Names/quotes only come from real Etsy reviews
+  // (see realReviews in src/lib/store-facts.ts) — never written by us.
+  const galleryPhotos = [
+    "/reviews/iap_600x600.7262401728_ae9vfp81.webp",
+    "/reviews/iap_600x600.7328186625_r1km0fan.webp",
+    "/reviews/iap_600x600.7339273571_jw5pkmrx.webp",
+    "/reviews/iap_600x600.7350513508_e26ewa8o.webp",
+    "/reviews/iap_600x600.7427157934_78avfdyy.webp",
+    "/reviews/iap_600x600.7499091595_dm9fhjrt.webp",
+    "/reviews/iap_600x600.7582209944_dtbqy69e.webp",
+    "/reviews/iap_600x600.7647883905_626g80nw.webp",
+    "/reviews/iap_600x600.7716775214_ho4q4bo4 (1).webp",
   ];
-
-  // Show purchase notification toast periodically
-  useEffect(() => {
-    const showPurchaseNotification = () => {
-      const location =
-        PURCHASE_LOCATIONS[
-          Math.floor(Math.random() * PURCHASE_LOCATIONS.length)
-        ];
-      const timeAgo =
-        TIME_AGO_OPTIONS[Math.floor(Math.random() * TIME_AGO_OPTIONS.length)];
-
-      addToast({
-        variant: "purchase",
-        message: `Someone from ${location.city}, ${location.country} purchased ${timeAgo}`,
-        duration: 6000,
-      });
-    };
-
-    // Show first notification after 3 seconds
-    const firstTimer = setTimeout(showPurchaseNotification, 3000);
-
-    // Show subsequent notifications every 15-25 seconds
-    const intervalTimer = setInterval(
-      () => {
-        showPurchaseNotification();
-      },
-      Math.random() * 10000 + 15000,
-    );
-
-    return () => {
-      clearTimeout(firstTimer);
-      clearInterval(intervalTimer);
-    };
-  }, [addToast]);
-
-  // Animate bought count (slower, more realistic)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBoughtIn24h((prev) => {
-        // Only increase occasionally (70% chance of staying the same or +1, 30% chance of -1)
-        const change = Math.random() > 0.3 ? (Math.random() > 0.5 ? 1 : 0) : -1;
-        return Math.max(50, Math.min(150, prev + change));
-      });
-    }, 15000); // Update every 15 seconds instead of 3
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Animate customizing count (slower, more realistic)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCustomizingNow((prev) => {
-        // Small fluctuations, mostly staying stable
-        const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or +1
-        return Math.max(40, Math.min(120, prev + change));
-      });
-    }, 20000); // Update every 20 seconds instead of 4
-
-    return () => clearInterval(interval);
-  }, []);
+  const etsyLink = product.etsyLink ? withEtsyUtm(product.etsyLink) : undefined;
 
   // Convert Sanity variants to color format
   const colors =
@@ -708,7 +547,7 @@ export default function ProductClient({ product }: ProductClientProps) {
     canvasRef.current?.download();
   };
 
-  const currentSummary = `Product: ${product.title} | Color: ${selectedColor?.name} | Text: ${addedTexts.length > 0 ? addedTexts.map((t) => t.text).join(", ") : "None"} | Text Color: ${isMultiColor ? MULTI_COLOR_PALETTES.find((p) => p.value === textColor)?.name : SINGLE_TEXT_COLORS.find((c) => c.value === textColor)?.name} | Font: ${FONTS.find((f) => f.value === textFont)?.name} | Icons: ${addedIcons.length > 0 ? addedIcons.join(", ") : "None"}`;
+  const currentSummary = `Name: ${addedTexts.length > 0 ? addedTexts.map((t) => t.text).join(", ") : "None"} | Font: ${FONTS.find((f) => f.value === textFont)?.name} | Thread: ${isMultiColor ? MULTI_COLOR_PALETTES.find((p) => p.value === textColor)?.name : SINGLE_TEXT_COLORS.find((c) => c.value === textColor)?.name} | Sweater: ${selectedColor?.name} | Icons: ${addedIcons.length > 0 ? addedIcons.join(", ") : "None"}`;
 
   const handleCopyCustomizations = () => {
     pixel.customEvent("CopyCustomizationDetails", {
@@ -740,13 +579,13 @@ export default function ProductClient({ product }: ProductClientProps) {
         body: JSON.stringify({
           ...orderForm,
           productName: product.title,
-          productLink: product.etsyLink || "Link Not Provided",
+          productLink: etsyLink || "Link Not Provided",
           customizationDetails: currentSummary,
         }),
       });
 
       if (response.ok) {
-        if (product.etsyLink) {
+        if (etsyLink) {
           pixel.event("Lead", {
             ...productPixelPayload,
             ...customizationPixelPayload,
@@ -764,7 +603,7 @@ export default function ProductClient({ product }: ProductClientProps) {
           setIsOrderDialogOpen(false);
           setOrderForm({ name: "", email: "", phone: "", address: "" });
           await new Promise((resolve) => setTimeout(resolve, 300));
-          window.location.assign(product.etsyLink);
+          window.location.assign(etsyLink);
           return;
         } else {
           addToast({
@@ -796,11 +635,25 @@ export default function ProductClient({ product }: ProductClientProps) {
     }
   };
 
+  // Lets shoppers go straight to Etsy without filling the form.
+  const handleSkipToEtsy = () => {
+    if (!etsyLink) return;
+    navigator.clipboard?.writeText(currentSummary).catch(() => undefined);
+    pixel.event("InitiateCheckout", {
+      ...productPixelPayload,
+      ...customizationPixelPayload,
+      destination: "etsy",
+      checkout_source: "skip_form",
+    });
+    window.open(etsyLink, "_blank", "noopener");
+    setIsOrderDialogOpen(false);
+  };
+
   const badges = getBadgeLabels(product.badges);
   const trustHighlights = [
     { icon: Shield, label: "Secure Etsy checkout" },
     { icon: Truck, label: "Made to order" },
-    { icon: Heart, label: "Handmade keepsake" },
+    { icon: Heart, label: "Check delivery and returns on Etsy" },
   ];
 
   return (
@@ -861,7 +714,7 @@ export default function ProductClient({ product }: ProductClientProps) {
               </div>
               <div className="space-y-3">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#bf6036]">
-                  Personalized crochet studio
+                  Hand-embroidered name sweater · {storeFacts.sizes}
                 </p>
                 <h1 className="max-w-3xl text-3xl font-black leading-[0.95] tracking-tight text-[#24130f] sm:text-5xl lg:text-6xl">
                   {product.title}
@@ -970,11 +823,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                 <div className="mb-2 sm:mb-3">
                   <p className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#a84e2b] sm:text-sm md:text-base">
                     <span className="size-2 rounded-full bg-[#cf6f3f] shadow-[0_0_0_6px_rgba(207,111,63,0.12)]" />
-                    In demand.{" "}
-                    <span className="inline-block min-w-[2ch]">
-                      {boughtIn24h}
-                    </span>{" "}
-                    people bought this in the last 24 hours.
+                    Preview here · Order on Etsy
                   </p>
                 </div>
                 <CardTitle className="text-lg font-black text-[#251611] sm:text-xl">
@@ -1052,10 +901,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                           {/* Customizing count above Add Text */}
                           <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#a84e2b] sm:text-sm md:text-base">
                             <span className="size-2 rounded-full bg-[#cf6f3f] shadow-[0_0_0_6px_rgba(207,111,63,0.12)]" />
-                            <span className="inline-block min-w-[2ch]">
-                              {customizingNow}
-                            </span>{" "}
-                            shoppers are customizing this right now.
+                            Add the name
                           </div>
                           <div className="mt-0.5 text-[10px] text-[#7a6258] sm:mt-1 sm:text-xs">
                             Personalize with your message
@@ -1423,8 +1269,10 @@ export default function ProductClient({ product }: ProductClientProps) {
                     <span>Important Note:</span>
                   </p>
                   <p className="mt-2 text-sm leading-relaxed text-[#7a6258]">
-                    Please copy the text below to Etsy&apos;s personalization
-                    box, or take a screenshot and send it to the seller!
+                    Tap <strong>Copy</strong>, then paste it into the
+                    personalization box on Etsy and pick your size there
+                    ({storeFacts.sizes}). You can also download the preview and
+                    send it to the seller in Etsy messages.
                   </p>
                 </div>
               </CardContent>
@@ -1454,8 +1302,8 @@ export default function ProductClient({ product }: ProductClientProps) {
                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
                 </Button>
                 <p className="text-center text-xs leading-relaxed text-[#f5d6bd] sm:text-base">
-                  Pricing starts at $18.99. Choose your perfect size ( from 0
-                  months to 7 Years) and complete your order securely on Etsy.
+                  Check current prices, sizes and shipping options on Etsy, then check out
+                  securely on Etsy.
                 </p>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
                   <div className="text-center">
@@ -1463,7 +1311,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                       <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <p className="text-[9px] sm:text-[10px] font-medium opacity-90">
-                      Secure
+                      Etsy checkout
                     </p>
                   </div>
                   <div className="text-center">
@@ -1471,7 +1319,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                       <Truck className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <p className="text-[9px] sm:text-[10px] font-medium opacity-90">
-                      Fast
+                      Free US shipping
                     </p>
                   </div>
                   <div className="text-center">
@@ -1479,7 +1327,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                       <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
                     <p className="text-[9px] sm:text-[10px] font-medium opacity-90">
-                      Handmade
+                      See Etsy returns policy
                     </p>
                   </div>
                 </div>
@@ -1498,7 +1346,7 @@ export default function ProductClient({ product }: ProductClientProps) {
               <div className="inline-flex items-center gap-1.5 rounded-full border border-[#dfbea9] bg-white px-3 py-1.5 shadow-sm sm:gap-2 sm:px-4 sm:py-2">
                 <Quote className="w-3 h-3 text-[#bf6036] sm:w-4 sm:h-4" />
                 <span className="text-xs font-bold text-[#bf6036] sm:text-sm">
-                  Customer gallery
+                  Finished sweaters
                 </span>
               </div>
               <div className="max-w-2xl space-y-3">
@@ -1506,31 +1354,36 @@ export default function ProductClient({ product }: ProductClientProps) {
                   Real little moments, stitched into sweaters.
                 </h2>
                 <p className="max-w-xl text-sm leading-7 text-[#7a6258] sm:text-base">
-                  Browse customer photos, names, colors, and keepsake details
-                  from families who customized their own crochet piece.
+                  Finished sweaters with hand-embroidered names. Read every
+                  verified buyer review on our Etsy shop.
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-3 overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_18px_45px_rgba(124,82,58,0.08)]">
               <div className="border-r border-[#ead7c7] p-4 text-center">
-                <p className="text-2xl font-black text-[#251611]">5.0</p>
+                <p className="text-2xl font-black text-[#251611]">Etsy</p>
                 <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a7867]">
-                  Rating
+                  Checkout
                 </p>
               </div>
               <div className="border-r border-[#ead7c7] p-4 text-center">
-                <p className="text-2xl font-black text-[#251611]">300+</p>
+                <p className="text-2xl font-black text-[#251611]">Buyer</p>
                 <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a7867]">
-                  Orders
+                  Etsy reviews
                 </p>
               </div>
-              <div className="p-4 text-center">
-                <p className="text-2xl font-black text-[#251611]">Photo</p>
+              <a
+                href={ETSY_REVIEWS_URL}
+                target="_blank"
+                rel="noopener"
+                className="flex flex-col items-center justify-center p-4 text-center transition-colors hover:bg-[#fff1e6]"
+              >
+                <p className="text-sm font-black text-[#bf6036]">Read on Etsy →</p>
                 <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a7867]">
-                  Proof
+                  Verified
                 </p>
-              </div>
+              </a>
             </div>
           </div>
 
@@ -1561,26 +1414,53 @@ export default function ProductClient({ product }: ProductClientProps) {
               loop={true}
               className="reviews-swiper !overflow-visible pb-12"
             >
-              {reviews.map((review) => (
-                <SwiperSlide
-                  key={review.id}
-                  className="!h-auto !w-[84vw] sm:!w-[360px] lg:!w-[350px]"
-                >
-                  <ReviewCard review={review} />
-                </SwiperSlide>
-              ))}
+              {realReviews.length > 0
+                ? realReviews.map((review, i) => (
+                    <SwiperSlide
+                      key={`review-${i}`}
+                      className="!h-auto !w-[84vw] sm:!w-[360px] lg:!w-[350px]"
+                    >
+                      <ReviewCard
+                        review={{
+                          id: i,
+                          name: review.name,
+                          location: "Etsy buyer",
+                          image: review.image || galleryPhotos[i % galleryPhotos.length],
+                          rating: review.rating,
+                          text: review.text,
+                          date: review.date,
+                        }}
+                      />
+                    </SwiperSlide>
+                  ))
+                : galleryPhotos.map((src, i) => (
+                    <SwiperSlide
+                      key={src}
+                      className="!h-auto !w-[70vw] sm:!w-[300px]"
+                    >
+                      <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_18px_45px_rgba(124,82,58,0.1)]">
+                        <Image
+                          src={src}
+                          alt={`Finished hand-embroidered name sweater, photo ${i + 1}`}
+                          fill
+                          sizes="(min-width: 640px) 300px, 70vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
             </Swiper>
 
             {/* Navigation Buttons - Hidden on mobile */}
             <button
               className="reviews-button-prev group absolute -left-2 top-[42%] z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
-              aria-label="Previous review"
+              aria-label="Previous photo"
             >
               <ChevronLeft className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
             <button
               className="reviews-button-next group absolute -right-2 top-[42%] z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[#ead7c7] bg-white text-[#5c4036] shadow-lg transition-all hover:border-[#cf6f3f] hover:bg-[#cf6f3f] hover:text-white sm:flex"
-              aria-label="Next review"
+              aria-label="Next photo"
             >
               <ChevronRight className="w-4 h-4 group-hover:scale-110 transition-transform" />
             </button>
@@ -1593,9 +1473,9 @@ export default function ProductClient({ product }: ProductClientProps) {
             <DialogHeader>
               <DialogTitle>Complete Your Customization</DialogTitle>
               <DialogDescription>
-                Please provide your details before we redirect you to Etsy to
-                complete the purchase. This helps us match your customization to
-                your order.
+                Add your name and email so we can match your design to your Etsy
+                order. Your design is copied, too. Prefer to skip? Go straight
+                to Etsy and paste it in the personalization box.
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleOrderSubmit} className="space-y-4 py-4">
@@ -1628,9 +1508,7 @@ export default function ProductClient({ product }: ProductClientProps) {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">
-                  Phone Number ( For Shipping Purpose )
-                </Label>
+                <Label htmlFor="phone">Phone (optional)</Label>
                 <Input
                   id="phone"
                   type="tel"
@@ -1639,11 +1517,10 @@ export default function ProductClient({ product }: ProductClientProps) {
                     setOrderForm((prev) => ({ ...prev, phone: e.target.value }))
                   }
                   placeholder="+1 (555) 000-0000"
-                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="address">Shipping Address</Label>
+                <Label htmlFor="address">Shipping address (optional — Etsy asks at checkout)</Label>
                 <Input
                   id="address"
                   value={orderForm.address}
@@ -1654,18 +1531,19 @@ export default function ProductClient({ product }: ProductClientProps) {
                     }))
                   }
                   placeholder="123 Main St, City, Country"
-                  required
                 />
               </div>
-              <DialogFooter className="pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsOrderDialogOpen(false)}
-                  disabled={isSubmittingOrder}
-                >
-                  Cancel
-                </Button>
+              <DialogFooter className="flex-col gap-2 pt-4 sm:flex-row">
+                {etsyLink && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={handleSkipToEtsy}
+                    disabled={isSubmittingOrder}
+                  >
+                    Skip, go to Etsy
+                  </Button>
+                )}
                 <Button type="submit" disabled={isSubmittingOrder}>
                   {isSubmittingOrder ? "Processing..." : "Continue to Etsy"}
                 </Button>
@@ -1690,7 +1568,7 @@ export default function ProductClient({ product }: ProductClientProps) {
               <div className="relative overflow-hidden rounded-[1.5rem] border border-[#ead7c7] bg-white shadow-[0_18px_55px_rgba(124,82,58,0.12)]">
                 <Image
                   src="/colors/color-guide.avif"
-                  alt="Real crochet text color guide"
+                  alt="Real embroidery thread color guide"
                   width={1400}
                   height={1000}
                   className="h-auto w-full"

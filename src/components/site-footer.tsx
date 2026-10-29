@@ -20,13 +20,14 @@ export function SiteFooter() {
           <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-5 gap-y-3 text-sm">
             <Link href="/products" className="text-muted-foreground hover:text-foreground">All products</Link>
             <Link href="/category/sweaters" className="text-muted-foreground hover:text-foreground">Personalized sweaters</Link>
-            <Link href="/blog" className="text-muted-foreground hover:text-foreground">Gift & care guides</Link>
+            <Link href="/blog" className="text-muted-foreground hover:text-foreground">Guides</Link>
             <Link href="/about" className="text-muted-foreground hover:text-foreground">About Knitty Petit</Link>
           </nav>
 
           {/* Copyright */}
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Knitty Petit. Made with <Heart className="h-3 w-3 inline fill-red-500" />
+            © {new Date().getFullYear()} Knitty Petit · Made with <Heart className="h-3 w-3 inline fill-red-500" aria-label="love" /> ·{" "}
+            <a href="https://www.etsy.com/shop/knittypetit" target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-foreground">Etsy shop</a>
           </p>
         </div>
       </div>

@@ -3,7 +3,36 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
-import { defaultDescription, siteName, siteUrl } from "@/lib/seo";
+import { absoluteUrl, defaultDescription, serializeJsonLd, siteName, siteUrl } from "@/lib/seo";
+import { ETSY_SHOP_URL } from "@/lib/store-facts";
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: siteName,
+      url: siteUrl,
+      logo: absoluteUrl("/logo.png"),
+      description:
+        "Knitty Petit makes personalized baby and kids name sweaters: knit sweaters with hand-embroidered names, available through Etsy.",
+      sameAs: [ETSY_SHOP_URL],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: siteName,
+      publisher: { "@id": `${siteUrl}/#organization` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${siteUrl}/search?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
 
 import "./globals.css";
 import FacebookPixel from "@/components/FacebookPixel";
@@ -45,20 +74,13 @@ export const metadata: Metadata = {
     url: "/",
     siteName,
     type: "website",
-    images: [
-      {
-        url: "/logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Knitty Petit personalized sweaters",
-      },
-    ],
+    images: [{ url: "/banner2.png", alt: "Knitty Petit personalized name sweaters" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Knitty Petit - Personalized Baby Name Sweaters",
     description: defaultDescription,
-    images: ["/logo.png"],
+    images: ["/banner2.png"],
   },
   robots: {
     index: true,
@@ -87,6 +109,10 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationJsonLd) }}
+        />
         <FacebookPixel />
         <Providers>
           <Header />

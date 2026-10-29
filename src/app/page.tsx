@@ -6,34 +6,66 @@ import OurProducts from "@/components/home/our-products";
 import Personalized from "@/components/home/Personalized";
 import TestimonialsSection from "@/components/home/Testimonials";
 import { Reveal } from "@/components/motion/Reveal";
-import { absoluteUrl, buildMetadata, serializeJsonLd, siteName, siteUrl } from "@/lib/seo";
+import { buildMetadata, serializeJsonLd } from "@/lib/seo";
 
 import React from "react";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Personalized Baby Name Sweaters & Hand Embroidery",
+  title: "Personalized Baby Name Sweaters, Hand Embroidered",
   description:
-    "Create a personalized baby name sweater with hand embroidery. Preview colors, lettering, and motifs at Knitty Petit, then complete your order on Etsy.",
+    "Hand-embroidered name sweaters for babies and kids. Preview the name, colors and icons, then order on Etsy. Choose lettering, thread colors and motifs.",
   path: "/",
   image: "/banner2.png",
 });
 
-const page = () => {
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: siteName,
-    url: siteUrl,
-    logo: absoluteUrl("/logo.png"),
-  };
+const homeFaqs = [
+  {
+    q: "Can I preview the name before ordering?",
+    a: "Yes. The customizer shows your sweater color, the name in your chosen lettering and thread color, and any icons. Copy the design, then paste it into the personalization box on Etsy when you order.",
+    link: { href: "/products/hand-embroidered-kids-name-sweaters", label: "Preview a personalized name sweater" },
+  },
+  {
+    q: "What sizes do the name sweaters come in?",
+    a: "Check the Etsy listing for current size options and garment measurements before ordering. Our sizing guide explains how to choose a fit for a gift.",
+    link: { href: "/blog/what-size-baby-name-sweater-should-you-get", label: "Read the sizing guide" },
+  },
+  {
+    q: "How much does a personalized name sweater cost?",
+    a: "Current prices and personalization options are shown on the Etsy listing. Check the final price for your chosen size and design before completing checkout.",
+  },
+  {
+    q: "Is the name printed or embroidered?",
+    a: "Names are hand-embroidered onto knit sweaters. Preview your lettering and optional motifs in the customizer before ordering on Etsy.",
+  },
+  {
+    q: "Can I return or exchange it?",
+    a: "Return and exchange eligibility depends on the Etsy listing and the personalization ordered. Read the listing policy and double-check the name spelling before checkout.",
+  },
+  {
+    q: "How do I wash a hand-embroidered sweater?",
+    a: "Turn it inside out, wash cold on a gentle cycle or by hand, and lay it flat to air dry.",
+    link: { href: "/blog/how-to-wash-hand-embroidered-baby-sweater", label: "Read the care guide" },
+  },
+];
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: homeFaqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
+const page = () => {
   return (
     <div>
+
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(organizationJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(faqJsonLd) }}
       />
-
       <HeroBanner />
       <BestSeller />
 
@@ -71,43 +103,18 @@ const page = () => {
             From a baby shower gift to a first birthday keepsake, start with the
             name and colors you have in mind. These guides help with the details.
           </p>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            <div className="rounded-3xl border border-[#ead7c7] bg-white p-6">
-              <h3 className="text-xl font-semibold text-[#2f211b]">Can I preview the name before ordering?</h3>
-              <p className="mt-3 text-sm leading-7 text-[#756156]">
-                Yes. The product customizer lets you add text and icons, choose
-                colors, and adjust their placement. The website preview helps
-                you plan the design; check the Etsy listing for final options
-                and order details.
-              </p>
-              <Link href="/products/hand-embroidered-kids-name-sweaters" className="mt-4 inline-block font-semibold text-[#a94f2c] underline underline-offset-4">
-                Preview a personalized name sweater
-              </Link>
-            </div>
-            <div className="rounded-3xl border border-[#ead7c7] bg-white p-6">
-              <h3 className="text-xl font-semibold text-[#2f211b]">Which size should I choose for a gift?</h3>
-              <p className="mt-3 text-sm leading-7 text-[#756156]">
-                Check the size options and measurements on the Etsy listing
-                before ordering. Our sizing guide explains what to consider
-                when choosing a baby name sweater.
-              </p>
-              <Link href="/blog/what-size-baby-name-sweater-should-you-get" className="mt-4 inline-block font-semibold text-[#a94f2c] underline underline-offset-4">
-                Read the baby name sweater sizing guide
-              </Link>
-            </div>
-            <div className="rounded-3xl border border-[#ead7c7] bg-white p-6">
-              <h3 className="text-xl font-semibold text-[#2f211b]">Looking for gift ideas or care advice?</h3>
-              <p className="mt-3 text-sm leading-7 text-[#756156]">
-                Explore thoughtful gift ideas, or read our embroidery care guide.
-                Follow the care instructions supplied with your sweater.
-              </p>
-              <Link href="/blog/baby-shower-gift-ideas" className="mt-4 block font-semibold text-[#a94f2c] underline underline-offset-4">
-                Explore baby shower gift ideas
-              </Link>
-              <Link href="/blog/how-to-wash-hand-embroidered-baby-sweater" className="mt-3 block font-semibold text-[#a94f2c] underline underline-offset-4">
-                Read the hand-embroidered sweater care guide
-              </Link>
-            </div>
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {homeFaqs.map((faq) => (
+              <div key={faq.q} className="rounded-3xl border border-[#ead7c7] bg-white p-6">
+                <h3 className="text-xl font-semibold text-[#2f211b]">{faq.q}</h3>
+                <p className="mt-3 text-sm leading-7 text-[#756156]">{faq.a}</p>
+                {faq.link && (
+                  <Link href={faq.link.href} className="mt-4 inline-block font-semibold text-[#a94f2c] underline underline-offset-4">
+                    {faq.link.label}
+                  </Link>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
-  title: "About Our Personalized Sweater Studio",
+  title: "About Knitty Petit, Name Sweaters Embroidered in Texas",
   description:
-    "Meet Knitty Petit and discover the care behind our personalized baby name sweaters, hand embroidery, and custom gifts.",
+    "Knitty Petit hand-embroiders personalized baby and kids name sweaters by hand. How each sweater is made, materials, sizes and shipping.",
   path: "/about",
   image: "/about-hero.png",
 });

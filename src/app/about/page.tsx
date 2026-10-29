@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
+import { ETSY_SHOP_URL, storeFacts } from "@/lib/store-facts";
 
 const AboutPage = () => {
   const fadeIn = {
@@ -31,7 +32,7 @@ const AboutPage = () => {
         <div className="absolute inset-0 z-0">
           <Image
             src="/about-hero.png"
-            alt="Crochet Texture"
+            alt="Soft knit sweater texture"
             fill
             className="object-cover opacity-40 blur-[2px]"
             priority
@@ -52,8 +53,9 @@ const AboutPage = () => {
               Crafting Warmth, <br /> One Stitch at a Time
             </h1>
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
-              Welcome to Knitty Petit—where every thread tells a story of love,
-              patience, and the timeless beauty of handmade artistry.
+              Knitty Petit makes personalized baby and kids name sweaters: soft
+              knit sweaters with each name embroidered by hand in{" "}
+              {storeFacts.location.label}, sold through our Etsy shop.
             </p>
           </motion.div>
         </div>
@@ -85,7 +87,7 @@ const AboutPage = () => {
           >
             <Image
               src="/img.png"
-              alt="The Creator"
+              alt="The Knitty Petit maker at work"
               fill
               className="object-cover"
             />
@@ -93,8 +95,8 @@ const AboutPage = () => {
 
           <motion.div {...fadeIn} className="space-y-8">
             <h2 className="text-4xl md:text-5xl  text-gray-900 leading-tight">
-              The Heart Behind <br />
-              the Hook
+              The hands behind <br />
+              every name
             </h2>
             <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
               <p>
@@ -144,12 +146,12 @@ const AboutPage = () => {
               {
                 icon: <Heart className="w-8 h-8 text-primary" />,
                 title: "Hand-Crafted with Love",
-                desc: "No machines, no shortcuts. Every item is hand-crocheted with meticulous attention to detail.",
+                desc: "Every name is embroidered by hand, stitch by stitch, after you order. Little icons are crocheted appliqués.",
               },
               {
                 icon: <ShieldCheck className="w-8 h-8 text-primary" />,
                 title: "Premium & Safe",
-                desc: "We use only the softest, high-quality yarns that are safe for babies and gentle on your skin.",
+                desc: `Sweaters are ${storeFacts.material} with ribbed neck and cuffs. Wash cold, inside out, and air dry.`,
               },
               {
                 icon: <Sparkles className="w-8 h-8 text-primary" />,
@@ -178,34 +180,33 @@ const AboutPage = () => {
         <div className="grid md:grid-cols-2 gap-16 items-center flex-row-reverse">
           <motion.div {...fadeIn} className="order-2 md:order-1 space-y-8">
             <h2 className="text-4xl md:text-5xl  text-gray-900 leading-tight">
-              The Alchemy of <br />
-              Crochet
+              How a name <br />
+              sweater is made
             </h2>
             <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
               <p>
-                Every creation at Knitty Petit follows a journey. It starts with
-                selecting the perfect palette of yarns, imagining the shape, and
-                then—the rhythm of the hook begins.
+                You choose the sweater color, the name, the lettering and any
+                small icons in our online preview. When the order arrives on
+                Etsy, we match threads to your design and stitch the name by
+                hand.
               </p>
               <p>
-                It can take hours, sometimes days, to finish a single piece. But
-                when we see the final texture, the intricate patterns, and
-                finally, how it finds a place in your home, we know it&apos;s
-                worth every second.
+                Preview the name, lettering and colors before placing your order.
+                Check the Etsy listing for current sizes, shipping estimates and return eligibility.
               </p>
             </div>
             <div className="flex gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">100%</div>
+                <div className="text-3xl font-bold text-primary">Your name</div>
                 <div className="text-sm text-gray-500 uppercase tracking-widest">
-                  Handmade
+                  Stitched by hand
                 </div>
               </div>
               <div className="w-px h-12 bg-gray-200" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">500+</div>
+                <div className="text-3xl font-bold text-primary">Preview</div>
                 <div className="text-sm text-gray-500 uppercase tracking-widest">
-                  Happy Homes
+                  Before ordering
                 </div>
               </div>
             </div>
@@ -217,7 +218,7 @@ const AboutPage = () => {
           >
             <Image
               src="/crochet-process.png"
-              alt="The Process"
+              alt="Embroidering a name onto a knit sweater"
               fill
               className="object-cover"
             />
@@ -236,25 +237,26 @@ const AboutPage = () => {
 
           <div className="relative z-10">
             <h2 className="text-4xl md:text-6xl  mb-8 max-w-3xl mx-auto leading-tight">
-              Ready to Find Your Next Handmade Treasure?
+              Ready to design their name sweater?
             </h2>
             <p className="text-xl text-primary-foreground/90 mb-12 max-w-2xl mx-auto">
-              Browse our shop for unique trays, personalized nursery decor, and
-              accessories made just for you.
+              Preview the name, colors and icons first, then order on Etsy.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
               <Link
                 href="/products"
                 className="px-10 py-4 bg-white text-primary rounded-full font-bold hover:bg-gray-100 transition-all hover:scale-105 shadow-xl"
               >
-                Shop Products
+                Design yours
               </Link>
-              <Link
-                href="/blog"
+              <a
+                href={ETSY_SHOP_URL}
+                target="_blank"
+                rel="noopener"
                 className="px-10 py-4 border-2 border-white/30 text-white rounded-full font-bold hover:bg-white/10 transition-all"
               >
-                Read Our Blog
-              </Link>
+                Visit our Etsy shop
+              </a>
             </div>
           </div>
         </motion.div>
