@@ -81,7 +81,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 
 // Swiper imports
@@ -535,16 +534,7 @@ export default function ProductClient({ product }: ProductClientProps) {
 
   // UI state
   const [showFullDescription, setShowFullDescription] = useState(false);
-  const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
   const [isColorGuideOpen, setIsColorGuideOpen] = useState(false);
-  const [orderForm, setOrderForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
-  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
-
   const productPixelPayload = useMemo(
     () => getProductPixelPayload(product),
     [product],
@@ -719,79 +709,23 @@ export default function ProductClient({ product }: ProductClientProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleOpenOrderDialog = () => {
-    pixel.event("AddToCart", {
-      ...productPixelPayload,
-      ...customizationPixelPayload,
-      source: "product_detail_order_cta",
-    });
-    setIsOrderDialogOpen(true);
-  };
-
-  const handleOrderSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmittingOrder(true);
-    try {
-      const response = await fetch("/api/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...orderForm,
-          productName: product.title,
-          productLink: product.etsyLink || "Link Not Provided",
-          customizationDetails: pricedSummary,
-        }),
-      });
-
-      if (response.ok) {
-        if (product.etsyLink) {
-          pixel.event("Lead", {
-            ...productPixelPayload,
-            ...customizationPixelPayload,
-            destination: "etsy",
-            lead_source: "product_customization_form",
-          });
-
-          pixel.event("InitiateCheckout", {
-            ...productPixelPayload,
-            ...customizationPixelPayload,
-            destination: "etsy",
-            checkout_source: "product_customization_form",
-          });
-
-          setIsOrderDialogOpen(false);
-          setOrderForm({ name: "", email: "", phone: "", address: "" });
-          await new Promise((resolve) => setTimeout(resolve, 300));
-          window.location.assign(product.etsyLink);
-          return;
-        } else {
-          addToast({
-            variant: "default",
-            message:
-              "Etsy link for this product is not available. Please contact us.",
-            duration: 5000,
-          });
-        }
-        setIsOrderDialogOpen(false);
-        setOrderForm({ name: "", email: "", phone: "", address: "" });
-      } else {
-        const errorData = await response.json();
-        addToast({
-          variant: "default",
-          message:
-            "Failed to submit order: " + (errorData.message || "Unknown error"),
-          duration: 5000,
-        });
-      }
-    } catch {
+  const handleEtsyCheckout = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!product.etsyLink) {
+      e.preventDefault();
       addToast({
         variant: "default",
-        message: "Failed to submit order. Please check your connection.",
+        message: "Etsy link for this product is not available. Please contact us.",
         duration: 5000,
       });
-    } finally {
-      setIsSubmittingOrder(false);
+      return;
     }
+
+    pixel.event("InitiateCheckout", {
+      ...productPixelPayload,
+      ...customizationPixelPayload,
+      destination: "etsy",
+      checkout_source: "product_detail_order_cta",
+    });
   };
 
   const badges = getBadgeLabels(product.badges);
@@ -1454,12 +1388,14 @@ export default function ProductClient({ product }: ProductClientProps) {
                   </div>
                 </div>
                 <Button
-                  onClick={handleOpenOrderDialog}
+                  asChild
                   className="h-11 w-full rounded-full bg-[#cf6f3f] text-sm font-bold text-white shadow-xl hover:bg-[#dd7d4e] sm:h-12 sm:text-base"
                 >
-                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                  Order on Etsy
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
+                  <a href={product.etsyLink || undefined} onClick={handleEtsyCheckout}>
+                    <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
+                    Order on Etsy
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
+                  </a>
                 </Button>
                 <p className="text-center text-xs leading-relaxed text-[#f5d6bd] sm:text-base">
                   Product total: {formatPrice(productTotal)} USD. Name included;
@@ -1594,94 +1530,6 @@ export default function ProductClient({ product }: ProductClientProps) {
             </button>
           </div>
         </section>
-
-        {/* Order Dialog */}
-        <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
-          <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-106.25">
-            <DialogHeader>
-              <DialogTitle>Complete Your Customization</DialogTitle>
-              <DialogDescription>
-                Please provide your details before we redirect you to Etsy to
-                complete the purchase. This helps us match your customization to
-                your order.
-              </DialogDescription>
-            </DialogHeader>
-            <form onSubmit={handleOrderSubmit} className="space-y-4 py-4">
-              <PricingSummary iconCount={addedIcons.length} />
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  value={orderForm.name}
-                  onChange={(e) =>
-                    setOrderForm((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={orderForm.email}
-                  onChange={(e) =>
-                  {
-
-                    setOrderForm((prev) => ({ ...prev, email: e.target.value }))
-                  }
-                  }
-                  placeholder="john@example.com"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">
-                  Phone Number ( For Shipping Purpose )
-                </Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={orderForm.phone}
-                  onChange={(e) =>
-                    setOrderForm((prev) => ({ ...prev, phone: e.target.value }))
-                  }
-                  placeholder="+1 (555) 000-0000"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Shipping Address</Label>
-                <Input
-                  id="address"
-                  value={orderForm.address}
-                  onChange={(e) =>
-                    setOrderForm((prev) => ({
-                      ...prev,
-                      address: e.target.value,
-                    }))
-                  }
-                  placeholder="123 Main St, City, Country"
-                  required
-                />
-              </div>
-              <DialogFooter className="pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsOrderDialogOpen(false)}
-                  disabled={isSubmittingOrder}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isSubmittingOrder}>
-                  {isSubmittingOrder ? "Processing..." : "Continue to Etsy"}
-                </Button>
-              </DialogFooter>
-            </form>
-          </DialogContent>
-        </Dialog>
 
         <Dialog open={isColorGuideOpen} onOpenChange={setIsColorGuideOpen}>
           <DialogContent className="max-h-[92vh] overflow-y-auto border-[#ead7c7] bg-[#fffaf4] p-0 sm:max-w-3xl">
