@@ -100,32 +100,7 @@ const pacifico = Pacifico({
 const sniglet = Sniglet({ subsets: ["latin"], weight: "400", display: "swap" });
 
 // Purchase notification data (defined outside component to avoid re-renders)
-const PURCHASE_LOCATIONS = [
-  { city: "London", country: "UK" },
-  { city: "Manchester", country: "UK" },
-  { city: "Birmingham", country: "UK" },
-  { city: "Leeds", country: "UK" },
-  { city: "Bristol", country: "UK" },
-  { city: "Liverpool", country: "UK" },
-  { city: "Nottingham", country: "UK" },
-  { city: "Sheffield", country: "UK" },
-  { city: "Cardiff", country: "UK" },
-  { city: "Glasgow", country: "UK" },
-  { city: "Edinburgh", country: "UK" },
-  { city: "Brighton", country: "UK" },
-];
 
-const TIME_AGO_OPTIONS = [
-  "Just now",
-  "1 minute ago",
-  "2 minutes ago",
-  "3 minutes ago",
-  "5 minutes ago",
-  "8 minutes ago",
-  "10 minutes ago",
-  "12 minutes ago",
-  "15 minutes ago",
-];
 
 const ICONS = [
   // Classic Flowers
@@ -350,10 +325,6 @@ export default function ProductClient({ product }: ProductClientProps) {
   const didTrackCustomizeProduct = useRef(false);
   const { addToast } = useToaster();
 
-  // Social proof state (fixed initial values instead of random)
-  const [boughtIn24h, setBoughtIn24h] = useState(105);
-  const [customizingNow, setCustomizingNow] = useState(87);
-
   // Reviews data with new images
   const reviews = [
     {
@@ -438,66 +409,6 @@ export default function ProductClient({ product }: ProductClientProps) {
       date: "1 week ago",
     },
   ];
-
-  // Show purchase notification toast periodically
-  useEffect(() => {
-    const showPurchaseNotification = () => {
-      const location =
-        PURCHASE_LOCATIONS[
-          Math.floor(Math.random() * PURCHASE_LOCATIONS.length)
-        ];
-      const timeAgo =
-        TIME_AGO_OPTIONS[Math.floor(Math.random() * TIME_AGO_OPTIONS.length)];
-
-      addToast({
-        variant: "purchase",
-        message: `Someone from ${location.city}, ${location.country} purchased ${timeAgo}`,
-        duration: 6000,
-      });
-    };
-
-    // Show first notification after 3 seconds
-    const firstTimer = setTimeout(showPurchaseNotification, 3000);
-
-    // Show subsequent notifications every 15-25 seconds
-    const intervalTimer = setInterval(
-      () => {
-        showPurchaseNotification();
-      },
-      Math.random() * 10000 + 15000,
-    );
-
-    return () => {
-      clearTimeout(firstTimer);
-      clearInterval(intervalTimer);
-    };
-  }, [addToast]);
-
-  // Animate bought count (slower, more realistic)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBoughtIn24h((prev) => {
-        // Only increase occasionally (70% chance of staying the same or +1, 30% chance of -1)
-        const change = Math.random() > 0.3 ? (Math.random() > 0.5 ? 1 : 0) : -1;
-        return Math.max(50, Math.min(150, prev + change));
-      });
-    }, 15000); // Update every 15 seconds instead of 3
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Animate customizing count (slower, more realistic)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCustomizingNow((prev) => {
-        // Small fluctuations, mostly staying stable
-        const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or +1
-        return Math.max(40, Math.min(120, prev + change));
-      });
-    }, 20000); // Update every 20 seconds instead of 4
-
-    return () => clearInterval(interval);
-  }, []);
 
   // Convert Sanity variants to color format
   const colors =
@@ -827,17 +738,9 @@ export default function ProductClient({ product }: ProductClientProps) {
             >
             <Card className="w-full overflow-hidden rounded-[1.75rem] border border-[#ead7c7] bg-white/90 shadow-[0_18px_55px_rgba(124,82,58,0.1)]">
               <CardHeader className="px-4 pb-3 sm:px-6 sm:pb-4">
-                {/* In demand text above color selection */}
-                <div className="mb-2 sm:mb-3">
-                  <p className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#a84e2b] sm:text-sm md:text-base">
-                    <span className="size-2 rounded-full bg-[#cf6f3f] shadow-[0_0_0_6px_rgba(207,111,63,0.12)]" />
-                    In demand.{" "}
-                    <span className="inline-block min-w-[2ch]">
-                      {boughtIn24h}
-                    </span>{" "}
-                    people bought this in the last 24 hours.
-                  </p>
-                </div>
+                <h1 className="mb-3 text-2xl font-semibold leading-tight text-[#251611] sm:text-3xl">
+                  {product.title}
+                </h1>
                 <CardTitle className="text-lg font-black text-[#251611] sm:text-xl">
                   Choose Your Color
                 </CardTitle>
@@ -910,13 +813,9 @@ export default function ProductClient({ product }: ProductClientProps) {
                           <Type className="w-4 h-4 sm:w-5 sm:h-5" />
                         </div>
                         <div className="text-left min-w-0 flex-1">
-                          {/* Customizing count above Add Text */}
                           <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#a84e2b] sm:text-sm md:text-base">
                             <span className="size-2 rounded-full bg-[#cf6f3f] shadow-[0_0_0_6px_rgba(207,111,63,0.12)]" />
-                            <span className="inline-block min-w-[2ch]">
-                              {customizingNow}
-                            </span>{" "}
-                            shoppers are customizing this right now.
+                            Preview your name, colors, and placement.
                           </div>
                           <div className="mt-0.5 text-[10px] text-[#7a6258] sm:mt-1 sm:text-xs">
                             Name personalization included in the base price

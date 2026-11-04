@@ -11,6 +11,7 @@ import TimerClock from "../TimerClock";
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Products", href: "/products" },
+  { name: "Name sweaters", href: "/category/sweaters" },
   { name: "Journal", href: "/blog" },
   { name: "About", href: "/about" },
 ];
