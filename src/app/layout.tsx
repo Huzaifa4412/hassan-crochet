@@ -7,6 +7,7 @@ import { defaultDescription, siteName, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
 import FacebookPixel from "@/components/FacebookPixel";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import Header from "@/components/home/navbar";
 
 const geistSans = Geist({
@@ -88,6 +89,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <FacebookPixel />
+        <GoogleAnalytics />
         <Providers>
           <Header />
           <main className="min-h-[calc(100vh-4rem)]">

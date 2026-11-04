@@ -69,7 +69,7 @@ export function EnhancedCTA({ className }: EnhancedCTAProps) {
           <div className="flex flex-wrap items-center justify-center gap-6 pt-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
             <div className="flex items-center gap-2 text-white/80 text-sm">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span>Free Shipping on Orders $50+</span>
+              <span>Free Shipping on All Orders</span>
             </div>
             <div className="flex items-center gap-2 text-white/80 text-sm">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" style={{ animationDelay: '0.5s' }} />

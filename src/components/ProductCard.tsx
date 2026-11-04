@@ -9,6 +9,7 @@ import type { Product } from "@/sanity/queries";
 import { cn } from "@/lib/utils";
 import * as pixel from "@/lib/fpixel";
 import { getProductEngagementPayload } from "@/lib/meta-events";
+import { PRODUCT_BASE_PRICE, SWEATER_ONLY_PRICE, SWEATER_ONLY_SIZE, ICON_PRICE, formatPrice } from "@/lib/pricing";
 
 interface ProductCardProps {
   product: Product;
@@ -155,6 +156,12 @@ export function ProductCard({
           )}
 
           <div className="mt-auto flex flex-col gap-3 pt-5">
+            <div>
+              <p className="text-xl font-bold text-[#2f211b]">From {formatPrice(SWEATER_ONLY_PRICE)} <span className="text-xs font-medium">USD</span></p>
+              <p className="mt-1 text-xs text-[#7b665c]">Sweater only · {SWEATER_ONLY_SIZE} · No name or icons</p>
+              <p className="mt-2 text-sm font-semibold text-[#2f211b]">With name: {formatPrice(PRODUCT_BASE_PRICE)} USD</p>
+              <p className="mt-1 text-xs text-[#7b665c]">Icons +{formatPrice(ICON_PRICE)} each · Free shipping</p>
+            </div>
             <Link
               href={`/products/${product.slug.current}`}
               onClick={() => trackCustomizeClick("product_card_customize_cta")}
@@ -271,6 +278,10 @@ export function ProductCardCompact({ product, className }: ProductCardCompactPro
               <Heart className={cn("h-3.5 w-3.5", isFavorite && "fill-current text-[#bf6036]")} />
             </button>
           </div>
+          <p className="mt-2 text-sm font-bold text-[#2f211b]">From {formatPrice(SWEATER_ONLY_PRICE)} USD</p>
+          <p className="mt-1 text-xs text-[#7b665c]">Sweater only · {SWEATER_ONLY_SIZE} · No name or icons</p>
+          <p className="mt-2 text-xs font-semibold text-[#2f211b]">With name: {formatPrice(PRODUCT_BASE_PRICE)} USD</p>
+          <p className="mt-1 text-xs text-[#7b665c]">Icons +{formatPrice(ICON_PRICE)} each · Free shipping</p>
         </div>
       </div>
     </motion.article>

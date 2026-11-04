@@ -1,5 +1,5 @@
 import { searchProducts } from "@/sanity/queries"
-import { ProductCard } from "@/components/home/ProductCard"
+import { ProductCard } from "@/components/ProductCard"
 import Link from "next/link"
 
 interface SearchResultsProps {
