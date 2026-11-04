@@ -1,5 +1,6 @@
 import { fetchSanity, fetchSanityArray } from "./lib/fetch";
 import { applyVariantOverrides } from "@/lib/product-variants";
+import { catalogQueryParams } from "@/lib/catalog-routes";
 
 // ============================================================================
 // PRODUCT TYPES & QUERIES
@@ -88,17 +89,17 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 
 // Get all products (for static generation)
 export async function getAllProducts(): Promise<Pick<Product, "title" | "slug">[]> {
-  const query = `*[_type == "product" && defined(slug.current) && slug.current != "" && !(_id in path("drafts.**"))]{
+  const query = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && defined(slug.current) && slug.current != "" && !(_id in path("drafts.**"))]{
     title,
     slug
   }`;
 
-  return fetchSanityArray(query, undefined, { throwOnError: true });
+  return fetchSanityArray(query, catalogQueryParams, { throwOnError: true });
 }
 
 // Get featured products
 export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
-  const query = `*[_type == "product" && featured == true && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const query = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && featured == true && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
@@ -120,13 +121,13 @@ export async function getFeaturedProducts(limit = 4): Promise<Product[]> {
     slug
   }[0...${limit}]`;
 
-  const results = await fetchSanityArray<Product>(query);
+  const results = await fetchSanityArray<Product>(query, catalogQueryParams);
   return results.map(applyVariantOverrides);
 }
 
 // Get new products
 export async function getNewProducts(limit = 8): Promise<Product[]> {
-  const query = `*[_type == "product" && isNew == true && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const query = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && isNew == true && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
@@ -148,13 +149,13 @@ export async function getNewProducts(limit = 8): Promise<Product[]> {
     slug
   }[0...${limit}]`;
 
-  const results = await fetchSanityArray<Product>(query);
+  const results = await fetchSanityArray<Product>(query, catalogQueryParams);
   return results.map(applyVariantOverrides);
 }
 
 // Get all products with basic info
 export async function getProducts(limit: number | null = 12, offset = 0): Promise<Product[]> {
-  const query = `*[_type == "product" && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const query = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
@@ -177,13 +178,13 @@ export async function getProducts(limit: number | null = 12, offset = 0): Promis
     slug
   }${limit === null ? "" : `[${offset}...${offset + limit}]`}`;
 
-  const results = await fetchSanityArray<Product>(query, undefined, { throwOnError: true });
+  const results = await fetchSanityArray<Product>(query, catalogQueryParams, { throwOnError: true });
   return results.map(applyVariantOverrides);
 }
 
 // Get products by category
 export async function getProductsByCategory(categorySlug: string, limit: number | null = 12): Promise<Product[]> {
-  const query = `*[_type == "product" && category->slug.current == $categorySlug && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const query = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && category->slug.current == $categorySlug && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
@@ -205,13 +206,13 @@ export async function getProductsByCategory(categorySlug: string, limit: number 
     slug
   }${limit === null ? "" : `[0...${limit}]`}`;
 
-  const results = await fetchSanityArray<Product>(query, { categorySlug }, { throwOnError: true });
+  const results = await fetchSanityArray<Product>(query, { ...catalogQueryParams, categorySlug }, { throwOnError: true });
   return results.map(applyVariantOverrides);
 }
 
 // Get products by collection
 export async function getProductsByCollection(collectionSlug: string, limit = 12): Promise<Product[]> {
-  const query = `*[_type == "product" && $collectionSlug in collections[].slug.current && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const query = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && $collectionSlug in collections[].slug.current && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
@@ -233,7 +234,7 @@ export async function getProductsByCollection(collectionSlug: string, limit = 12
     slug
   }[0...${limit}]`;
 
-  const results = await fetchSanityArray<Product>(query, { collectionSlug });
+  const results = await fetchSanityArray<Product>(query, { ...catalogQueryParams, collectionSlug });
   return results.map(applyVariantOverrides);
 }
 
@@ -255,7 +256,7 @@ export interface Category {
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const query = `*[_type == "category" && isActive == true && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const query = `*[_type == "category" && isActive == true && !(_id in path("drafts.**")) && count(*[_type == "product" && category._ref == ^._id && defined(slug.current) && slug.current != "" && !(slug.current in $redirectedProductSlugs) && inStock != false && !(_id in path("drafts.**"))]) > 0] | order(sortOrder asc){
     _id,
     title,
     slug,
@@ -266,7 +267,7 @@ export async function getCategories(): Promise<Category[]> {
     isActive
   }`;
 
-  return fetchSanityArray<Category>(query);
+  return fetchSanityArray<Category>(query, catalogQueryParams, { throwOnError: true });
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
@@ -355,7 +356,7 @@ export async function getCollectionBySlug(slug: string): Promise<Collection | nu
 
   const result = await fetchSanity<Collection>(query, { slug });
   if (result && result.products) {
-    result.products = result.products.map(applyVariantOverrides);
+    result.products = result.products.filter((product) => !catalogQueryParams.redirectedProductSlugs.includes(product.slug.current)).map(applyVariantOverrides);
   }
   return result;
 }
@@ -575,7 +576,7 @@ export async function getNavigationMenu(menuType: NavigationMenu["menuType"]): P
 // ============================================================================
 
 export async function searchProducts(searchTerm: string, limit = 12): Promise<Product[]> {
-  const searchQuery = `*[_type == "product" && (title match $searchTerm || description match $searchTerm) && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
+  const searchQuery = `*[_type == "product" && !(slug.current in $redirectedProductSlugs) && (title match $searchTerm || description match $searchTerm) && inStock != false && !(_id in path("drafts.**"))] | order(sortOrder asc){
     _id,
     title,
     shortDescription,
@@ -597,7 +598,7 @@ export async function searchProducts(searchTerm: string, limit = 12): Promise<Pr
     slug
   }[0...${limit}]`;
 
-  const results = await fetchSanityArray<Product>(searchQuery, { searchTerm: `*${searchTerm}*` });
+  const results = await fetchSanityArray<Product>(searchQuery, { ...catalogQueryParams, searchTerm: `*${searchTerm}*` });
   return results.map(applyVariantOverrides);
 }
 

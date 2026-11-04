@@ -57,7 +57,7 @@ const HeroBanner = () => {
           >
             <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
               <Link
-                href="/products"
+                href="/category/sweaters"
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#bf6036] px-7 py-3 text-sm font-semibold text-white shadow-[0_18px_38px_rgba(191,96,54,0.28)] transition-colors hover:bg-[#a94f2c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#bf6036] focus-visible:ring-offset-2"
               >
                 Shop personalized sweaters

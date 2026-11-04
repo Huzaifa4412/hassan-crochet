@@ -1,10 +1,16 @@
 import type { NextConfig } from "next";
+import { canonicalSweaterSlug, redirectedProductSlugs } from "./src/lib/catalog-routes";
 
 const nextConfig: NextConfig = {
   // Allow independent local previews without overwriting an active build.
   distDir: process.env.KNITTY_BUILD_DIR || ".next",
   async redirects() {
     return [
+      ...redirectedProductSlugs.map((slug) => ({
+        source: `/products/${slug}`,
+        destination: `https://www.knittypetit.shop/products/${canonicalSweaterSlug}`,
+        permanent: true,
+      })),
       {
         source: "/:path*",
         has: [{ type: "host", value: "knittypetit.shop" }],

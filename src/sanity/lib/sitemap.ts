@@ -1,4 +1,5 @@
 import { client } from "./client";
+import { catalogQueryParams } from "@/lib/catalog-routes";
 
 export interface SitemapDocument {
   slug: string;
@@ -16,11 +17,11 @@ interface SitemapContent {
 export async function getSitemapContent(): Promise<SitemapContent> {
   const content = await client.fetch<SitemapContent>(
     `{
-      "products": *[_type == "product" && defined(slug.current) && slug.current != "" && !(_id in path("drafts.**"))]{
+      "products": *[_type == "product" && defined(slug.current) && slug.current != "" && !(slug.current in $redirectedProductSlugs) && !(_id in path("drafts.**"))]{
         "slug": slug.current,
         _updatedAt
       },
-      "categories": *[_type == "category" && isActive == true && defined(slug.current) && slug.current != "" && !(_id in path("drafts.**"))]{
+      "categories": *[_type == "category" && isActive == true && defined(slug.current) && slug.current != "" && !(_id in path("drafts.**")) && count(*[_type == "product" && category._ref == ^._id && defined(slug.current) && slug.current != "" && !(slug.current in $redirectedProductSlugs) && inStock != false && !(_id in path("drafts.**"))]) > 0]{
         "slug": slug.current,
         _updatedAt
       },
@@ -29,7 +30,7 @@ export async function getSitemapContent(): Promise<SitemapContent> {
         _updatedAt
       }
     }`,
-    {},
+    catalogQueryParams,
     { next: { revalidate: 3600 } },
   );
 
