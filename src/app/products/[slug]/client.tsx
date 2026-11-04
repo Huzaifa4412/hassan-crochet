@@ -35,7 +35,7 @@ import CustomizationCanvas, {
 } from "@/components/CustomizationCanvas";
 import { Product } from "@/sanity/queries";
 import { PricingSummary } from "@/components/PricingSummary";
-import { PRODUCT_BASE_PRICE, SWEATER_ONLY_PRICE, SWEATER_ONLY_SIZE, ICON_PRICE, formatPrice, getCustomizationPrice } from "@/lib/pricing";
+import { PRODUCT_BASE_PRICE, ICON_PRICE, formatPrice, getCustomizationPrice } from "@/lib/pricing";
 import { useToaster } from "@/components/ui/toast";
 import * as pixel from "@/lib/fpixel";
 import {
@@ -729,11 +729,6 @@ export default function ProductClient({ product }: ProductClientProps) {
   };
 
   const badges = getBadgeLabels(product.badges);
-  const trustHighlights = [
-    { icon: Shield, label: "Secure Etsy checkout" },
-    { icon: Truck, label: "Free shipping" },
-    { icon: Heart, label: "Handmade keepsake" },
-  ];
 
   return (
     <div className="min-h-screen bg-[#fffaf4] text-[#251611]">
@@ -758,79 +753,6 @@ export default function ProductClient({ product }: ProductClientProps) {
             {product.title}
           </span>
         </nav>
-
-        {/* Product Header */}
-        <motion.header
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-7 overflow-hidden rounded-[2rem] border border-[#ead7c7] bg-white/75 shadow-[0_24px_80px_rgba(124,82,58,0.12)] backdrop-blur sm:mb-10"
-        >
-          <div className="grid gap-6 p-5 sm:p-7 lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                {badges.primary && (
-                  <Badge className="rounded-full border border-[#e6c6b4] bg-[#fff1e6] px-3 py-1 text-xs font-semibold text-[#a84e2b] hover:bg-[#fff1e6]">
-                    {badges.primary}
-                  </Badge>
-                )}
-                {badges.secondary && (
-                  <Badge className="rounded-full border border-[#ead7c7] bg-white px-3 py-1 text-xs font-semibold text-[#6f574d] hover:bg-white">
-                    {badges.secondary}
-                  </Badge>
-                )}
-                {product.category && (
-                  <Link href={`/category/${product.category.slug.current}`}>
-                  <Badge className="rounded-full border border-[#ead7c7] bg-[#f7efe8] px-3 py-1 text-xs font-semibold text-[#6f574d] hover:bg-[#f7efe8]">
-                    {product.category.title}
-                  </Badge>
-                  </Link>
-                )}
-                {product.inStock === false && (
-                  <Badge variant="destructive" className="rounded-full px-3 py-1 text-xs">
-                    Out of Stock
-                  </Badge>
-                )}
-              </div>
-              <div className="space-y-3">
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#bf6036]">
-                  Personalized crochet studio
-                </p>
-                <h1 className="max-w-3xl text-3xl font-black leading-[0.95] tracking-tight text-[#24130f] sm:text-5xl lg:text-6xl">
-                  {product.title}
-                </h1>
-                <div>
-                  <p className="text-3xl font-bold text-[#a84e2b]">From {formatPrice(SWEATER_ONLY_PRICE)} <span className="text-sm font-semibold">USD</span></p>
-                  <p className="mt-2 text-sm text-[#735f56]">{formatPrice(SWEATER_ONLY_PRICE)} is for the sweater only in size {SWEATER_ONLY_SIZE}, without a name or icons.</p>
-                  <p className="mt-3 text-lg font-bold text-[#251611]">Personalized sweater with name: {formatPrice(PRODUCT_BASE_PRICE)} USD</p>
-                  <p className="mt-1 text-sm text-[#735f56]">Add icons for {formatPrice(ICON_PRICE)} each. Free shipping on all orders.</p>
-                </div>
-                {product.shortDescription && (
-                  <p className="max-w-2xl text-base leading-7 text-[#735f56] sm:text-lg">
-                    {product.shortDescription}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              {trustHighlights.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={item.label}
-                    className="flex items-center gap-3 rounded-2xl border border-[#ead7c7] bg-[#fffaf4] px-4 py-3"
-                  >
-                    <span className="grid size-10 place-items-center rounded-full bg-[#cf6f3f] text-white shadow-[0_12px_30px_rgba(207,111,63,0.25)]">
-                      <Icon className="size-4" />
-                    </span>
-                    <span className="text-sm font-semibold text-[#4d3b34]">
-                      {item.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.header>
 
         {/* Main Content - Flex container with sticky */}
         <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
