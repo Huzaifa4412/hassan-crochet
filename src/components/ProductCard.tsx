@@ -39,7 +39,7 @@ export function ProductCard({
     pixel.event("AddToWishlist", getProductEngagementPayload(product, "product_card"));
   };
   const trackEtsyClick = () => {
-    pixel.event("InitiateCheckout", {
+    pixel.customEvent("EtsyListingClick", {
       ...getProductEngagementPayload(product, "product_card_etsy_link"),
       destination: "etsy",
     });

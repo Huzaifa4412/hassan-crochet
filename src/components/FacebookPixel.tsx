@@ -1,24 +1,20 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
 import { useEffect, Suspense, useRef } from "react";
 import * as pixel from "@/lib/fpixel";
 
-// Inner component that reads searchParams (must be wrapped in Suspense)
+// Track route changes without duplicating the initial bootstrap PageView.
 function PixelPageTracker() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const didTrackInitialPageview = useRef(false);
+  const lastPath = useRef(pathname);
 
   useEffect(() => {
-    if (!didTrackInitialPageview.current) {
-      didTrackInitialPageview.current = true;
-      return;
-    }
-
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
     pixel.pageview();
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   return null;
 }
@@ -26,7 +22,7 @@ function PixelPageTracker() {
 const FacebookPixel = () => {
   const pixelId = pixel.FB_PIXEL_ID;
 
-  if (!pixelId) return null;
+  if (!pixelId || process.env.NEXT_PUBLIC_TRACKING_ENABLED === "false") return null;
 
   return (
     <>
@@ -34,6 +30,7 @@ const FacebookPixel = () => {
       <Script
         id="fb-pixel-init"
         strategy="afterInteractive"
+        onReady={pixel.flushQueuedEvents}
         dangerouslySetInnerHTML={{
           __html: `
             !function(f,b,e,v,n,t,s)

@@ -5,6 +5,7 @@ import { getAllProducts, getProductBySlug } from "@/sanity/queries";
 import ProductClient from "./client";
 import { absoluteUrl, buildMetadata, serializeJsonLd, truncateDescription } from "@/lib/seo";
 import { canonicalSweaterSlug } from "@/lib/catalog-routes";
+import { PRODUCT_BASE_PRICE, PRODUCT_CURRENCY } from "@/lib/pricing";
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
@@ -49,8 +50,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const productImage =
     product.mainImageUrl || product.variants?.[0]?.imageUrl || undefined;
   const productUrl = absoluteUrl(`/products/${product.slug.current}`);
-  // Emit page/breadcrumb markup until verified visible pricing is available.
-  // A partial Offer without a price causes Google product rich-result errors.
+  // The named-sweater price matches the customizer; icons are optional extras.
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemPage",
@@ -61,6 +61,24 @@ export default async function ProductPage({ params }: ProductPageProps) {
     primaryImageOfPage: productImage ? { "@type": "ImageObject", url: productImage } : undefined,
     url: productUrl,
     relatedLink: product.etsyLink,
+    mainEntity: {
+      "@type": "Product",
+      "@id": `${productUrl}#product`,
+      name: product.title,
+      description: truncateDescription(product.shortDescription || product.description),
+      image: productImage ? [productImage] : undefined,
+      sku: product._id,
+      brand: { "@type": "Brand", name: "Knitty Petit" },
+      offers: {
+        "@type": "Offer",
+        name: "Personalized sweater with name; optional icons cost extra",
+        url: productUrl,
+        price: PRODUCT_BASE_PRICE,
+        priceCurrency: PRODUCT_CURRENCY,
+        availability: product.inStock === false || !product.etsyLink ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+        seller: { "@type": "Organization", name: "Knitty Petit" },
+      },
+    },
   };
 
   const breadcrumbJsonLd = {

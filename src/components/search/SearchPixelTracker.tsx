@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import * as pixel from "@/lib/fpixel"
+import * as google from "@/lib/gtag"
 import { getSearchPixelPayload } from "@/lib/meta-events"
 
 interface SearchPixelTrackerProps {
@@ -20,6 +21,7 @@ export function SearchPixelTracker({ query }: SearchPixelTrackerProps) {
 
     lastTrackedQuery.current = trimmedQuery
     pixel.event("Search", getSearchPixelPayload(trimmedQuery, "search_page"))
+    google.event("view_search_results", { search_term: trimmedQuery.slice(0, 100) })
   }, [query])
 
   return null

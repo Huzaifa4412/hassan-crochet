@@ -38,6 +38,9 @@ import { PricingSummary } from "@/components/PricingSummary";
 import { PRODUCT_BASE_PRICE, ICON_PRICE, formatPrice, getCustomizationPrice } from "@/lib/pricing";
 import { useToaster } from "@/components/ui/toast";
 import * as pixel from "@/lib/fpixel";
+import { addCartItem } from "@/lib/cart-store";
+import { trackShoppingEvent } from "@/lib/shopping-events";
+import { useRouter } from "next/navigation";
 import {
   getCustomizationPixelPayload,
   getProductPixelPayload,
@@ -432,6 +435,8 @@ export default function ProductClient({ product }: ProductClientProps) {
   const [isMultiColor, setIsMultiColor] = useState(false);
   const [addedIcons, setAddedIcons] = useState<string[]>([]);
   const productTotal = getCustomizationPrice(addedIcons.length);
+  const router = useRouter();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [addedTexts, setAddedTexts] = useState<
     Array<{ text: string; color: string; font: string }>
   >([]);
@@ -472,8 +477,12 @@ export default function ProductClient({ product }: ProductClientProps) {
     if (didTrackViewContent.current) return;
 
     didTrackViewContent.current = true;
-    pixel.event("ViewContent", productPixelPayload);
-  }, [productPixelPayload]);
+    trackShoppingEvent("view_item", [{
+      id: product._id, productId: product._id, slug: product.slug.current,
+      title: product.title, category: product.category?.title || "Sweaters",
+      color: "", iconCount: 0, details: "", design: "", quantity: 1,
+    }]);
+  }, [product]);
 
   const trackCustomizeProduct = (
     customizationType: string,
@@ -489,13 +498,6 @@ export default function ProductClient({ product }: ProductClientProps) {
       ...details,
     });
   };
-
-  // Update canvas base image when color changes
-  useEffect(() => {
-    if (canvasRef.current && selectedColor && selectedColor.imageUrl) {
-      canvasRef.current.updateBaseImage(selectedColor.imageUrl);
-    }
-  }, [selectedColor]);
 
   // Handlers
   const handleAddText = () => {
@@ -620,23 +622,27 @@ export default function ProductClient({ product }: ProductClientProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleEtsyCheckout = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!product.etsyLink) {
-      e.preventDefault();
-      addToast({
-        variant: "default",
-        message: "Etsy link for this product is not available. Please contact us.",
-        duration: 5000,
-      });
+  const handleAddToCart = () => {
+    if (isAddingToCart) return;
+    if (customText.trim()) {
+      addToast({ message: "Add your typed name to the preview before saving this design." });
       return;
     }
-
-    pixel.event("InitiateCheckout", {
-      ...productPixelPayload,
-      ...customizationPixelPayload,
-      destination: "etsy",
-      checkout_source: "product_detail_order_cta",
-    });
+    setIsAddingToCart(true);
+    try {
+      const snapshot = canvasRef.current?.snapshot();
+      if (!snapshot) throw new Error("Preview unavailable");
+      addCartItem({
+        productId: product._id, slug: product.slug.current, title: product.title,
+        category: product.category?.title || "Sweaters", color: selectedColor?.name || "Choose on Etsy",
+        iconCount: snapshot.iconCount, preview: snapshot.preview, design: snapshot.design,
+        details: `Product: ${product.title}\nSweater color: ${selectedColor?.name || "Choose on Etsy"}\n${snapshot.details || "No lettering or icons added."}\nName personalization included. Icons: ${snapshot.iconCount}.\nChoose and confirm size on Etsy. See saved preview for placement.`,
+      });
+      addToast({ variant: "success", message: "Your design was added to the cart." });
+      router.push("/cart");
+    } catch {
+      addToast({ message: "Your design couldn’t be saved. Wait for the preview to load, allow browser storage, and keep the cart under 12 designs and 20 of each design.", duration: 7000 });
+    } finally { setIsAddingToCart(false); }
   };
 
   const badges = getBadgeLabels(product.badges);
@@ -672,7 +678,7 @@ export default function ProductClient({ product }: ProductClientProps) {
             initial={false}
             whileHover={{ y: -4 }}
             transition={{ type: "spring", stiffness: 260, damping: 24 }}
-            className="sticky top-16 z-20 order-first self-start lg:top-24"
+            className="z-20 order-first self-start lg:sticky lg:top-40"
           >
             <Card className="overflow-hidden rounded-[2rem] border border-[#ead7c7] bg-white shadow-[0_24px_70px_rgba(124,82,58,0.16)]">
               <CardContent className="p-0">
@@ -1209,18 +1215,17 @@ export default function ProductClient({ product }: ProductClientProps) {
                   </div>
                 </div>
                 <Button
-                  asChild
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart || product.inStock === false || !product.etsyLink}
                   className="h-11 w-full rounded-full bg-[#cf6f3f] text-sm font-bold text-white shadow-xl hover:bg-[#dd7d4e] sm:h-12 sm:text-base"
                 >
-                  <a href={product.etsyLink || undefined} onClick={handleEtsyCheckout}>
                     <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2" />
-                    Order on Etsy
+                    {product.inStock === false ? "Out of stock" : !product.etsyLink ? "Listing unavailable" : isAddingToCart ? "Saving your design…" : "Add to cart"}
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-1.5 sm:ml-2" />
-                  </a>
                 </Button>
                 <p className="text-center text-xs leading-relaxed text-[#f5d6bd] sm:text-base">
                   Product total: {formatPrice(productTotal)} USD. Name included;
-                  icons add {formatPrice(ICON_PRICE)} each. Free shipping. Complete your order securely on Etsy.
+                  icons add {formatPrice(ICON_PRICE)} each. Free shipping. Review your saved design in the cart, then complete payment on Etsy.
                 </p>
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-1 sm:pt-2">
                   <div className="text-center">

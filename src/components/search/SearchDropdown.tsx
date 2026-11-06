@@ -12,7 +12,6 @@ import type { Product } from "@/sanity/queries"
 import * as pixel from "@/lib/fpixel"
 import {
   getProductEngagementPayload,
-  getSearchPixelPayload,
 } from "@/lib/meta-events"
 
 interface SearchDropdownProps {
@@ -56,10 +55,6 @@ export function SearchDropdown({ placeholder = "Search products...", className }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (query.trim()) {
-      pixel.event(
-        "Search",
-        getSearchPixelPayload(query, "search_dropdown_submit", results.length),
-      )
       router.push(`/search?q=${encodeURIComponent(query.trim())}`)
       setIsOpen(false)
       inputRef?.blur()
@@ -182,14 +177,6 @@ export function SearchDropdown({ placeholder = "Search products...", className }
                     <Link
                       href={`/search?q=${encodeURIComponent(query.trim())}`}
                       onClick={() => {
-                        pixel.event(
-                          "Search",
-                          getSearchPixelPayload(
-                            query,
-                            "search_dropdown_view_all",
-                            results.length,
-                          ),
-                        )
                         setIsOpen(false)
                         setQuery("")
                         setResults([])

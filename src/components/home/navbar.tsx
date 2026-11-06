@@ -6,7 +6,8 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, Search, UserRound, X } from "lucide-react";
 import { SearchDropdown } from "@/components/search/SearchDropdown";
-import TimerClock from "../TimerClock";
+import { CartLink } from "@/components/cart/CartLink";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -24,9 +25,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-50 border-b border-[#ead7c7]/80 bg-[#fffaf4]/88 shadow-[0_10px_40px_rgba(86,52,32,0.06)] backdrop-blur-xl">
         <div className="flex min-h-10 items-center justify-center gap-3 bg-[#b85e37]/70 px-4 py-2 text-center text-sm font-medium text-white">
-          <span>Up to 40% off custom keepsakes</span>
-          <span className="hidden h-1 w-1 rounded-full bg-white/55 sm:block" />
-          <TimerClock />
+          <span>Personalized name sweaters · Free shipping</span>
         </div>
 
         <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -51,7 +50,7 @@ export default function Header() {
                 className="h-10 w-10 object-contain"
               />
             </span>
-            <span className="leading-none">
+            <span className="hidden leading-none sm:block">
               <span className="block text-sm font-semibold uppercase text-[#281b16]">
                 Knitty Petit
               </span>
@@ -74,55 +73,39 @@ export default function Header() {
           </div>
 
           <div className="flex min-w-0 items-center justify-end gap-2">
-            <AnimatePresence mode="wait">
-              {isSearchOpen ? (
-                <motion.div
-                  key="search"
-                  initial={{ opacity: 0, width: 120 }}
-                  animate={{ opacity: 1, width: 330 }}
-                  exit={{ opacity: 0, width: 120 }}
-                  transition={{ duration: 0.25 }}
-                  className="hidden items-center gap-2 overflow-hidden md:flex"
+            <CartLink />
+            <div className="flex items-center gap-2">
+              <motion.button
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsSearchOpen(true)}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#e3cdbd] bg-white text-[#31211b] shadow-sm transition-colors hover:bg-[#fff1e6]"
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" />
+              </motion.button>
+              <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  href="/studio"
+                  className="hidden h-11 items-center gap-2 rounded-full bg-[#31211b] px-4 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(49,33,27,0.16)] transition-colors hover:bg-[#4a3329] sm:inline-flex"
                 >
-                  <SearchDropdown className="w-full shadow-sm" />
-                  <button
-                    onClick={() => setIsSearchOpen(false)}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#7c665b] hover:bg-[#fff1e6]"
-                    aria-label="Close search"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="actions"
-                  initial={false}
-                  className="flex items-center gap-2"
-                >
-                  <motion.button
-                    whileHover={{ y: -1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsSearchOpen(true)}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#e3cdbd] bg-white text-[#31211b] shadow-sm transition-colors hover:bg-[#fff1e6]"
-                    aria-label="Search"
-                  >
-                    <Search className="h-5 w-5" />
-                  </motion.button>
-                  <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.95 }}>
-                    <Link
-                      href="/studio"
-                      className="hidden h-11 items-center gap-2 rounded-full bg-[#31211b] px-4 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(49,33,27,0.16)] transition-colors hover:bg-[#4a3329] sm:inline-flex"
-                    >
-                      <UserRound className="h-4 w-4" />
-                      Studio
-                    </Link>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  <UserRound className="h-4 w-4" />
+                  Studio
+                </Link>
+              </motion.div>
+            </div>
           </div>
         </nav>
       </header>
+
+      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <DialogContent className="top-[25%] overflow-visible border-[#ead7c7] bg-[#fffaf4] sm:max-w-lg">
+          <DialogHeader><DialogTitle>Find your keepsake</DialogTitle><DialogDescription>Search personalized sweaters and handmade gifts.</DialogDescription></DialogHeader>
+          <div onClick={(event) => { if ((event.target as HTMLElement).closest("a")) setIsSearchOpen(false); }} onSubmit={() => setIsSearchOpen(false)}>
+            <SearchDropdown className="w-full" />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <AnimatePresence>
         {isMenuOpen && (

@@ -7,6 +7,7 @@ export interface CustomizationCanvasRef {
     addText: (text: string, font: string, color: string) => void;
     addIcon: (url: string, name: string) => void;
     download: () => void;
+    snapshot: () => { preview: string; design: string; details: string; iconCount: number };
     updateBaseImage: (url: string) => void;
     updateSelectedTextColor: (color: string, font?: string) => void;
     getSelectedObjectType: () => 'text' | 'group' | 'image' | null;
@@ -31,6 +32,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
         const containerRef = useRef<HTMLDivElement>(null);
         const [isCanvasReady, setIsCanvasReady] = useState(false);
         const fabricCanvasRef = useRef<fabric.Canvas | null>(null);
+        const pendingImages = useRef(0);
         const onSelectionChangeRef = useRef(onSelectionChange);
         const onObjectRemovedRef = useRef(onObjectRemoved);
         const onIconsChangeRef = useRef(onIconsChange);
@@ -171,9 +173,11 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
         // Load initial background image
         useEffect(() => {
             const fabricCanvas = fabricCanvasRef.current;
-            if (!fabricCanvas || !initialImage) return;
+            if (!fabricCanvas || !initialImage || !isCanvasReady) return;
+            let active = true;
 
             const loadBaseImage = async () => {
+                pendingImages.current += 1;
                 try {
                     // Clear any existing background
                     if (fabricCanvas.backgroundImage) {
@@ -181,6 +185,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     }
 
                     const img = await fabric.FabricImage.fromURL(initialImage, { crossOrigin: "anonymous" });
+                    if (!active) return;
 
                     // Scale to fit canvas, then multiply by 1.0 to fit perfectly
                     const scale = Math.min(
@@ -201,10 +206,13 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     fabricCanvas.requestRenderAll();
                 } catch (error) {
                     console.error("Failed to load base image:", error);
+                } finally {
+                    pendingImages.current -= 1;
                 }
             };
 
             loadBaseImage();
+            return () => { active = false; };
         }, [isCanvasReady, initialImage]);
 
         // Handle Resize
@@ -283,6 +291,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
 
+                pendingImages.current += 1;
                 try {
                     const img = await fabric.FabricImage.fromURL(url, { crossOrigin: "anonymous" });
                     img.set({
@@ -334,6 +343,8 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     fabricCanvas.requestRenderAll();
                 } catch (error) {
                     console.error("Failed to load dropped image:", error);
+                } finally {
+                    pendingImages.current -= 1;
                 }
             };
 
@@ -348,6 +359,38 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
 
         // Expose methods to parent
         useImperativeHandle(ref, () => ({
+            snapshot: () => {
+                const canvas = fabricCanvasRef.current;
+                if (!canvas || !isCanvasReady || !canvas.backgroundImage || pendingImages.current > 0) throw new Error("Preview is still loading");
+                canvas.discardActiveObject();
+                canvas.requestRenderAll();
+                const objects = canvas.getObjects().filter((object) => (object as CustomFabricObject).customType);
+                const describe = (object: fabric.Object): { text: string; font: string; color: string }[] => {
+                    if (object instanceof fabric.Group) return object.getObjects().flatMap(describe);
+                    if (object instanceof fabric.FabricText) return [{ text: object.text, font: object.fontFamily, color: String(object.fill) }];
+                    return [];
+                };
+                const design = objects.map((object) => ({
+                    type: (object as CustomFabricObject).customType,
+                    name: (object as CustomFabricObject).customName,
+                    left: object.left, top: object.top, scaleX: object.scaleX, scaleY: object.scaleY, angle: object.angle,
+                    lettering: describe(object),
+                }));
+                const background = canvas.backgroundColor;
+                let preview: string;
+                try {
+                    canvas.backgroundColor = "#fffaf4";
+                    preview = canvas.toDataURL({ format: "jpeg", quality: 0.75, multiplier: Math.min(1, 480 / canvas.width) });
+                } finally { canvas.backgroundColor = background; }
+                return {
+                    preview,
+                    design: JSON.stringify(design),
+                    details: design.map((object) => object.type === "text"
+                        ? `Lettering: ${object.lettering.map((part) => `${part.text} (font: ${part.font}; color: ${part.color})`).join(" ")}`
+                        : `Icon: ${object.name}`).join("\n"),
+                    iconCount: design.filter((object) => object.type === "icon").length,
+                };
+            },
             addText: (text, font, color) => {
                 const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
@@ -450,6 +493,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
             addIcon: async (url, name) => {
                 const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
+                pendingImages.current += 1;
                 try {
                     const img = await fabric.FabricImage.fromURL(url, { crossOrigin: "anonymous" });
 
@@ -500,6 +544,8 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     fabricCanvas.requestRenderAll();
                 } catch (error) {
                     console.error("Failed to load icon:", error);
+                } finally {
+                    pendingImages.current -= 1;
                 }
             },
             download: () => {
@@ -525,6 +571,7 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
             updateBaseImage: async (url) => {
                 const fabricCanvas = fabricCanvasRef.current;
                 if (!fabricCanvas) return;
+                pendingImages.current += 1;
                 try {
                     const img = await fabric.FabricImage.fromURL(url, { crossOrigin: "anonymous" });
                     // Scale to fit canvas, then multiply by 1.0 to fit perfectly
@@ -546,6 +593,8 @@ const CustomizationCanvas = forwardRef<CustomizationCanvasRef, CustomizationCanv
                     fabricCanvas.requestRenderAll();
                 } catch (error) {
                     console.error("Failed to update base image:", error);
+                } finally {
+                    pendingImages.current -= 1;
                 }
             },
             updateSelectedTextColor: (color, font) => {

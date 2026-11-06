@@ -1,0 +1,181 @@
+
+> hassan-crochet@0.1.0 lint
+> eslint
+
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\daily-blog-pipeline.js
+   1:12  error    A `require()` style import is forbidden              @typescript-eslint/no-require-imports
+   2:14  error    A `require()` style import is forbidden              @typescript-eslint/no-require-imports
+   3:15  error    A `require()` style import is forbidden              @typescript-eslint/no-require-imports
+  10:7   warning  'GEMINI_API_KEY' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  67:10  warning  'bullet' is defined but never used                   @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\generate-sizing-graphic.js
+  1:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:7   warning  'fs' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  2:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\generate-styling-graphic.js
+  1:15  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:7   warning  'fs' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  2:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\publish-announcement-blog.js
+  1:7   warning  'fs' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  1:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\publish-blog-post.js
+  1:7   warning  'fs' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  1:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\publish-coming-home-outfit-blog.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\publish-embroidery-guide-blog.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\publish-sensitive-skin-blog.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\scripts\publish-sibling-matching-sweaters-blog.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\app\products\[slug]\client.tsx
+    17:3   warning  'Gem' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+    19:3   warning  'ChevronDown' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+    20:3   warning  'ChevronUp' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+    26:3   warning  'Clock' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+    29:3   warning  'ZoomIn' is defined but never used                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    98:7   warning  'pacifico' is assigned a value but never used                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   103:7   warning  'sniglet' is assigned a value but never used                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   270:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+   429:10  warning  'isFavorite' is assigned a value but never used                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   429:22  warning  'setIsFavorite' is assigned a value but never used                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   452:10  warning  'showFullDescription' is assigned a value but never used                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   452:31  warning  'setShowFullDescription' is assigned a value but never used                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   773:31  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  1090:35  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\app\test-sanity\page.tsx
+  8:3  warning  'getCollections' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\Newsletter.tsx
+  17:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  44:14  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\Testimonials.tsx
+  62:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  92:57  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\blog\BlogReadingTools.tsx
+  74:40  warning  'title' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  83:11  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\blog\BlogReadingTools.tsx:83:11
+  81 |         const list = JSON.parse(saved);
+  82 |         if (Array.isArray(list) && list.includes(slug)) {
+> 83 |           setBookmarked(true);
+     |           ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  84 |         }
+  85 |       }
+  86 |     } catch {  react-hooks/set-state-in-effect
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\home\BannerSlider.tsx
+   3:10  warning  'useEffect' is defined but never used     @typescript-eslint/no-unused-vars
+  26:28  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\home\BentoGrid.tsx
+  4:29  warning  'Package' is defined but never used  @typescript-eslint/no-unused-vars
+  5:8   warning  'Image' is defined but never used    @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\home\BrandStory.tsx
+  4:8  warning  'Image' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\home\ProductCard.tsx
+   35:10  warning  'imageLoaded' is assigned a value but never used     @typescript-eslint/no-unused-vars
+   35:23  warning  'setImageLoaded' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  310:3   warning  'reviewCount' is defined but never used              @typescript-eslint/no-unused-vars
+  317:9   warning  'isSale' is assigned a value but never used          @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\home\SocialProofStats.tsx
+  3:38  warning  'useCallback' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\home\TestimonialsCarousel.tsx
+   3:10  warning  'useEffect' is defined but never used     @typescript-eslint/no-unused-vars
+   3:31  warning  'useRef' is defined but never used        @typescript-eslint/no-unused-vars
+  23:40  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\layout\AnnouncementBar.tsx
+   9:35  warning  'className' is defined but never used     @typescript-eslint/no-unused-vars
+  10:52  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\layout\Footer.tsx
+   5:31  warning  'Youtube' is defined but never used       @typescript-eslint/no-unused-vars
+   5:40  warning  'Mail' is defined but never used          @typescript-eslint/no-unused-vars
+  23:48  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\layout\Header.tsx
+    5:24  warning  'User' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    5:30  warning  'ShoppingBag' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+    5:43  warning  'Heart' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   21:8   warning  'Image' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   98:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  130:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\layout\HeroBanner.tsx
+    5:10  warning  'Badge' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  109:40  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  130:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\layout\PromoBanner.tsx
+  5:10  warning  'Badge' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\search\SearchDropdown.tsx
+  139:27  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\site-footer.tsx
+  13:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\ui\ecommerce.tsx
+    7:10  warning  'Separator' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   47:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+  182:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+  226:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+  282:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\ui\ecommerce.tsx:282:5
+  280 |     }
+  281 |
+> 282 |     setTimeLeft(calculateTimeLeft())
+      |     ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  283 |
+  284 |     const timer = setInterval(() => {
+  285 |       setTimeLeft(calculateTimeLeft())  react-hooks/set-state-in-effect
+
+D:\code play ground\Projects\knitty petit\hassan-crochet\src\components\ui\testimonials-card.tsx
+  142:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+✖ 86 problems (33 errors, 53 warnings)
+
