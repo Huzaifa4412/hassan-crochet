@@ -1,0 +1,82 @@
+{
+  "note": "One authorized QA journey using Demo + Heart. Sanitized network evidence; no cookies, visitor IDs, or raw requests saved. HTTP acceptance is not proof of ad attribution or dashboard processing.",
+  "events": [
+    {
+      "provider": "Meta",
+      "event": "AddToCart",
+      "destinationId": "1232897498603348",
+      "value": "44",
+      "currency": "USD",
+      "contents": "[{\"id\":\"3898a429-f63d-46df-846b-57b6ac833de2\",\"quantity\":1,\"item_price\":44}]",
+      "googleItem": null,
+      "eventID": "65a510e5-fa22-47c8-b066-524592f78edc",
+      "status": 200
+    },
+    {
+      "provider": "GA4",
+      "event": "add_to_cart",
+      "destinationId": "G-7QW1LRELTS",
+      "value": "44",
+      "currency": "USD",
+      "contents": null,
+      "googleItem": "id3898a429-f63d-46df-846b-57b6ac833de2~nmHand embroidered kids name sweater~brKnitty Petit~casweaters~vaRose~pr44~qt1",
+      "eventID": null,
+      "status": 204
+    },
+    {
+      "provider": "GA4",
+      "event": "view_cart",
+      "destinationId": "G-7QW1LRELTS",
+      "value": "44",
+      "currency": "USD",
+      "contents": null,
+      "googleItem": "id3898a429-f63d-46df-846b-57b6ac833de2~nmHand embroidered kids name sweater~brKnitty Petit~casweaters~vaRose~pr44~qt1",
+      "eventID": null,
+      "status": 204
+    },
+    {
+      "provider": "Meta",
+      "event": "InitiateCheckout",
+      "destinationId": "1232897498603348",
+      "value": "44",
+      "currency": "USD",
+      "contents": "[{\"id\":\"3898a429-f63d-46df-846b-57b6ac833de2\",\"quantity\":1,\"item_price\":44}]",
+      "googleItem": null,
+      "eventID": "e837d132-c818-48ac-ab1f-b7c1fa50428e",
+      "status": 200
+    },
+    {
+      "provider": "GA4",
+      "event": "begin_checkout",
+      "destinationId": "G-7QW1LRELTS",
+      "value": "44",
+      "currency": "USD",
+      "contents": null,
+      "googleItem": "id3898a429-f63d-46df-846b-57b6ac833de2~nmHand embroidered kids name sweater~brKnitty Petit~casweaters~vaRose~pr44~qt1",
+      "eventID": null,
+      "status": 204
+    },
+    {
+      "provider": "Meta",
+      "event": "EtsyCheckoutClick",
+      "destinationId": "1232897498603348",
+      "value": "44",
+      "currency": "USD",
+      "contents": "[{\"id\":\"3898a429-f63d-46df-846b-57b6ac833de2\",\"quantity\":1,\"item_price\":44}]",
+      "googleItem": null,
+      "eventID": "ob3_plugin-set_07e04221ec5a0f9e5572f2629f599850661604115814b26e7dd32e02b1acc6f2",
+      "status": 200
+    },
+    {
+      "provider": "GA4",
+      "event": "etsy_checkout_click",
+      "destinationId": "G-7QW1LRELTS",
+      "value": "44",
+      "currency": "USD",
+      "contents": null,
+      "googleItem": null,
+      "eventID": null,
+      "status": 204
+    }
+  ]
+}

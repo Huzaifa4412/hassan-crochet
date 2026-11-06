@@ -1,0 +1,84 @@
+{
+  "action": "read_event",
+  "results": [
+    {
+      "success": true,
+      "error": null,
+      "events": [
+        {
+          "event_rule_id": "940995668910677",
+          "event_type": "Lead",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318766,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"order on etsy\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "4450305941915363",
+          "event_type": "CustomizeProduct",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318723,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"copy\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "940851445421526",
+          "event_type": "CustomizeProduct",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318483,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"khaki\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "2796632244007545",
+          "event_type": "CustomizeProduct",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318471,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"pink\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "1743355906471112",
+          "event_type": "CustomizeProduct",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318455,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"rose\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "1705164323987122",
+          "event_type": "CustomizeProduct",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318330,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"customize now\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "1512224030273218",
+          "event_type": "ViewContent",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318302,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"hand embroidered kids name sweater\"}]}",
+          "parameters": []
+        },
+        {
+          "event_rule_id": "958242250154844",
+          "event_type": "InitiateCheckout",
+          "status": "INACTIVE",
+          "creation_source": "Manual Event Setup Tool",
+          "created_at_epoch": 1777318271,
+          "condition": "{\"type\":1,\"conditions\":[{\"targetType\":1,\"extractor\":2,\"operator\":2,\"action\":1,\"value\":\"view on etsy\"}]}",
+          "parameters": []
+        }
+      ]
+    }
+  ],
+  "client_conversation_id": "aH9dkQ3wRs6V2cF8xLm1"
+}

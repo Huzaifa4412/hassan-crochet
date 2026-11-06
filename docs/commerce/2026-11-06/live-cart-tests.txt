@@ -1,0 +1,5 @@
+
+> hassan-crochet@0.1.0 test:cart
+> node scripts/check-cart.mjs https://www.knittypetit.shop
+
+Cart checks passed: persistence, quantities, price integrity, storage failures, privacy, event semantics, and initialization.

@@ -1,6 +1,8 @@
 # Cart, Etsy checkout, measurement, and SEO — 6 November 2026
 
-Implemented locally. Payment remains on Etsy, as requested. No production deployment, order, charge, or external message was made. Screenshots contain a clearly identified QA design (Mila, one Heart icon), not an actual order.
+Deployed to **https://www.knittypetit.shop** on 6 November 2026. Payment remains on Etsy. No order, charge, or external message was made. The initial screenshots show a local QA design (Mila + Heart); the live verification used Demo + Heart at $44 and removed that sample from the browser cart afterward. [Production release record](meta-release.json), [sanitized live requests](live-events.json), [live checkout screenshot](checkout-live.png).
+
+Production source: commit `48585ec4e3e5308cb63512f6b18e00b658654a7c` on `codex/cart-checkout-meta-events-20261106`, deployment `dpl_7NzZdzurU9yGtFJh8NtbUMAiUphb`, READY with the www and apex aliases assigned. The release branch has not been merged into master.
 
 ## Shopping behavior
 
@@ -25,9 +27,9 @@ Implemented locally. Payment remains on Etsy, as requested. No production deploy
 
 Payloads contain product IDs, quantity, price, value, and USD currency. Quantity changes send only their delta. Embroidered names, design JSON, preview images, and copyable personalization details are excluded. Meta standard shopping events receive unique event IDs. There is no configured Conversions API sender; these are browser events, not a claim of browser/server deduplication.
 
-Google ecommerce events queue even when they occur before the Google script loads; Google initializes only once. Meta route tracking avoids a duplicate initial PageView. Removed duplicate Search events on dropdown submission and renamed product-card listing clicks so they do not inflate checkout starts.
+Google ecommerce events queue even when they occur before the Google script loads; Google initializes only once. Meta events now also queue until the inline bootstrap is ready, replacing the previous two-second expiry. Tests cover delayed initialization and repeated queue flushes. Meta route tracking avoids a duplicate initial PageView. Removed duplicate Search events on dropdown submission and renamed product-card listing clicks so they do not inflate checkout starts.
 
-Google page views use the provider's enhanced measurement by default. In the active web stream, keep **Page loads** and **Page changes based on browser history events** enabled. These account settings could not be inspected with the connected GA tools and still require live acceptance testing. If choosing explicit application page views instead, first disable enhanced history/page-load page views, then set `NEXT_PUBLIC_GA_MANUAL_PAGEVIEWS=true`. Do not enable both approaches.
+Google page views use the provider's enhanced measurement by default. In the active web stream, keep **Page loads** and **Page changes based on browser history events** enabled. The connected GA tools do not expose these account settings; deployed SPA page_view requests were verified in the network evidence below. If choosing explicit application page views instead, first disable enhanced history/page-load page views, then set `NEXT_PUBLIC_GA_MANUAL_PAGEVIEWS=true`. Do not enable both approaches.
 
 `NEXT_PUBLIC_TRACKING_ENABLED=false` suppresses our Google and Meta tags/events for local browser QA. The browser preview on port 3100 used this flag, so its sample cart activity was not intentionally sent to production analytics. Production builds use the existing configured IDs unless that flag is explicitly disabled. Retain the site's applicable consent configuration when releasing; this change does not introduce a consent manager.
 
@@ -39,8 +41,10 @@ Google page views use the provider's enhanced measurement by default. In the act
 - Search Console MCP: owner access to `https://www.knittypetit.shop/`. The main product URL is submitted and indexed; Google's selected canonical agrees with the website. Reported crawl: 2 November 2026.
 - Sitemap: 16 submitted pages, no errors or warnings, not pending. Last reported download/submission: 4 November. Sitemap indexed-count reporting was zero, while individual product inspection explicitly passed; the summary counter is not proof of non-indexing.
 - Search performance query for 7 October–3 November 2026 returned no rows. This is not evidence of achieved rankings or traffic gains.
-- Meta MCP: the configured Knitty Petit dataset is active, with a browser last-fired timestamp on 4 November. No server event activity or CAPI gateway setup was reported. This read predates deployment of the new code and does not prove receipt of its events.
-- Vercel MCP: the existing **All main projects** connection verified the owning team, project, domains, and currently READY production deployment. The code changes remain local; no deployment was made.
+- Meta MCP and Vercel environment verification found different local-preview and production pixels. The actual production pixel is `1232897498603348` (knittypetit), matching the existing Sales-Etsy ad set's promoted pixel. Production was preserved, and the local public pixel was aligned to it. Earlier observations about the local preview dataset were not evidence about production. The production dataset is active and already had historical AddToCart/InitiateCheckout volume before this release.
+- Meta account `986091360949043`: ad sets were paused or campaign-paused at inspection. The user clarified that they will edit and run ads after configuration. No campaign, ad set, audience, budget, or bidding setting was changed.
+- Eight legacy Manual Event Setup Tool rules were set INACTIVE after the new live flow was verified. These included View on Etsy → InitiateCheckout, Order on Etsy → Lead, title-click → ViewContent, and overlapping customization clicks. A fresh read confirmed all eight statuses. [Before](legacy-rules-before.json), [after](legacy-rules-after.json). They can be restored by setting their recorded IDs ACTIVE if rolling back the website; do not run both the legacy click rules and the replacement application triggers.
+- Vercel MCP **All main projects** connection verified the production project and performed the Git-backed deployment. The production deployment is READY and assigned to www.knittypetit.shop and knittypetit.shop.
 
 ## SEO and validation
 
@@ -57,4 +61,10 @@ Skills used: Analytics, project Meta Pixel, SEO, frontend design, Sanity best pr
 
 Provider references: [Google ecommerce event reference](https://developers.google.com/analytics/devguides/collection/ga4/reference/events), [Google single-page measurement guidance](https://developers.google.com/analytics/devguides/collection/ga4/single-page-applications), [Meta Pixel event reference](https://developers.facebook.com/documentation/meta-pixel/reference).
 
-Before calling the release complete, publish to the authorized Vercel project, verify the active GA enhanced measurement settings, inspect one real browsing journey in GA DebugView and Meta Test Events, and check Product rich-result eligibility after Google recrawls. Ranking gains cannot be promised from technical changes alone; maintain the existing buyer-focused content and measure subsequent Search Console impressions and clicks.
+## Live acceptance
+
+An authorized QA journey on the production domain saved Demo + Heart, added it to the cart, reviewed checkout, and opened the Etsy listing. It placed no order and made no payment. Network evidence confirms one captured Meta AddToCart, InitiateCheckout, and EtsyCheckoutClick, each accepted with HTTP 200 and $44 USD / quantity 1. Corresponding GA4 add_to_cart, view_cart, begin_checkout, and etsy_checkout_click requests returned HTTP 204. Product IDs and quantities matched the cart. Google batches some events in newline-delimited request bodies; each event was inspected separately. SPA page_view traffic was observed on the route changes.
+
+`npm run test:cart -- https://www.knittypetit.shop` passed against production, including checkout price/URL integrity, noindex, sitemap exclusions, and Product markup. [Live checks](live-cart-tests.txt).
+
+HTTP acceptance confirms delivery to the provider endpoints, not completed ad attribution or dashboard processing. Dashboard visibility can lag. The existing **knittypetit** pixel can use **InitiateCheckout** as the observable checkout-start event; **AddToCart** records saved-cart additions. Confirmed Etsy paid orders remain a separate integration requirement. Product rich-result eligibility and ranking changes still depend on Google's processing and subsequent search performance; no ranking improvement is claimed.

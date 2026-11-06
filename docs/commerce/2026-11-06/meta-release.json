@@ -1,0 +1,67 @@
+{
+  "date": "2026-11-06",
+  "site": "https://www.knittypetit.shop",
+  "deployment": "dpl_7NzZdzurU9yGtFJh8NtbUMAiUphb",
+  "state": "READY",
+  "target": "production",
+  "commit": "48585ec4e3e5308cb63512f6b18e00b658654a7c",
+  "branch": "codex/cart-checkout-meta-events-20261106",
+  "productionReadyAt": "2026-11-06T14:32:02.287Z",
+  "aliases": [
+    "www.knittypetit.shop",
+    "hassan-crochet.vercel.app",
+    "knittypetit.shop",
+    "hassan-crochet-huzaifas-projects-85179f29.vercel.app",
+    "hassan-crochet-git-codex-cart-d66a21-huzaifas-projects-85179f29.vercel.app"
+  ],
+  "previousProduction": "dpl_E65hgA3MZ1sPqjN3jeg1yTDQSVT2",
+  "productionPixel": "1232897498603348",
+  "localPixelAligned": true,
+  "legacyRulesDeactivated": [
+    {
+      "id": "940995668910677",
+      "event": "Lead",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "4450305941915363",
+      "event": "CustomizeProduct",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "940851445421526",
+      "event": "CustomizeProduct",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "2796632244007545",
+      "event": "CustomizeProduct",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "1743355906471112",
+      "event": "CustomizeProduct",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "1705164323987122",
+      "event": "CustomizeProduct",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "1512224030273218",
+      "event": "ViewContent",
+      "status": "INACTIVE"
+    },
+    {
+      "id": "958242250154844",
+      "event": "InitiateCheckout",
+      "status": "INACTIVE"
+    }
+  ],
+  "campaignsChanged": false,
+  "budgetsChanged": false,
+  "purchaseTracking": "Not emitted without confirmed Etsy payment",
+  "liveEvidence": "live-events.json",
+  "sourceNote": "Production was deployed from the focused release branch; master has not been merged."
+}
