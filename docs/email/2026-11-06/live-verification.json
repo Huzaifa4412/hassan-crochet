@@ -1,0 +1,31 @@
+{
+  "verifiedAtUtc": "2026-11-06T16:37:38Z",
+  "site": "https://www.knittypetit.shop",
+  "commit": "431edac46f387206e471e6cfd2ac77eb7dcb8c3f",
+  "deployment": "dpl_3EwtnYPvdvfG77qbRtXv9pkcg3U8",
+  "deploymentState": "READY",
+  "sender": "Knitty Petit <orders@knittypetit.shop>",
+  "ownerRecipient": "Owner-provided mailbox (omitted from repository evidence)",
+  "domainVerified": true,
+  "reference": "KP-FAE5A057E297",
+  "testLabel": "INTEGRATION TEST - no order/payment",
+  "customerEmail": {
+    "id": "01a1b1b5-e315-75a0-83c9-021d67b3d91c",
+    "createdAtUtc": "2026-11-06T16:34:10.021Z",
+    "lastEvent": "delivered",
+    "explicitUnpaidWording": true,
+    "attachments": [{ "filename": "design-1.jpg", "contentType": "image/jpeg", "bytes": 39066 }]
+  },
+  "merchantEmail": {
+    "id": "01a1b1b5-e6f4-7a41-9c95-d50aef482d70",
+    "createdAtUtc": "2026-11-06T16:34:11.028Z",
+    "lastEvent": "delivered",
+    "explicitUnpaidWording": true,
+    "attachments": [{ "filename": "design-1.jpg", "contentType": "image/jpeg", "bytes": 39066 }]
+  },
+  "verificationSources": ["Vercel deployment API", "Production checkout UI", "Resend retrieve email", "Resend list email attachments"],
+  "testCartCleaned": true,
+  "etsyOrderPlaced": false,
+  "inboxPlacementVerified": false,
+  "sanityCloudSchemaDeployment": "Permission denied; runtime delivery metadata writes verified working"
+}
