@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/pricing";
 import { trackShoppingEvent, trackEtsyHandoff } from "@/lib/shopping-events";
 import type { ReviewedItem } from "@/app/api/checkout/route";
 import { Button } from "@/components/ui/button";
+import { EmailSummaryForm } from "@/components/cart/EmailSummaryForm";
 
 export function CheckoutPage() {
   const items = useCart();
@@ -60,6 +61,7 @@ export function CheckoutPage() {
             <li><strong>3. Pay on Etsy</strong><br />Check shipping, delivery, taxes, and your final total.</li>
           </ol>
           <p className="mt-5 text-sm leading-6 text-[#6f5a50]">Your website cart does not automatically transfer to Etsy. Keep this page open while you build your Etsy basket. If needed, share the downloaded preview with the seller through Etsy.</p>
+          <EmailSummaryForm items={items} ready={Boolean(ready && review?.items.every((item) => item.available))} />
           {error && <div role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-800">{error}<Button variant="outline" className="ml-3" onClick={() => { setError(""); setAttempt((value) => value + 1); }}>Retry listing check</Button></div>}
           <ul className="mt-8 space-y-5">
             {items.map((item, index) => {

@@ -7,6 +7,7 @@ import newsletter from './newsletter'
 import order from './order'
 import post from './post'
 import author from './author'
+import { emailDispatch, emailRateLimit } from './emailDelivery'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -19,5 +20,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     // Blog types
     post,
     author,
+    emailDispatch,
+    emailRateLimit,
   ],
 }
